@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="50dp"
+        android:text="Meu Fortinite"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="50dp"
+        android:textStyle="bold|italic" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/bordas_preenchidas"
+            android:gravity="center"
+            android:text="Selecione uma das plataformas"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
+
+            <ImageButton
+                android:id="@+id/imbtnPSN"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="0.3"
+                android:background="@null"
+                app:srcCompat="@drawable/ic_playstation" />
+
+            <ImageButton
+                android:id="@+id/imbtnXBX"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="0.3"
+                android:background="@null"
+                app:srcCompat="@drawable/ic_xbox" />
+
+            <ImageButton
+                android:id="@+id/imbtnPC"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="3dp"
+                android:layout_weight="0.3"
+                android:background="@null"
+                app:srcCompat="@drawable/ic_pc" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edittext_main_username"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bordas_preenchidas_dir_esq_baix"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Digite seu username"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textColorHint="@color/colorPrimaryDark" />
+
+        <Button
+            android:id="@+id/button_main_check"
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/bordas_vazias"
+            android:text="Buscar"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="For platform enter pc if you play on computer, xbl if you play on xbox, or psn if you play on the ps4"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/edittext_main_platform"
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
+        android:background="@android:color/background_light"
+        android:ems="10"
+        android:hint="Platform"
+        android:inputType="textPersonName"
+        android:textColor="@color/colorPrimaryDark"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal" />
+
+</FrameLayout>
