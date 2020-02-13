@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InfoConta">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_margin="50dp"
+        android:text="Suas Estatísticas :)"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:typeface="serif" />
+
+    <LinearLayout
+        android:id="@+id/lnlMeio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/lnlVitoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgVitorias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_vitoria" />
+
+            <TextView
+                android:id="@+id/txtVitoriasInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="..."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnlScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_score" />
+
+            <TextView
+                android:id="@+id/txtScoreInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="..."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnlKill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgKills"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_kill" />
+
+            <TextView
+                android:id="@+id/txtKillInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="..."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnlKD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgKD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_kd" />
+
+            <TextView
+                android:id="@+id/txtKDInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="..."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnlTop25"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img25PriInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_primeiro" />
+
+            <TextView
+                android:id="@+id/txt25PriInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="..."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnlTop10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img10PriInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_topdez" />
+
+            <TextView
+                android:id="@+id/txt10PriInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="..."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnlTop3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img3PriInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_toptres" />
+
+            <TextView
+                android:id="@+id/txt3PriInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:text="..."
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lnlFundo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/lnlInfo"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgIdInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="0.1"
+                android:src="@drawable/ic_id" />
+
+            <TextView
+                android:id="@+id/txtIDInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="0.8"
+                android:text="..."
+                android:textAlignment="viewStart"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold|italic"
+                android:typeface="serif" />
+
+            <Button
+                android:id="@+id/btnCopiarIdInfo"
+                android:layout_width="45dp"
+                android:layout_height="30dp"
+                android:layout_weight="0.1"
+                android:background="@null"
+                android:drawableRight="@drawable/ic_copiar"
+                android:text="copiar"
+                android:textAllCaps="false"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="10sp"
+                android:typeface="serif" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnLojaInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_margin="5dp"
+            android:background="@drawable/bordas_fundo"
+            android:elevation="2dp"
+            android:text="Ver Loja"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold|italic" />
+    </LinearLayout>
+
+</FrameLayout>

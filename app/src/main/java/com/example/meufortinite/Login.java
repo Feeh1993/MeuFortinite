@@ -1,6 +1,7 @@
 package com.example.meufortinite;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +21,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class MainActivity extends AppCompatActivity {
+public class Login extends AppCompatActivity {
 
 
     private String accountId;
@@ -29,27 +30,32 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnXBX,btnPSN,btnPC;
     private int XBX = 0 ,PSN = 0,PC = 0;
 
-    private EditText platform;
+    private String platform = "";
     private EditText username;
     public static final String EXTRA_ACCOUNT = "account";
     public static final String EXTRA_STATS = "stats";
 
+    public  MediaPlayer mp;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         fazerCast();
 
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(platform.getText().toString().equals("") || username.getText().toString().equals("")) {
-                    Toast.makeText(MainActivity.this, "Digite o username!", Toast.LENGTH_SHORT).show();
-                    check.setError("Digite o username!");
+                if(platform == "" || username.getText().toString().equals(""))
+                {
+                    Toast.makeText(Login.this, "Digite o username e selecione uma das plataformas", Toast.LENGTH_SHORT).show();
+                    username.setError("Digite o username!");
                 }
                 else{
-                    getAccountData(platform.getText().toString(), username.getText().toString());
+                    getAccountData(platform, username.getText().toString());
                 }
             }
         });
@@ -65,10 +71,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    platform = "psn";
                     btnPSN.setBackgroundResource(R.drawable.bordas_verdes);
                     btnPC.setBackgroundResource(R.drawable.bordas_vazias);
-                    btnPSN.setBackgroundResource(R.drawable.bordas_vazias);
+                    btnXBX.setBackgroundResource(R.drawable.bordas_vazias);
                     PSN = 1;
+                    XBX = 0;
+                    PC = 0;
 
                 }
             }
@@ -76,20 +85,52 @@ public class MainActivity extends AppCompatActivity {
         btnXBX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (XBX == 1)
+                {
+                    XBX = 0;
+                    btnXBX.setBackgroundResource(R.drawable.bordas_vazias);
+                }
+                else
+                {
+                    platform = "xb1";
+                    btnXBX.setBackgroundResource(R.drawable.bordas_verdes);
+                    btnPC.setBackgroundResource(R.drawable.bordas_vazias);
+                    btnPSN.setBackgroundResource(R.drawable.bordas_vazias);
+                    XBX = 1;
+                    PSN = 0;
+                    PC = 0;
 
+                }
             }
         });
-        btnPC.setOnClickListener(new View.OnClickListener() {
+        btnPC.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
+                if (PC == 1)
+                {
+                    PC = 0;
+                    btnPC.setBackgroundResource(R.drawable.bordas_vazias);
+                }
+                else
+                {
+                    platform = "pc";
+                    btnPC.setBackgroundResource(R.drawable.bordas_verdes);
+                    btnXBX.setBackgroundResource(R.drawable.bordas_vazias);
+                    btnPSN.setBackgroundResource(R.drawable.bordas_vazias);
+                    PC = 1;
+                    PSN = 0;
+                    XBX = 0;
 
+                }
             }
         });
 
 
     }
 
-    private void getAccountData(String p, String u) {
+    private void getAccountData(String p, String u)
+    {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.fortnitetracker.com/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -107,19 +148,20 @@ public class MainActivity extends AppCompatActivity {
                                    Response<ItemResponse> response) {
 
 
-                if(response.body() == (null)) {
-
-                    Toast.makeText(MainActivity.this, "You didn't enter a valid platform, make sure it's pc,xb1, or psn.", Toast.LENGTH_SHORT).show();
+                if(response.body() == (null))
+                {
+                    Toast.makeText(Login.this, "Usuário Não encontrado!\n tente novamente", Toast.LENGTH_SHORT).show();
                 }
-                else if(response.body().getAccountId() == (null)){
-                    Toast.makeText(MainActivity.this, "Your Username didn't seem to work, maybe you forgot a capital.", Toast.LENGTH_SHORT).show();
+                else if(response.body().getAccountId() == (null))
+                {
+                    Toast.makeText(Login.this, "Your Username didn't seem to work, maybe you forgot a capital.", Toast.LENGTH_SHORT).show();
                 }
                 else{
 
                     accountId = response.body().getAccountId();
                     lifeTimeStat = response.body().getLifeTimeStats();
 
-                    Intent intent = new Intent(MainActivity.this, AccountInfoActivity.class);
+                    Intent intent = new Intent(Login.this, InfoConta.class);
 
                     ArrayList<Stats> stats = new ArrayList<>();
 
@@ -127,12 +169,6 @@ public class MainActivity extends AppCompatActivity {
                     intent.putParcelableArrayListExtra(EXTRA_STATS, lifeTimeStat);
                     startActivity(intent);
                 }
-
-
-
-                // Log.d("ENQUEUE", "onResponse: " + accountId);
-
-                //  Toast.makeText(MainActivity.this, "test toast" + accountId, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -145,14 +181,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void fazerCast() {
+    private void fazerCast()
+    {
 
-        username = findViewById(R.id.edittext_main_username);
-        platform = findViewById(R.id.edittext_main_platform);
-        check = findViewById(R.id.button_main_check);
+        username = findViewById(R.id.edtUserLogin);
+        check = findViewById(R.id.btnBuscarLogin);
         btnPC = findViewById(R.id.imbtnPC);
         btnXBX = findViewById(R.id.imbtnXBX);
         btnPSN = findViewById(R.id.imbtnPSN);
+        mp = MediaPlayer.create(Login.this,R.raw.forti_theme);
+        mp.start();
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                if (mp != null)
+                {
+                    mp.release();;
+                    mp = null;
+                }
+            }
+        });
 
     }
 
