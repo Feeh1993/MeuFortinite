@@ -116,7 +116,9 @@
                 android:id="@+id/imgKD"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
                 android:layout_weight="0.1"
+                android:foregroundGravity="left"
                 android:src="@drawable/ic_kd" />
 
             <TextView
@@ -222,7 +224,7 @@
             android:id="@+id/lnlInfo"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_margin="5dp"
+            android:layout_marginBottom="3dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -236,25 +238,26 @@
                 android:id="@+id/txtIDInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_weight="0.8"
+                android:layout_weight="0.6"
                 android:text="..."
                 android:textAlignment="viewStart"
                 android:textColor="@color/colorPrimary"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:textStyle="bold|italic"
                 android:typeface="serif" />
 
             <Button
                 android:id="@+id/btnCopiarIdInfo"
-                android:layout_width="45dp"
-                android:layout_height="30dp"
-                android:layout_weight="0.1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
                 android:background="@null"
                 android:drawableRight="@drawable/ic_copiar"
                 android:text="copiar"
+                android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="10sp"
+                android:textSize="8sp"
                 android:typeface="serif" />
         </LinearLayout>
 

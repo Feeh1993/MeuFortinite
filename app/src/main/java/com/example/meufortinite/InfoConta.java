@@ -49,14 +49,14 @@ public class InfoConta extends AppCompatActivity
 
         wins = stats.get(8).getValue();
 
-        txtVitorias.setText("Voce Tem " + wins + " vitorias.");
-        txt3Pri.setText("no top 3:" + stats.get(1).getValue() + " vezes.");
-        txt10Pri.setText(" no top 10:" + stats.get(3).getValue() + "vezes");
-        txt25Prim.setText( "Ficou entre os 25 primeiros:" + stats.get(5).getValue() + " vezes");
+        txtVitorias.setText("Voce Tem " + wins + " vitorias");
+        txt3Pri.setText("no top 3: " + stats.get(1).getValue() + " vezes");
+        txt10Pri.setText(" no top 10: " + stats.get(3).getValue() + "vezes");
+        txt25Prim.setText( "Ficou entre os 25 primeiros: " + stats.get(5).getValue() + " vezes");
         txtId.setText("seu ID da conta é: " + acc);
-        txtKD.setText("seu K/d é" + stats.get(11).getValue() + ".");
+        txtKD.setText("seu K/d é de " + stats.get(11).getValue() + " ");
         txtKill.setText( "Você tem " + stats.get(10).getValue() + " kills");
-        txtScore.setText( "Seu score é " + stats.get(6).getValue() + ".");
+        txtScore.setText( "Seu score é " + stats.get(6).getValue() + " ");
     }
 
     private void fazerCast()
