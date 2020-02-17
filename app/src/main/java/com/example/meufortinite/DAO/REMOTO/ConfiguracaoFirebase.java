@@ -1,4 +1,4 @@
-package com.example.meufortinite.DBFirebase;
+package com.example.meufortinite.DAO.REMOTO;
 
 /**
  * Created by Fernando Silveira on 08/03/2017.

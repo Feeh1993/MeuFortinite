@@ -1,4 +1,4 @@
-package com.example.meufortinite;
+package com.example.meufortinite.VIEW.ADAPTER;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.meufortinite.MODEL.Store;
+import com.example.meufortinite.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

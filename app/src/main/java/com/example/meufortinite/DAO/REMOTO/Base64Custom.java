@@ -1,4 +1,4 @@
-package com.example.meufortinite.DBFirebase;
+package com.example.meufortinite.DAO.REMOTO;
 
 import android.util.Base64;
 

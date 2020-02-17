@@ -1,4 +1,4 @@
-package com.example.meufortinite;
+package com.example.meufortinite.VIEW;
 
 
 import android.content.ClipData;
@@ -10,9 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.meufortinite.DAO.API.FornightService;
+import com.example.meufortinite.MODEL.Stats;
+import com.example.meufortinite.MODEL.Store;
+import com.example.meufortinite.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +38,8 @@ public class InfoConta extends AppCompatActivity
     private List<Stats> stats;
     private String wins;
 
-    private Button btnLoja,btnCopiar;
+    private ImageButton btnCopiar,btnShare;
+    private Button btnLoja;
     private TextView txtVitorias,txtScore,txtKill,txtKD,txt25Prim,txt10Pri,txt3Pri,txtId;
 
 
@@ -63,6 +71,7 @@ public class InfoConta extends AppCompatActivity
     {
         btnLoja = findViewById(R.id.btnLojaInfo);
         btnCopiar = findViewById(R.id.btnCopiarIdInfo);
+        btnShare = findViewById(R.id.btnShareIdInfo);
         txtVitorias = findViewById(R.id.txtVitoriasInfo);
         txtScore = findViewById(R.id.txtScoreInfo);
         txtKill = findViewById(R.id.txtKillInfo);
@@ -82,13 +91,17 @@ public class InfoConta extends AppCompatActivity
             public void onClick(View view)
             {
                 txtId.setTextColor(getResources().getColor(R.color.verde));
-                btnCopiar.setTextColor(getResources().getColor(R.color.verde));
-                btnCopiar.setText("Copiado");
-                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.ic_success);
-                btnCopiar.setCompoundDrawablesWithIntrinsicBounds(null,null,img,null);
+                btnCopiar.setBackgroundResource(R.drawable.ic_success);
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("Texto Copiado",acc);
                 clipboard.setPrimaryClip(clipData);
+                Toast.makeText(getApplicationContext(),"Id copiado para area de transferencia!",Toast.LENGTH_LONG).show();
+            }
+        });
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"Compartilhando id!",Toast.LENGTH_LONG).show();
             }
         });
 

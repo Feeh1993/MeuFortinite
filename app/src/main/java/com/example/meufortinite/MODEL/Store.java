@@ -1,4 +1,4 @@
-package com.example.meufortinite;
+package com.example.meufortinite.MODEL;
 
 import android.os.Parcel;
 import android.os.Parcelable;

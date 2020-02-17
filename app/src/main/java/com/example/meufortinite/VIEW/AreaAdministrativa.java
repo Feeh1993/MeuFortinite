@@ -1,8 +1,10 @@
-package com.example.meufortinite;
+package com.example.meufortinite.VIEW;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.meufortinite.R;
 
 public class AreaAdministrativa extends AppCompatActivity
 {

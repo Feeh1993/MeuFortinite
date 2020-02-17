@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    tools:context=".VIEW.Login">
 
     <TextView
         android:id="@+id/titulo"
@@ -103,7 +103,7 @@
                 android:layout_height="47dp"
                 android:layout_gravity="center"
                 android:background="@drawable/bordas_fundo"
-                android:text="Buscar"
+                android:text="Conectar"
                 android:textColor="@color/colorPrimaryDark" />
 
             <ProgressBar

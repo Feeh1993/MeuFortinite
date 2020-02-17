@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InfoConta">
+    tools:context=".VIEW.InfoConta">
 
     <TextView
         android:id="@+id/textView2"
@@ -246,19 +246,23 @@
                 android:textStyle="bold|italic"
                 android:typeface="serif" />
 
-            <Button
-                android:id="@+id/btnCopiarIdInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+            <ImageButton
+                android:id="@+id/btnShareIdInfo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="0.1"
                 android:background="@null"
-                android:drawableRight="@drawable/ic_copiar"
-                android:text="copiar"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="8sp"
-                android:typeface="serif" />
+                app:srcCompat="@drawable/ic_share" />
+
+            <ImageButton
+                android:id="@+id/btnCopiarIdInfo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="3dp"
+                android:layout_weight="0.1"
+                app:srcCompat="@drawable/ic_copiar" />
+
         </LinearLayout>
 
         <Button

@@ -40,4 +40,7 @@ dependencies {
     // cookie para aparecer alertas
     implementation 'org.aviran.cookiebar2:cookiebar2:1.1.3'
     implementation 'com.google.android.material:material:1.1.0'
+
+    //tela de boas vindas
+    implementation 'com.stephentuso:welcome:1.4.1'
 }

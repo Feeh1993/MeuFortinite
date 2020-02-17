@@ -11,16 +11,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AreaAdministrativa"></activity>
-        <activity android:name=".Login">
+        <activity android:name=".VIEW.Loading"></activity>
+        <activity android:name=".VIEW.AreaAdministrativa" />
+        <activity android:name=".VIEW.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InfoConta" />
-        <activity android:name=".StoreActivity" />
+        <activity
+            android:name="VIEW.TelaBoasVindas"
+            android:theme="@style/WelcomeScreenTheme" />
+        <activity android:name=".VIEW.InfoConta" />
+        <activity android:name=".VIEW.StoreActivity" />
     </application>
 
 </manifest>

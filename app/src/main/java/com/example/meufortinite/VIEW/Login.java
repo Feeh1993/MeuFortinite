@@ -1,7 +1,9 @@
-package com.example.meufortinite;
+package com.example.meufortinite.VIEW;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,18 +19,24 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.meufortinite.DBFirebase.ConfiguracaoFirebase;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.meufortinite.DAO.API.FornightService;
+import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
+import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
+import com.example.meufortinite.DAO.REMOTO.PermissionsUtils;
+import com.example.meufortinite.MODEL.ItemResponse;
+import com.example.meufortinite.MODEL.Usuario;
+import com.example.meufortinite.R;
+import com.example.meufortinite.MODEL.Stats;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import org.aviran.cookiebar2.CookieBar;
+import com.stephentuso.welcome.WelcomeHelper;
 
 import java.util.ArrayList;
 
@@ -57,23 +65,43 @@ public class Login extends AppCompatActivity
     private EditText username;
     public static final String EXTRA_ACCOUNT = "account";
     public static final String EXTRA_STATS = "stats";
+    WelcomeHelper welcomeScreen;
 
+    String[] permissoes = new String[]
+            {
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_WIFI_STATE
+            };
     public ProgressBar prgLogin,prgBuscar;
 
 
     public  MediaPlayer mp;
+    private DatabaseHelper db;
 
     @Override
     protected void onStart()
     {
         super.onStart();
+        db = new DatabaseHelper(getApplicationContext());
+        recuperarBancoLocal();
     }
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        welcomeScreen.onSaveInstanceState(outState);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        welcomeScreen = new WelcomeHelper(this, TelaBoasVindas.class);
+        welcomeScreen.show(savedInstanceState);
+        PermissionsUtils.ActivePermissions(this,permissoes,1);
         fazerCast();
         btnLogar.setOnClickListener(new View.OnClickListener()
         {
@@ -96,7 +124,7 @@ public class Login extends AppCompatActivity
                                 Snackbar.make(v, "Seja bem vindo Administrador :) ", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                                 iniciarAnimacao();
-                                startActivity(new Intent(getApplicationContext(),AreaAdministrativa.class));
+                                startActivity(new Intent(getApplicationContext(), AreaAdministrativa.class));
                             }
                             else
                             {
@@ -245,6 +273,8 @@ public class Login extends AppCompatActivity
                     lifeTimeStat = response.body().getLifeTimeStats();
 
                     Intent intent = new Intent(Login.this, InfoConta.class);
+                    //salvando usuário logado pela primeira vez
+                    db.atualizarUsuario(new Usuario(accountId));
 
                     ArrayList<Stats> stats = new ArrayList<>();
 
@@ -327,5 +357,43 @@ public class Login extends AppCompatActivity
     }
 
     private void searchItems() {
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (int result : grantResults)
+        {
+            if (result == PackageManager.PERMISSION_DENIED)
+            {
+                ativeasPermissoes();
+                return;
+            }
+        }
+    }
+    private void ativeasPermissoes()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Permissões negadas");
+        builder.setMessage("Para utilizar este app, é necessário aceitar as permissões");
+        builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    //VERIFICA SE O BANCO LOCAL NÃO ESTÁ VAZIO
+    private void recuperarBancoLocal()
+    {
+        if (db.getQTDUsuarios() > 0)
+        {
+            Usuario usuario = new Usuario();
+            usuario = db.recuperarUsuario();
+            Log.d("LOGIN",usuario.getId());
+        }
     }
 }

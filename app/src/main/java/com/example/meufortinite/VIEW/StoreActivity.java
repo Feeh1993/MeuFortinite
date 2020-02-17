@@ -1,9 +1,13 @@
-package com.example.meufortinite;
+package com.example.meufortinite.VIEW;
 
 import android.os.Bundle;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.meufortinite.MODEL.Store;
+import com.example.meufortinite.R;
+import com.example.meufortinite.VIEW.ADAPTER.StoreAdapter;
 
 import java.util.ArrayList;
 

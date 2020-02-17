@@ -1,4 +1,6 @@
-package com.example.meufortinite;
+package com.example.meufortinite.MODEL;
+
+import com.example.meufortinite.MODEL.Stats;
 
 import java.util.ArrayList;
 
