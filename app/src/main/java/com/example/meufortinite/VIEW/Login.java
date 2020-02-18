@@ -80,13 +80,13 @@ public class Login extends AppCompatActivity
 
     public  MediaPlayer mp;
     private DatabaseHelper db;
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
 
     @Override
     protected void onStart()
     {
         super.onStart();
         db = new DatabaseHelper(getApplicationContext());
-        recuperarBancoLocal();
     }
     @Override
     protected void onSaveInstanceState(Bundle outState)
@@ -99,6 +99,7 @@ public class Login extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        recuperarBancoLocal();
         welcomeScreen = new WelcomeHelper(this, TelaBoasVindas.class);
         welcomeScreen.show(savedInstanceState);
         PermissionsUtils.ActivePermissions(this,permissoes,1);
@@ -117,7 +118,7 @@ public class Login extends AppCompatActivity
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
-                            Log.d("Login","Senha= "+edtSenha.getText().toString()+"\n Senha Server: "+dataSnapshot.getValue().toString());
+                            Log.d("LOGIN_ACVTY","Senha= "+edtSenha.getText().toString()+"\n Senha Server: "+dataSnapshot.getValue().toString());
                             if (edtSenha.getText().toString().equals(dataSnapshot.getValue().toString()))
                             {
                                 prgLogin.setVisibility(View.GONE);
@@ -273,9 +274,32 @@ public class Login extends AppCompatActivity
                     lifeTimeStat = response.body().getLifeTimeStats();
 
                     Intent intent = new Intent(Login.this, InfoConta.class);
-                    //salvando usuário logado pela primeira vez
-                    db.atualizarUsuario(new Usuario(accountId));
+                    String[] score = lifeTimeStat.get(6).getValue().split(",");
 
+                    //salvando usuário logado pela primeira vez
+                    Usuario user = new Usuario(accountId,score[0]+"."+score[1],lifeTimeStat.get(11).getValue(),
+                            lifeTimeStat.get(10).getValue(),lifeTimeStat.get(5).getValue(),
+                            lifeTimeStat.get(3).getValue(),lifeTimeStat.get(1).getValue(),
+                            lifeTimeStat.get(8).getValue());
+                    Log.d("LOGIN_ACVTY", "DADOS USER: " +
+                            "\n ID: " + user.getId()+
+                            "\n KILL: "+ user.getKill()+
+                            "\n KD: " + user.getKd()+
+                            "\n SCORE: "+ user.getScore()+
+                            "\n 3PRI: " + user.getTrespri()+
+                            "\n 10PRI: "+ user.getDezpri()+
+                            "\n 25PRI: " + user.getVintecincopri()+
+                            "\n Vitoria: "+ user.getVitorias()+
+                            "\n"+ lifeTimeStat.get(0).getKey()+":" + lifeTimeStat.get(0).getValue()+
+                            "\n"+ lifeTimeStat.get(2).getKey()+":" + lifeTimeStat.get(2).getValue()+
+                            "\n"+ lifeTimeStat.get(4).getKey()+":" + lifeTimeStat.get(4).getValue()+
+                            "\n"+ lifeTimeStat.get(7).getKey()+":" + lifeTimeStat.get(7).getValue()+
+                            "\n"+ lifeTimeStat.get(9).getKey()+":" + lifeTimeStat.get(9).getValue()
+                          );
+                    db.inserirUser(user);
+                    Log.d("LOGIN_ACVTY", "DADOS USER: \n ID: " + user.getId()+
+                            "\n KILL: "+ user.getKill());
+                    Log.d("LOGIN_ACVTY", "Banco atualizado: " + db.getQTDUsuarios()+" usuarios salvos");
                     ArrayList<Stats> stats = new ArrayList<>();
 
                     intent.putExtra(EXTRA_ACCOUNT, accountId);
@@ -288,7 +312,7 @@ public class Login extends AppCompatActivity
             @Override
             public void onFailure(Call<ItemResponse> call,
                                   Throwable t) {
-                Log.d("ENQUEUE", "onFailure: " + t.getMessage());
+                Log.d("LOGIN_ACVTY", "onFailure: " + t.getMessage());
             }
         });
 
@@ -389,11 +413,19 @@ public class Login extends AppCompatActivity
     //VERIFICA SE O BANCO LOCAL NÃO ESTÁ VAZIO
     private void recuperarBancoLocal()
     {
-        if (db.getQTDUsuarios() > 0)
+        try
         {
-            Usuario usuario = new Usuario();
-            usuario = db.recuperarUsuario();
-            Log.d("LOGIN",usuario.getId());
+            if (db.getQTDUsuarios() > 0 )
+            {
+                usuarios.addAll( db.recuperarUsuarios());
+                Log.d("LOGIN_ACVTY",usuarios.get(0).getId());
+            }
+        }
+        catch (NullPointerException e)
+        {
+            usuarios = null;
+            Log.d("LOGIN_ACVTY","VAZIO ESSA PORRA");
         }
     }
+
 }

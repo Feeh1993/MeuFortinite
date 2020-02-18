@@ -30,7 +30,7 @@ public class Loading extends AppCompatActivity
 {
     private TextView txt;
     private DatabaseHelper dbLocal;
-    private Usuario usuario;
+    private  ArrayList<Usuario> usuarios = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,9 +62,9 @@ public class Loading extends AppCompatActivity
             public void run()
             {
                     txt.setText("bem vindo de volta ");
+                consultarDados();
             }
         }, SPLASH_DISPLAY_LENGTH);
-        consultarDados();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Loading extends AppCompatActivity
     private void consultarDados()
     {
         recuperarBancoLocal();
-        if (usuario != null)
+        if (usuarios != null)
         {
             startActivity(new Intent(getApplicationContext(), InfoConta.class));
         }
@@ -87,11 +87,17 @@ public class Loading extends AppCompatActivity
     //VERIFICA SE O BANCO LOCAL NÃO ESTÁ VAZIO
     private void recuperarBancoLocal()
     {
-        if (dbLocal.getQTDUsuarios() > 0)
+        try
         {
-            usuario = new Usuario();
-            usuario = dbLocal.recuperarUsuario();
-            Log.d("LOADING",usuario.getId());
+            if (dbLocal.getQTDUsuarios() > 0 )
+            {
+                usuarios.addAll( dbLocal.recuperarUsuarios());
+                Log.d("LOADING_",usuarios.get(0).getId());
+            }
+        }
+        catch (NullPointerException e)
+        {
+            usuarios = null;
         }
     }
 

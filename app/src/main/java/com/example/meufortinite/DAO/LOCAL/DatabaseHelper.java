@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 
 import com.example.meufortinite.MODEL.Usuario;
@@ -33,8 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     // Creating Tables
     @Override
-    public void onCreate(SQLiteDatabase db) {
-
+    public void onCreate(SQLiteDatabase db)
+    {
         // create notes table
         db.execSQL(Usuario.CREATE_TABLE);
     }
@@ -50,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public long inserirBook(Usuario usuario)
+    public long inserirUser(Usuario usuario)
     {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
@@ -59,6 +60,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // `id` and `timestamp` will be inserted automatically.
         // no need to add them
         values.put(Usuario.COLUMN_ID, usuario.id);
+        values.put(Usuario.COLUMN_DEZPRIMEIROS, usuario.dezpri);
+        values.put(Usuario.COLUMN_TRESPRIMEIROS, usuario.trespri);
+        values.put(Usuario.COLUMN_VINTECINCOPRIMEIROS, usuario.vintecincopri);
+        values.put(Usuario.COLUMN_KD, usuario.kd);
+        values.put(Usuario.COLUMN_KILL, usuario.kill);
+        values.put(Usuario.COLUMN_VITORIAS, usuario.vitorias);
+        values.put(Usuario.COLUMN_SCORE, usuario.score);
+
 
         // insert row
         long id = db.insert(Usuario.TABLE_NAME, null, values);
@@ -82,7 +91,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
         if (cursor != null)
             cursor.moveToFirst();
         Usuario usuario = new Usuario(
-                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_ID)));
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_SCORE)),
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_KD)),
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_KILL)),
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_VINTECINCOPRIMEIROS)),
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_DEZPRIMEIROS)),
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_TRESPRIMEIROS)),
+                cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_VITORIAS)));
 
         // close the db connection
         cursor.close();
@@ -106,6 +122,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
             {
                 Usuario usuario = new Usuario();
                 usuario.setId(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_ID)));
+                usuario.setScore(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_SCORE)));
+                usuario.setKd(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_KD)));
+                usuario.setKill(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_KILL)));
+                usuario.setVintecincopri(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_VINTECINCOPRIMEIROS)));
+                usuario.setDezpri(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_DEZPRIMEIROS)));
+                usuario.setTrespri(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_TRESPRIMEIROS)));
+                usuario.setVitorias(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_VITORIAS)));
 
                 usuarios.add(usuario);
             } while (cursor.moveToNext());
@@ -117,28 +140,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // return notes list
         return usuarios;
     }
-    public Usuario recuperarUsuario()
-    {
-        Usuario usuario = new Usuario();
 
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + Usuario.TABLE_NAME ;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do
-            {
-                usuario.setId(cursor.getString(cursor.getColumnIndex(Usuario.COLUMN_ID)));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-
-        // return notes list
-        return usuario;
-    }
 
     public int getQTDUsuarios()
     {
@@ -160,16 +162,33 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         ContentValues values = new ContentValues();
         values.put(Usuario.COLUMN_ID, usuario.id);
-        // updating row
+        values.put(Usuario.COLUMN_DEZPRIMEIROS, usuario.dezpri);
+        values.put(Usuario.COLUMN_TRESPRIMEIROS, usuario.trespri);
+        values.put(Usuario.COLUMN_VINTECINCOPRIMEIROS, usuario.vintecincopri);
+        values.put(Usuario.COLUMN_KD, usuario.kd);
+        values.put(Usuario.COLUMN_KILL, usuario.kill);
+        values.put(Usuario.COLUMN_SCORE, usuario.score);
+        values.put(Usuario.COLUMN_VITORIAS, usuario.vitorias);
         return db.update(Usuario.TABLE_NAME, values, Usuario.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(usuario.getId())});
     }
 
-    public void deletarUser(Usuario usuario)
+    public void deletarUser(Usuario usuario, String ID)
     {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(Usuario.TABLE_NAME, Usuario.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(usuario.getId())});
-        db.close();
+        if (ID == "")
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(Usuario.TABLE_NAME, Usuario.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(usuario.getId())});
+            db.close();
+        }
+        else
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(Usuario.TABLE_NAME, Usuario.COLUMN_ID + " = ?",
+                    new String[]{ID});
+            db.close();
+        }
+
     }
 }

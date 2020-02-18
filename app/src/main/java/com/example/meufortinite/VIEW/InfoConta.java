@@ -14,14 +14,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.meufortinite.DAO.API.FornightService;
+import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.MODEL.Stats;
 import com.example.meufortinite.MODEL.Store;
+import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,6 +46,9 @@ public class InfoConta extends AppCompatActivity
     private ImageButton btnCopiar,btnShare;
     private Button btnLoja;
     private TextView txtVitorias,txtScore,txtKill,txtKD,txt25Prim,txt10Pri,txt3Pri,txtId;
+    private DatabaseHelper db;
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
+
 
 
     @Override
@@ -48,23 +56,43 @@ public class InfoConta extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_conta);
+        db = new DatabaseHelper(getApplicationContext());
         fazerCast();
+        try
+        {
+            Log.d("INFOCONTA_","USUARIO DADOS ONLINE ADICIONADO ");
+            Intent accountIntent = getIntent();
+            acc = accountIntent.getStringExtra("account");
+            Intent statIntent = getIntent();
+            stats = statIntent.getParcelableArrayListExtra("stats");
+            wins = stats.get(8).getValue();
+            txtVitorias.setText("Voce Tem " + wins + " vitorias");
+            txt3Pri.setText("no top 3: " + stats.get(1).getValue() + " vezes");
+            txt10Pri.setText(" no top 10: " + stats.get(3).getValue() + "vezes");
+            txt25Prim.setText( "Ficou entre os 25 primeiros: " + stats.get(5).getValue() + " vezes");
+            txtId.setText("seu ID da conta é: " + acc);
+            txtKD.setText("seu K/d é de " + stats.get(11).getValue() + " ");
+            txtKill.setText( "Você tem " + stats.get(10).getValue() + " kills");
+            txtScore.setText( "Seu score é " + stats.get(6).getValue() + " ");
+        }
+        catch (NullPointerException e)
+        {
+            if (db.getQTDUsuarios() > 0)
+            {
+                usuarios.clear();
+                usuarios.addAll(db.recuperarUsuarios());
+                Log.d("INFOCONTA_","USUARIO BANCO LOCAL ADICIONADO ");
+                txtVitorias.setText("Voce Tem " + usuarios.get(0).getVitorias() + " vitorias");
+                txt3Pri.setText("no top 3: " + usuarios.get(0).getTrespri() + " vezes");
+                txt10Pri.setText(" no top 10: " + usuarios.get(0).getDezpri() + "vezes");
+                txt25Prim.setText( "Ficou entre os 25 primeiros: " + usuarios.get(0).getVintecincopri() + " vezes");
+                txtId.setText("seu ID da conta é: " + usuarios.get(0).getId());
+                txtKD.setText("seu K/d é de " + usuarios.get(0).getKd() + " ");
+                txtKill.setText( "Você tem " + usuarios.get(0).getKill() + " kills");
+                txtScore.setText( "Seu score é " + usuarios.get(0).getScore() + " ");
+            }
+        }
 
-        Intent accountIntent = getIntent();
-        acc = accountIntent.getStringExtra("account");
-        Intent statIntent = getIntent();
-        stats = statIntent.getParcelableArrayListExtra("stats");
-
-        wins = stats.get(8).getValue();
-
-        txtVitorias.setText("Voce Tem " + wins + " vitorias");
-        txt3Pri.setText("no top 3: " + stats.get(1).getValue() + " vezes");
-        txt10Pri.setText(" no top 10: " + stats.get(3).getValue() + "vezes");
-        txt25Prim.setText( "Ficou entre os 25 primeiros: " + stats.get(5).getValue() + " vezes");
-        txtId.setText("seu ID da conta é: " + acc);
-        txtKD.setText("seu K/d é de " + stats.get(11).getValue() + " ");
-        txtKill.setText( "Você tem " + stats.get(10).getValue() + " kills");
-        txtScore.setText( "Seu score é " + stats.get(6).getValue() + " ");
     }
 
     private void fazerCast()
