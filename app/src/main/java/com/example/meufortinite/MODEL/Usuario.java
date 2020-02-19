@@ -2,7 +2,8 @@ package com.example.meufortinite.MODEL;
 
 import android.text.TextUtils;
 
-public class Usuario {
+public class Usuario
+{
     public String id;
     public String score;
     public String kd;

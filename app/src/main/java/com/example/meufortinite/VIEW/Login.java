@@ -273,7 +273,7 @@ public class Login extends AppCompatActivity
                     accountId = response.body().getAccountId();
                     lifeTimeStat = response.body().getLifeTimeStats();
 
-                    Intent intent = new Intent(Login.this, InfoConta.class);
+                    Intent intent = new Intent(Login.this, PainelPrincipal.class);
                     String[] score = lifeTimeStat.get(6).getValue().split(",");
 
                     //salvando usuário logado pela primeira vez
@@ -296,11 +296,15 @@ public class Login extends AppCompatActivity
                             "\n"+ lifeTimeStat.get(7).getKey()+":" + lifeTimeStat.get(7).getValue()+
                             "\n"+ lifeTimeStat.get(9).getKey()+":" + lifeTimeStat.get(9).getValue()
                           );
+                    //salvando dados de acesso localmente
                     db.inserirUser(user);
+                    //salvando estado para logado
+                    ref.child(accountId).child("estado").setValue("logado");
+
                     Log.d("LOGIN_ACVTY", "DADOS USER: \n ID: " + user.getId()+
                             "\n KILL: "+ user.getKill());
                     Log.d("LOGIN_ACVTY", "Banco atualizado: " + db.getQTDUsuarios()+" usuarios salvos");
-                    ArrayList<Stats> stats = new ArrayList<>();
+
 
                     intent.putExtra(EXTRA_ACCOUNT, accountId);
                     intent.putParcelableArrayListExtra(EXTRA_STATS, lifeTimeStat);

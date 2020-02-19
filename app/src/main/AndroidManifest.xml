@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".VIEW.PainelPrincipal"></activity>
         <activity android:name=".VIEW.Loading">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".VIEW.AreaAdministrativa" />
-        <activity android:name=".VIEW.Login">
-        </activity>
+        <activity android:name=".VIEW.Login" />
         <activity
             android:name=".VIEW.TelaBoasVindas"
             android:theme="@style/WelcomeScreenTheme" />

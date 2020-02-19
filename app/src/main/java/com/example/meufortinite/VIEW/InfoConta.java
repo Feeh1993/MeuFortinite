@@ -20,10 +20,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.meufortinite.DAO.API.FornightService;
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
+import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.Stats;
 import com.example.meufortinite.MODEL.Store;
 import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -39,15 +41,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class InfoConta extends AppCompatActivity
 {
 
-    private String acc;
     private List<Stats> stats;
-    private String wins;
+    private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
 
     private ImageButton btnCopiar,btnShare;
-    private Button btnLoja;
+    private Button btnLoja,btnLogout;
     private TextView txtVitorias,txtScore,txtKill,txtKD,txt25Prim,txt10Pri,txt3Pri,txtId;
     private DatabaseHelper db;
     private ArrayList<Usuario> usuarios = new ArrayList<>();
+
+    public String vitorias = "",trespri = "",dezpri = "",vintecincopri = "",id = "",kd = "",kill = "",score = "";
 
 
 
@@ -62,18 +65,16 @@ public class InfoConta extends AppCompatActivity
         {
             Log.d("INFOCONTA_","USUARIO DADOS ONLINE ADICIONADO ");
             Intent accountIntent = getIntent();
-            acc = accountIntent.getStringExtra("account");
             Intent statIntent = getIntent();
             stats = statIntent.getParcelableArrayListExtra("stats");
-            wins = stats.get(8).getValue();
-            txtVitorias.setText("Voce Tem " + wins + " vitorias");
-            txt3Pri.setText("no top 3: " + stats.get(1).getValue() + " vezes");
-            txt10Pri.setText(" no top 10: " + stats.get(3).getValue() + "vezes");
-            txt25Prim.setText( "Ficou entre os 25 primeiros: " + stats.get(5).getValue() + " vezes");
-            txtId.setText("seu ID da conta é: " + acc);
-            txtKD.setText("seu K/d é de " + stats.get(11).getValue() + " ");
-            txtKill.setText( "Você tem " + stats.get(10).getValue() + " kills");
-            txtScore.setText( "Seu score é " + stats.get(6).getValue() + " ");
+            id = accountIntent.getStringExtra("account");
+            vitorias = stats.get(8).getValue();
+            trespri = stats.get(1).getValue();
+            dezpri = stats.get(3).getValue();
+            vintecincopri = stats.get(5).getValue();
+            kd = stats.get(11).getValue();
+            kill = stats.get(10).getValue();
+            score =  stats.get(6).getValue();
         }
         catch (NullPointerException e)
         {
@@ -82,21 +83,30 @@ public class InfoConta extends AppCompatActivity
                 usuarios.clear();
                 usuarios.addAll(db.recuperarUsuarios());
                 Log.d("INFOCONTA_","USUARIO BANCO LOCAL ADICIONADO ");
-                txtVitorias.setText("Voce Tem " + usuarios.get(0).getVitorias() + " vitorias");
-                txt3Pri.setText("no top 3: " + usuarios.get(0).getTrespri() + " vezes");
-                txt10Pri.setText(" no top 10: " + usuarios.get(0).getDezpri() + "vezes");
-                txt25Prim.setText( "Ficou entre os 25 primeiros: " + usuarios.get(0).getVintecincopri() + " vezes");
-                txtId.setText("seu ID da conta é: " + usuarios.get(0).getId());
-                txtKD.setText("seu K/d é de " + usuarios.get(0).getKd() + " ");
-                txtKill.setText( "Você tem " + usuarios.get(0).getKill() + " kills");
-                txtScore.setText( "Seu score é " + usuarios.get(0).getScore() + " ");
+                id = usuarios.get(0).getId();
+                vitorias = usuarios.get(0).getVitorias();
+                trespri = usuarios.get(0).getTrespri();
+                dezpri = usuarios.get(0).getDezpri();
+                vintecincopri = usuarios.get(0).getVintecincopri();
+                kd = usuarios.get(0).getKd();
+                kill = usuarios.get(0).getKill();
+                score =  usuarios.get(0).getScore();
             }
         }
+        txtVitorias.setText("Voce Tem " + vitorias + " vitorias");
+        txt3Pri.setText("no top 3: " + trespri + " vezes");
+        txt10Pri.setText(" no top 10: " + dezpri + "vezes");
+        txt25Prim.setText( "Ficou entre os 25 primeiros: " + vintecincopri + " vezes");
+        txtId.setText("seu ID da conta é: " + id);
+        txtKD.setText("seu K/d é de " + kd + " ");
+        txtKill.setText( "Você tem " + kill + " kills");
+        txtScore.setText( "Seu score é " + score + " ");
 
     }
 
     private void fazerCast()
     {
+        btnLogout = findViewById(R.id.btnLogout);
         btnLoja = findViewById(R.id.btnLojaInfo);
         btnCopiar = findViewById(R.id.btnCopiarIdInfo);
         btnShare = findViewById(R.id.btnShareIdInfo);
@@ -119,9 +129,9 @@ public class InfoConta extends AppCompatActivity
             public void onClick(View view)
             {
                 txtId.setTextColor(getResources().getColor(R.color.verde));
-                btnCopiar.setBackgroundResource(R.drawable.ic_success);
+                btnCopiar.setImageResource(R.drawable.ic_success);
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Texto Copiado",acc);
+                ClipData clipData = ClipData.newPlainText("Texto Copiado",id);
                 clipboard.setPrimaryClip(clipData);
                 Toast.makeText(getApplicationContext(),"Id copiado para area de transferencia!",Toast.LENGTH_LONG).show();
             }
@@ -130,6 +140,15 @@ public class InfoConta extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"Compartilhando id!",Toast.LENGTH_LONG).show();
+            }
+        });
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Toast.makeText(getApplicationContext(),"ID desconectado :)",Toast.LENGTH_LONG).show();
+                ref.child(id).child("estado").setValue("deslogado");
+                startActivity(new Intent(getApplicationContext(),Login.class));
             }
         });
 

@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
@@ -31,6 +32,8 @@ public class Loading extends AppCompatActivity
     private TextView txt;
     private DatabaseHelper dbLocal;
     private  ArrayList<Usuario> usuarios = new ArrayList<>();
+    private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -80,7 +83,30 @@ public class Loading extends AppCompatActivity
         recuperarBancoLocal();
         if (usuarios != null)
         {
-            startActivity(new Intent(getApplicationContext(), InfoConta.class));
+            ref.child(usuarios.get(0).id).child("estado").addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                {
+                    if (dataSnapshot.exists())
+                    {
+                        if (dataSnapshot.getValue().toString().equals("deslogado"))
+                        {
+                            startActivity(new Intent(getApplicationContext(), Login.class));
+                        }
+                        else
+                        {
+                            startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                        }
+                    }
+                    else startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError)
+                {
+
+                }
+            });
         }
         else startActivity(new Intent(getApplicationContext(), Login.class));
     }
