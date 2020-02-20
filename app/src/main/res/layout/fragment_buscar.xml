@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VIEW.FRAGMENT.Buscar">
+
+    <LinearLayout
+        android:id="@+id/lnlTopo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="vertical"></LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lnlMeio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/imgbSearch_BUSCAR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:src="@drawable/ic_world" />
+
+        <com.tomer.fadingtextview.FadingTextView
+            android:id="@+id/fadingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:textStyle="bold|italic"
+            android:typeface="serif"
+            android:visibility="gone"
+            app:texts="@array/text"
+            app:timeout="1000" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lnlFundo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"></LinearLayout>
+</FrameLayout>

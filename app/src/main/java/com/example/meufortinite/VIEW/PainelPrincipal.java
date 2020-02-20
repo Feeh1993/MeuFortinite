@@ -34,12 +34,14 @@ public class PainelPrincipal extends AppCompatActivity
     private int[] imageResId = {
             R.drawable.ic_statiscs,
             R.drawable.ic_amigos,
+            R.drawable.ic_search,
             R.drawable.ic_market,
             R.drawable.ic_settings
     };
     private int[] imageResIdChecked = {
             R.drawable.ic_statiscs_check,
             R.drawable.ic_amigos_check,
+            R.drawable.ic_search_clicked,
             R.drawable.ic_market_click,
             R.drawable.ic_settings_check
     };
@@ -84,7 +86,7 @@ public class PainelPrincipal extends AppCompatActivity
                     }
                 }
         );
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(2);
     }
 
     private void fazerCast()
@@ -118,7 +120,7 @@ public class PainelPrincipal extends AppCompatActivity
     {
         if (tabsInBack == 1 )
         {
-            viewPager.setCurrentItem(0);
+            viewPager.setCurrentItem(2);
             tabsInBack = 0;
         }
         else

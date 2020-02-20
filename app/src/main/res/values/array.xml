@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="text">
+        <item>Buscando jogadores online...</item>
+        <item>Tenha paciencia a busca pode demorar...</item>
+        <item>Buscando jogadores online...</item>
+        <item>Estamos encontrando jogadores com base nos seus filtros</item>
+        <item>Buscando jogadores online...</item>
+    </string-array>
+</resources>

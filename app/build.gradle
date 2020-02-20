@@ -44,6 +44,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     //dialog fragment
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
+
+    // animação de textos
+    implementation 'com.tomer:fadingtextview:2.5'
+
     //tela de boas vindas
     implementation 'com.stephentuso:welcome:1.4.1'
 }
