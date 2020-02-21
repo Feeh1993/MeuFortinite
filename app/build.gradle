@@ -50,4 +50,5 @@ dependencies {
 
     //tela de boas vindas
     implementation 'com.stephentuso:welcome:1.4.1'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 }
