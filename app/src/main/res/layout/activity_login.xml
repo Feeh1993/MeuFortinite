@@ -20,6 +20,7 @@
         android:typeface="serif" />
 
     <LinearLayout
+        android:id="@+id/lnlMeio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -75,6 +76,8 @@
                 android:layout_weight="0.3"
                 android:background="@null"
                 app:srcCompat="@drawable/ic_pc" />
+
+
         </LinearLayout>
 
         <EditText
@@ -115,6 +118,20 @@
                 android:layout_marginRight="3dp"
                 android:visibility="gone" />
         </FrameLayout>
+
+        <Button
+            android:id="@+id/btnPro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@null"
+            android:drawableRight="@drawable/ic_premium"
+            android:text="Clique para ser pró por apenas R$ 3,99 e obtenha vantagens"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/main_green_color"
+            android:textStyle="bold"
+            android:typeface="sans" />
 
     </LinearLayout>
 

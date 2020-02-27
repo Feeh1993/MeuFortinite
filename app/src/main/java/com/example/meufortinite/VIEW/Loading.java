@@ -81,8 +81,9 @@ public class Loading extends AppCompatActivity
     private void consultarDados()
     {
         recuperarBancoLocal();
-        if (usuarios != null)
+        try
         {
+            Log.d("LOADING_", "SIZE USUARIOS"+String.valueOf(usuarios.size()));
             ref.child(usuarios.get(0).id).child("estado").addListenerForSingleValueEvent(new ValueEventListener()
             {
                 @Override
@@ -107,14 +108,17 @@ public class Loading extends AppCompatActivity
 
                 }
             });
+        } catch (IndexOutOfBoundsException e)
+        {
+            startActivity(new Intent(getApplicationContext(), Login.class));
         }
-        else startActivity(new Intent(getApplicationContext(), Login.class));
     }
     //VERIFICA SE O BANCO LOCAL NÃO ESTÁ VAZIO
     private void recuperarBancoLocal()
     {
         try
         {
+            Log.d("LOADING_","SIZE BANCO "+dbLocal.getQTDUsuarios());
             if (dbLocal.getQTDUsuarios() > 0 )
             {
                 usuarios.addAll( dbLocal.recuperarUsuarios());

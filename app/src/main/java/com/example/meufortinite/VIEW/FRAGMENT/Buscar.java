@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.meufortinite.R;
 import com.tomer.fadingtextview.FadingTextView;
@@ -71,6 +73,7 @@ public class Buscar extends Fragment
                 }
             }
         });
+
      return view;
     }
 
@@ -79,7 +82,6 @@ public class Buscar extends Fragment
         frmlTopo = (FrameLayout) view.findViewById(R.id.frmlTXTRESUMO_buscar);
         lnlTopo = (LinearLayout) view.findViewById(R.id.lnlTopo_buscar);
         lnlFundo = (LinearLayout) view.findViewById(R.id.lnlFundo_buscar);
-
         swtchDuo = (Switch) view.findViewById(R.id.swtchDuo_buscar);
         swtchSQD = (Switch) view.findViewById(R.id.swtchSquad_buscar);
         swtchMeuHS = (Switch) view.findViewById(R.id.swtchMeuHeadSet_buscar);

@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity
     private FirebaseAuth user = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private FrameLayout frmlPost;
     private EditText edtSenha;
-    private Button btnLogar;
+    private Button btnLogar,btnPro;
 
     private String accountId;
     private ArrayList<Stats> lifeTimeStat;
@@ -234,6 +234,13 @@ public class Login extends AppCompatActivity
                 }
             }
         });
+        btnPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"Virando Pró",Toast.LENGTH_LONG).show();
+            }
+        });
+
 
 
     }
@@ -332,6 +339,8 @@ public class Login extends AppCompatActivity
         btnPC = findViewById(R.id.imbtnPC);
         btnXBX = findViewById(R.id.imbtnXBX);
         btnPSN = findViewById(R.id.imbtnPSN);
+        btnPro = findViewById(R.id.btnPro);
+
         frmlPost = findViewById(R.id.frml_post);
         edtSenha = findViewById(R.id.edtSenhaAdmLogin);
         btnLogar = findViewById(R.id.btnConectarLogin);

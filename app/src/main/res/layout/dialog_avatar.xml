@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btnLendarioPro"
+        android:layout_width="300dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:background="@null"
+        android:drawableRight="@drawable/ic_premium"
+        android:text="Clique para desbloquear os icones lendários por apenas R$ 2,99"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/main_green_color"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <Button
+        android:id="@+id/btnMiticoPro"
+        android:layout_width="300dp"
+        android:layout_height="170dp"
+        android:layout_gravity="bottom|center"
+        android:background="@null"
+        android:drawableRight="@drawable/ic_premium"
+        android:text="Clique para desbloquear os icones Mitícos por apenas R$ 3,99"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/main_green_color"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textView01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Icones Raros"
+            android:textAlignment="center"
+            android:textColor="@color/raro" />
+
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/gridRaro1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:columnCount="4"
+            app:useDefaultMargins="true">
+
+            <ImageButton
+                android:id="@+id/imgAV1T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img11avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV2T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img29avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV3T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img21avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV4T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img14avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV5T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img16avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV6T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img27avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV7T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img2avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV8T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_raras"
+                app:srcCompat="@drawable/ic_img3avt" />
+
+        </androidx.gridlayout.widget.GridLayout>
+
+        <TextView
+            android:id="@+id/textView451"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Icones Epicos"
+            android:textAlignment="center"
+            android:textColor="@color/epica" />
+
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/gridEpicos1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:columnCount="4"
+            app:useDefaultMargins="true">
+
+            <ImageButton
+                android:id="@+id/imgAV14T1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img12avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV13T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img10avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV9T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img18avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV10T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img19avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV15T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img20avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV11T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img24avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV16T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img5avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV12T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_epica"
+                app:srcCompat="@drawable/ic_img7avt" />
+        </androidx.gridlayout.widget.GridLayout>
+
+        <TextView
+            android:id="@+id/textView5s"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Icones Lendarios"
+            android:textAlignment="center"
+            android:textColor="@color/dourado" />
+
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/gridLendario"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:columnCount="4"
+            app:useDefaultMargins="true">
+
+            <ImageButton
+                android:id="@+id/imgAV17T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img15avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV18T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img17avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV19T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img22avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV20T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img23avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV21T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img13avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV22T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img31avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV23T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img8avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV24T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_lendarias"
+                app:srcCompat="@drawable/ic_img30avt" />
+        </androidx.gridlayout.widget.GridLayout>
+
+        <TextView
+            android:id="@+id/textView5jhs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Icones Miticos"
+            android:textAlignment="center"
+            android:textColor="@color/mitico" />
+
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/gridMitico"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:columnCount="4"
+            app:useDefaultMargins="true">
+
+            <ImageButton
+                android:id="@+id/imgAV25T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img32avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV26T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img33avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV27T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img34avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV28T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img35avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV29T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img36avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV30T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img37avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV31T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img38avt" />
+
+            <ImageButton
+                android:id="@+id/imgAV32T"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bordas_mitica"
+                app:srcCompat="@drawable/ic_img4avt" />
+        </androidx.gridlayout.widget.GridLayout>
+    </LinearLayout>
+
+</FrameLayout>
