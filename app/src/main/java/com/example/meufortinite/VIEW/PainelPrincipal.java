@@ -1,30 +1,14 @@
 package com.example.meufortinite.VIEW;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
-import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.MODEL.Stats;
 import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.PPPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class PainelPrincipal extends AppCompatActivity

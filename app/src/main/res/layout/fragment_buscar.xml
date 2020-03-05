@@ -177,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:src="@drawable/ic_avt8r" />
+                android:src="@drawable/ic_img01avt" />
 
             <TextView
                 android:id="@+id/txtUserUm_buscar"
@@ -204,7 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:src="@drawable/ic_avt8r" />
+                android:src="@drawable/ic_img01avt" />
 
             <TextView
                 android:id="@+id/txtUserDois_buscar"
@@ -230,7 +230,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
-                android:src="@drawable/ic_avt8r" />
+                android:src="@drawable/ic_img01avt" />
 
             <TextView
                 android:id="@+id/txtUserTres_buscar"

@@ -48,6 +48,10 @@ dependencies {
     // animação de textos
     implementation 'com.tomer:fadingtextview:2.5'
 
+    //Método de pagamento
+    implementation 'com.android.billingclient:billing:2.0.3'
+
+
     //tela de boas vindas
     implementation 'com.stephentuso:welcome:1.4.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'

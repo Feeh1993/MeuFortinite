@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "852618055790",
-    "firebase_url": "https://meu-fortinite.firebaseio.com",
-    "project_id": "meu-fortinite",
-    "storage_bucket": "meu-fortinite.appspot.com"
+    "project_number": "339023810235",
+    "firebase_url": "https://meu-fortinite-b1108.firebaseio.com",
+    "project_id": "meu-fortinite-b1108",
+    "storage_bucket": "meu-fortinite-b1108.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:852618055790:android:903a86d36e70c4bc49d67f",
+        "mobilesdk_app_id": "1:339023810235:android:b3e9e250a7588cd055239e",
         "android_client_info": {
           "package_name": "com.example.meufortinite"
         }
       },
       "oauth_client": [
         {
-          "client_id": "852618055790-9oq048ah7b1hodolk549dj4a8qgelq8l.apps.googleusercontent.com",
+          "client_id": "339023810235-h64djp3nev151udnrvt9tjbfl78unp8c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.meufortinite",
@@ -23,20 +23,20 @@
           }
         },
         {
-          "client_id": "852618055790-vtdahrm2vnba58jce1oere98opvpkdla.apps.googleusercontent.com",
+          "client_id": "339023810235-nqv564s62kvklgvgtssddf0lrnr8reev.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZiXbTerl6XRLLBmG4RHiML_Gv_8c4Ar8"
+          "current_key": "AIzaSyCOlcQEeALbVasSTkPoMhnwnO4eGG2dRds"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "852618055790-vtdahrm2vnba58jce1oere98opvpkdla.apps.googleusercontent.com",
+              "client_id": "339023810235-nqv564s62kvklgvgtssddf0lrnr8reev.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

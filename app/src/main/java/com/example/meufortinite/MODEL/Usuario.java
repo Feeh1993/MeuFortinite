@@ -12,33 +12,9 @@ public class Usuario
     public String dezpri;
     public String trespri;
     public String vitorias;
+    public String criado;
 
-    public static final String TABLE_NAME = "usuario";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_VITORIAS = "vitorias";
-    public static final String COLUMN_TRESPRIMEIROS = "trespri";
-    public static final String COLUMN_DEZPRIMEIROS = "dezpri";
-    public static final String COLUMN_VINTECINCOPRIMEIROS = "vintecincopri";
-    public static final String COLUMN_KD = "kd";
-    public static final String COLUMN_KILL = "kill";
-    public static final String COLUMN_SCORE = "score";
-
-    // Create table SQL query
-    public static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "("
-                    + COLUMN_ID + " TEXT PRIMARY KEY,"
-                    + COLUMN_DEZPRIMEIROS + " TEXT,"
-                    + COLUMN_TRESPRIMEIROS + " TEXT,"
-                    + COLUMN_VINTECINCOPRIMEIROS + " TEXT,"
-                    + COLUMN_KD + " TEXT,"
-                    + COLUMN_KILL + " TEXT,"
-                    + COLUMN_SCORE + " TEXT,"
-                    + COLUMN_VITORIAS + " TEXT"
-                    + ")";
-
-    public Usuario(String id, String score, String kd, String kill, String vintecincopri,
-                   String dezpri, String trespri, String vitorias)
-    {
+    public Usuario(String id, String score, String kd, String kill, String vintecincopri, String dezpri, String trespri, String vitorias, String criado) {
         this.id = id;
         this.score = score;
         this.kd = kd;
@@ -47,11 +23,20 @@ public class Usuario
         this.dezpri = dezpri;
         this.trespri = trespri;
         this.vitorias = vitorias;
+        this.criado = criado;
     }
 
     public Usuario() {
     }
 
+
+    public String getCriado() {
+        return criado;
+    }
+
+    public void setCriado(String criado) {
+        this.criado = criado;
+    }
     public String getId() {
         return id;
     }
@@ -114,10 +99,6 @@ public class Usuario
 
     public void setVitorias(String vitorias) {
         this.vitorias = vitorias;
-    }
-
-    public static String getCreateTable() {
-        return CREATE_TABLE;
     }
 
 }

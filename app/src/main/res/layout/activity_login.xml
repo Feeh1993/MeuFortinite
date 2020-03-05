@@ -126,7 +126,7 @@
             android:layout_marginTop="5dp"
             android:background="@null"
             android:drawableRight="@drawable/ic_premium"
-            android:text="Clique para ser pró por apenas R$ 3,99 e obtenha vantagens"
+            android:text="Assine o pró por apenas R$ 0,99 ao mês e obtenha acesso ilimitado ao no aplicativo além de todos os avatares desbloqueados!"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/main_green_color"

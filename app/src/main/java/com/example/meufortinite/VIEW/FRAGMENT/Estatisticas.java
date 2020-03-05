@@ -1,13 +1,7 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
-
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -26,12 +20,9 @@ import com.example.meufortinite.MODEL.Stats;
 import com.example.meufortinite.MODEL.Store;
 import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
-import com.example.meufortinite.VIEW.InfoConta;
 import com.example.meufortinite.VIEW.Login;
-import com.example.meufortinite.VIEW.PainelPrincipal;
 import com.example.meufortinite.VIEW.StoreActivity;
 import com.google.firebase.database.DatabaseReference;
-
 import java.util.ArrayList;
 import java.util.List;
 

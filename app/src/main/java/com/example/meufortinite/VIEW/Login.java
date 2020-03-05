@@ -287,7 +287,7 @@ public class Login extends AppCompatActivity
                     Usuario user = new Usuario(accountId,score[0]+"."+score[1],lifeTimeStat.get(11).getValue(),
                             lifeTimeStat.get(10).getValue(),lifeTimeStat.get(5).getValue(),
                             lifeTimeStat.get(3).getValue(),lifeTimeStat.get(1).getValue(),
-                            lifeTimeStat.get(8).getValue());
+                            lifeTimeStat.get(8).getValue(),DatabaseHelper.getDateTime());
                     Log.d("LOGIN_ACVTY", "DADOS USER: " +
                             "\n ID: " + user.getId()+
                             "\n KILL: "+ user.getKill()+
@@ -297,6 +297,7 @@ public class Login extends AppCompatActivity
                             "\n 10PRI: "+ user.getDezpri()+
                             "\n 25PRI: " + user.getVintecincopri()+
                             "\n Vitoria: "+ user.getVitorias()+
+                            "\n HORAS: "+user.getCriado()+
                             "\n"+ lifeTimeStat.get(0).getKey()+":" + lifeTimeStat.get(0).getValue()+
                             "\n"+ lifeTimeStat.get(2).getKey()+":" + lifeTimeStat.get(2).getValue()+
                             "\n"+ lifeTimeStat.get(4).getKey()+":" + lifeTimeStat.get(4).getValue()+
