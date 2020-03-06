@@ -13,24 +13,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.meufortinite.DAO.API.FornightService;
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.Stats;
-import com.example.meufortinite.MODEL.Store;
 import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.Login;
-import com.example.meufortinite.VIEW.StoreActivity;
 import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class Estatisticas extends Fragment
@@ -39,7 +30,7 @@ public class Estatisticas extends Fragment
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
 
     private ImageButton btnCopiar,btnShare;
-    private Button btnLoja,btnLogout;
+    private Button btnLogout;
     private TextView txtVitorias,txtScore,txtKill,txtKD,txt25Prim,txt10Pri,txt3Pri,txtId;
     private DatabaseHelper db;
     private ArrayList<Usuario> usuarios = new ArrayList<>();
@@ -88,7 +79,6 @@ public class Estatisticas extends Fragment
     private void fazerCast(View view)
     {
         btnLogout = view.findViewById(R.id.btnLogout);
-        btnLoja = view.findViewById(R.id.btnLojaInfo);
         btnCopiar = view.findViewById(R.id.btnCopiarIdInfo);
         btnShare = view.findViewById(R.id.btnShareIdInfo);
         txtVitorias = view.findViewById(R.id.txtVitoriasInfo);
@@ -99,12 +89,6 @@ public class Estatisticas extends Fragment
         txt10Pri = view.findViewById(R.id.txt10PriInfo);
         txt3Pri = view.findViewById(R.id.txt3PriInfo);
         txtId = view.findViewById(R.id.txtIDInfo);
-        btnLoja.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLoja();
-            }
-        });
         btnCopiar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -135,28 +119,7 @@ public class Estatisticas extends Fragment
 
     }
 
-    private void showLoja()
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.fortnitetracker.com/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        retrofit.create(FornightService.class).getStore().enqueue(new Callback<List<Store>>() {
-            @Override
-            public void onResponse(Call<List<Store>> call, Response<List<Store>> response) {
-                Intent storeIntent = new Intent(getContext(), StoreActivity.class);
-                ArrayList<Store> stores = new ArrayList<>();
-                stores.addAll(response.body());
-                storeIntent.putParcelableArrayListExtra("stores", stores);
-                startActivity(storeIntent);
-            }
 
-            @Override
-            public void onFailure(Call<List<Store>> call, Throwable t) {
-                Log.d("InfoConta", t.getMessage());
-            }
-        });
-    }
 
 
 }

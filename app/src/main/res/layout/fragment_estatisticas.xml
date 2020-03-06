@@ -273,18 +273,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnLojaInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_margin="5dp"
-            android:background="@drawable/bordas_fundo"
-            android:elevation="2dp"
-            android:text="Ver Loja"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold|italic" />
     </LinearLayout>
 
 </FrameLayout>

@@ -29,8 +29,6 @@
         <activity
             android:name=".VIEW.TelaBoasVindas"
             android:theme="@style/WelcomeScreenTheme" />
-        <activity android:name=".VIEW.InfoConta" />
-        <activity android:name=".VIEW.StoreActivity" />
     </application>
 
 </manifest>

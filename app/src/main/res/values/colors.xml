@@ -6,7 +6,8 @@
     <color name="verde">#04B404</color>
     <color name="dourado">#FFD700</color>
     <color name="mitico">#DAA520</color>
-    <color name="epica">#A000a0</color>
-    <color name="raro">#0101FF</color>
+    <color name="epica">#8643BA</color>
+    <color name="raro">#2C71B6</color>
+    <color name="incomum">#41852D</color>
 
 </resources>
