@@ -48,11 +48,28 @@ dependencies {
     // animação de textos
     implementation 'com.tomer:fadingtextview:2.5'
 
+    // chat
+    implementation 'com.github.stfalcon:chatkit:0.3.3'
+
     //Método de pagamento
     implementation 'com.android.billingclient:billing:2.0.3'
 
 
     //tela de boas vindas
     implementation 'com.stephentuso:welcome:1.4.1'
+
+    //rounded view
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    //circularImageView Library for showing images in circles
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+    //Picasso library for showing pictures
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //ripple layout
+    implementation 'com.balysv:material-ripple:1.0.2'
+    implementation 'com.github.jrvansuita:PickImage:2.2.4'
+    implementation 'com.miguelcatalan:materialsearchview:1.0.0'
+
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
 }

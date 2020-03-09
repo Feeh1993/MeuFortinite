@@ -1,15 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".VIEW.FRAGMENT.Amigos">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/Rec_amigos"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnVoltar_busca"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bordas_vazias"
+            android:src="@drawable/ic_close" />
+
+        <EditText
+            android:id="@+id/edtBuscar_busca"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@drawable/rounded_edittext"
+            android:drawableLeft="@drawable/search_icon"
+            android:ems="10"
+            android:hint="Digite o nick ou id "
+            android:inputType="textPersonName"
+            android:padding="6dp"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtUsuarios_Busca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="3dp"
+        android:text="Usuarios encontrados"
+        android:textColor="@color/colorPrimary"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/prgbUser_Busca"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recBuscaUsuarios_Busca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutAnimation="@anim/layout_animation"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_margin="3dp" />
+    </FrameLayout>
+
+
+</LinearLayout>

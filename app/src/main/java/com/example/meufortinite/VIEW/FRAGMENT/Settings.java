@@ -30,6 +30,7 @@ public class Settings extends Fragment
     private Switch swtchNtficacao,swtchOcultar;
     private DatabaseHelper db;
     private ArrayList<Avatar> avatars = new ArrayList<>();
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
 
 
     public Settings()
@@ -50,6 +51,7 @@ public class Settings extends Fragment
         {
             avatars.clear();
             avatars.addAll(db.recuperarAvatar());
+            usuarios.addAll(db.recuperarUsuarios());
             imgTrocarImg.setImageResource(Avatar.identificarAvatar(Integer.parseInt(avatars.get(0).getAvatar())));
             Log.d("SETTINGS_","AVATAR: "+avatars.get(0).getAvatar());
             Log.d("SETTINGS_","HORA DA ATUALIZAÇÃO: "+avatars.get(0).getCriado());
@@ -97,6 +99,8 @@ public class Settings extends Fragment
                 {
                     Bundle bundle = new Bundle();
                     bundle.putInt("id_avt",avatars.get(0).getId());
+                    Log.d("SETTINGS_","IDUSER: "+usuarios.get(0).getId());
+                    bundle.putString("id_user",usuarios.get(0).getId());
                     intent.putExtras(bundle);
                 }
                 startActivity(intent);

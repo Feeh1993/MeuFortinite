@@ -30,7 +30,8 @@
             android:id="@+id/horizontal_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
@@ -43,26 +44,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginRight="3dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/bordas_fundo"
-        android:elevation="2dp"
-        android:padding="5dp">
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textLongMessage"
-            android:text="Atualiza em 12:00"
-            android:textAlignment="center"
-            android:textColor="@color/verde"
-            android:textStyle="bold|italic" />
-    </FrameLayout>
 
 </FrameLayout>

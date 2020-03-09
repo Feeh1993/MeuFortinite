@@ -27,9 +27,12 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.DAO.REMOTO.PermissionsUtils;
 import com.example.meufortinite.MODEL.ItemResponse;
+import com.example.meufortinite.MODEL.User;
 import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.MODEL.Stats;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +42,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.stephentuso.welcome.WelcomeHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,6 +87,7 @@ public class Login extends AppCompatActivity
     public  MediaPlayer mp;
     private DatabaseHelper db;
     private ArrayList<Usuario> usuarios = new ArrayList<>();
+    private String name = "";
 
     @Override
     protected void onStart()
@@ -276,11 +283,10 @@ public class Login extends AppCompatActivity
                     prgBuscar.setVisibility(View.GONE);
                 }
                 else{
-
+                    name = response.body().getEpicUserHandle();
                     accountId = response.body().getAccountId();
                     lifeTimeStat = response.body().getLifeTimeStats();
 
-                    Intent intent = new Intent(Login.this, PainelPrincipal.class);
                     String[] score = lifeTimeStat.get(6).getValue().split(",");
 
                     //salvando usuário logado pela primeira vez
@@ -306,18 +312,13 @@ public class Login extends AppCompatActivity
                           );
                     //salvando dados de acesso localmente
                     db.inserirUser(user);
-                    //salvando estado para logado
-                    ref.child(accountId).child("estado").setValue("logado");
 
                     Log.d("LOGIN_ACVTY", "DADOS USER: \n ID: " + user.getId()+
                             "\n KILL: "+ user.getKill());
                     Log.d("LOGIN_ACVTY", "Banco atualizado: " + db.getQTDUsuarios()+" usuarios salvos");
 
-
-                    intent.putExtra(EXTRA_ACCOUNT, accountId);
-                    intent.putParcelableArrayListExtra(EXTRA_STATS, lifeTimeStat);
-                    prgBuscar.setVisibility(View.GONE);
-                    startActivity(intent);
+                    //SALVANDO USUARIO NO BANCO FIREBASE
+                    salvar(user.id,name);
                 }
             }
 
@@ -345,18 +346,6 @@ public class Login extends AppCompatActivity
         frmlPost = findViewById(R.id.frml_post);
         edtSenha = findViewById(R.id.edtSenhaAdmLogin);
         btnLogar = findViewById(R.id.btnConectarLogin);
-        mp = MediaPlayer.create(Login.this,R.raw.forti_theme);
-        mp.start();
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                if (mp != null)
-                {
-                    mp.release();;
-                    mp = null;
-                }
-            }
-        });
 
     }
     private void iniciarAnimacao()
@@ -394,8 +383,6 @@ public class Login extends AppCompatActivity
         }, SPLASH_DISPLAY_LENGTH);
     }
 
-    private void searchItems() {
-    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
@@ -440,6 +427,36 @@ public class Login extends AppCompatActivity
             usuarios = null;
             Log.d("LOGIN_ACVTY","VAZIO ESSA PORRA");
         }
+    }
+
+    private void salvar(final String id,String nick)
+    {
+
+        User usuario = new User(0,nick,"logado",null);
+        Map<String, Object> userMap = usuario.mapearUsuario();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/usuarios/"+id, userMap);
+        ref.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                prgBuscar.setVisibility(View.GONE);
+                new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText("Cadastrado!")
+                        .setContentText("Seu perfil básico foi criado com sucesso!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
+                        {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog)
+                            {
+                                startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                            }
+                        })
+                        .show();
+            }
+        });
+
     }
 
 }

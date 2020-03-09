@@ -11,9 +11,12 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
+import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.Avatar;
 import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -30,6 +33,9 @@ public class SelecionarAvatar extends AppCompatActivity
     private DatabaseHelper db;
     private int id = 1;
 
+    private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
+    private String idUser = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,6 +47,7 @@ public class SelecionarAvatar extends AppCompatActivity
         {
             Bundle bundle = getIntent().getExtras();
             id = bundle.getInt("id_avt");
+            idUser = bundle.getString("id_user");
         }
         fazerCast();
 
@@ -241,11 +248,13 @@ public class SelecionarAvatar extends AppCompatActivity
                                     {
                                         Log.d("SELECION_", "Banco atualizado Entrou no if: REPeTICAO: "+x+" \ne \n avatar: "+tag);
                                         db.atualizarAvatar(new Avatar(id,String.valueOf(tag),DatabaseHelper.getDateTime()));
+                                        ref.child("usuarios").child(idUser).child("icone").setValue(tag);
                                     }
                                     else
                                     {
                                         Log.d("SELECION_", "Banco atualizado Entrou no else: REPeTICAO: "+x+" \ne \n avatar: "+tag);
                                         db.inserirAvatar(new Avatar(id,String.valueOf(tag),DatabaseHelper.getDateTime()));
+                                        ref.child("usuarios").child(idUser).child("icone").setValue(tag);
                                     }
 
                                     Log.d("SELECION_", "Banco atualizado: " + db.getQTDAvatares()+" avatares salvos");
