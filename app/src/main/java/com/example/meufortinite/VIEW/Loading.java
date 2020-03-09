@@ -80,7 +80,7 @@ public class Loading extends AppCompatActivity
         try
         {
             Log.d("LOADING_", "SIZE USUARIOS"+String.valueOf(usuarios.size()));
-            ref.child(usuarios.get(0).id).child("tipo").addListenerForSingleValueEvent(new ValueEventListener()
+            ref.child("usuarios").child(usuarios.get(0).id).child("tipo").addListenerForSingleValueEvent(new ValueEventListener()
             {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)

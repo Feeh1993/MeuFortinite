@@ -38,7 +38,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
         private ArrayList<User> listUsuarios;
         private Context mContext;
         private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
-        private FirebaseAuth user = ConfiguracaoFirebase.getFirebaseAutenticacao();
         // Define listener member variable
         private CustomClick customBuscaClickList;
         private int comunidades = 0 , amigos = 0;

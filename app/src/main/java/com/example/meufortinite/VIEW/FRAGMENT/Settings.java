@@ -16,21 +16,26 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
+import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.Avatar;
 import com.example.meufortinite.MODEL.Usuario;
 import com.example.meufortinite.R;
+import com.example.meufortinite.VIEW.Login;
 import com.example.meufortinite.VIEW.SelecionarAvatar;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
 public class Settings extends Fragment
 {
-    private Button btnPro;
+    private Button btnPro,btnLogout;
     private ImageButton imgTrocarImg;
     private Switch swtchNtficacao,swtchOcultar;
     private DatabaseHelper db;
     private ArrayList<Avatar> avatars = new ArrayList<>();
     private ArrayList<Usuario> usuarios = new ArrayList<>();
+    private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
+
 
 
     public Settings()
@@ -47,11 +52,12 @@ public class Settings extends Fragment
         fazerCast(view);
         db = new DatabaseHelper(getContext());
         Log.d("SETTINGS_","TAMANHO DB: "+db.getQTDAvatares());
+        usuarios.clear();
+        usuarios.addAll(db.recuperarUsuarios());
         if (db.getQTDAvatares() > 0)
         {
             avatars.clear();
             avatars.addAll(db.recuperarAvatar());
-            usuarios.addAll(db.recuperarUsuarios());
             imgTrocarImg.setImageResource(Avatar.identificarAvatar(Integer.parseInt(avatars.get(0).getAvatar())));
             Log.d("SETTINGS_","AVATAR: "+avatars.get(0).getAvatar());
             Log.d("SETTINGS_","HORA DA ATUALIZAÇÃO: "+avatars.get(0).getCriado());
@@ -80,6 +86,7 @@ public class Settings extends Fragment
     private void fazerCast(View view)
     {
         btnPro = view.findViewById(R.id.btnPro);
+        btnLogout = view.findViewById(R.id.btnLogout);
         imgTrocarImg = view.findViewById(R.id.imgAvatar_setting);
         swtchNtficacao = view.findViewById(R.id.swtchNotificacoes_settings);
         swtchOcultar = view.findViewById(R.id.swtchOcultarDados_settings);
@@ -88,6 +95,15 @@ public class Settings extends Fragment
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(),"Virando Pró",Toast.LENGTH_LONG).show();
+            }
+        });
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Toast.makeText(getContext(),"ID desconectado :)",Toast.LENGTH_LONG).show();
+                ref.child("usuarios").child(usuarios.get(0).getId()).child("tipo").setValue("deslogado");
+                startActivity(new Intent(getContext(), Login.class));
             }
         });
 

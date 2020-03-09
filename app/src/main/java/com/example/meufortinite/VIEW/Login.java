@@ -319,6 +319,7 @@ public class Login extends AppCompatActivity
 
                     //SALVANDO USUARIO NO BANCO FIREBASE
                     salvar(user.id,name);
+                    ref.child("nick").child(name).setValue(user.id);
                 }
             }
 
@@ -444,7 +445,7 @@ public class Login extends AppCompatActivity
                 prgBuscar.setVisibility(View.GONE);
                 new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText("Cadastrado!")
-                        .setContentText("Seu perfil básico foi criado com sucesso!")
+                        .setContentText("Seja bem vindo a nossa plataforma!")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
                         {
                             @Override

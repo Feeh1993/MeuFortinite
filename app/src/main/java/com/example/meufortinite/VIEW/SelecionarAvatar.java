@@ -43,11 +43,12 @@ public class SelecionarAvatar extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selecao_avatar);
         db = new DatabaseHelper(getApplicationContext());
+        Bundle bundle = getIntent().getExtras();
+        idUser = bundle.getString("id_user");
         if (db.getQTDAvatares() > 0)
         {
-            Bundle bundle = getIntent().getExtras();
             id = bundle.getInt("id_avt");
-            idUser = bundle.getString("id_user");
+            Log.d("SELECIONARAVATAR","id: "+id+"\n e idUser: "+idUser);
         }
         fazerCast();
 

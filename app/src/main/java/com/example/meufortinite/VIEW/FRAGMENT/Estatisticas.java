@@ -27,10 +27,8 @@ import java.util.List;
 public class Estatisticas extends Fragment
 {
     private List<Stats> stats;
-    private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
 
     private ImageButton btnCopiar,btnShare;
-    private Button btnLogout;
     private TextView txtVitorias,txtScore,txtKill,txtKD,txt25Prim,txt10Pri,txt3Pri,txtId;
     private DatabaseHelper db;
     private ArrayList<Usuario> usuarios = new ArrayList<>();
@@ -78,7 +76,6 @@ public class Estatisticas extends Fragment
 
     private void fazerCast(View view)
     {
-        btnLogout = view.findViewById(R.id.btnLogout);
         btnCopiar = view.findViewById(R.id.btnCopiarIdInfo);
         btnShare = view.findViewById(R.id.btnShareIdInfo);
         txtVitorias = view.findViewById(R.id.txtVitoriasInfo);
@@ -105,15 +102,6 @@ public class Estatisticas extends Fragment
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(),"Compartilhando id!",Toast.LENGTH_LONG).show();
-            }
-        });
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Toast.makeText(getContext(),"ID desconectado :)",Toast.LENGTH_LONG).show();
-                ref.child(id).child("estado").setValue("deslogado");
-                startActivity(new Intent(getContext(), Login.class));
             }
         });
 
