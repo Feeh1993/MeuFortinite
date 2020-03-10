@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,8 +33,8 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-    public class AdaptadorAmigos extends RecyclerView.Adapter<AdaptadorAmigos.ViewHolder> {
-
+    public class AdaptadorAmigos extends RecyclerView.Adapter<AdaptadorAmigos.ViewHolder>
+    {
 
         private ArrayList<User> listUsuarios;
         private Context mContext;
@@ -122,13 +123,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
         private void recuperoMeuNick(final AdaptadorAmigos.ViewHolder viewHolder, final User usuario)
         {
 
-            ref.child("usuarios").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
+            ref.child("usuarios").child(usuario.getId()).addListenerForSingleValueEvent(new ValueEventListener()
             {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     meuUsuario = dataSnapshot.getValue(User.class);
-                    viewHolder.nick.setText("@"+usuario.getNick());
+                    viewHolder.nick.setText(usuario.getNick());
                     if (usuario.getIcone() != 0)
                     {
                         viewHolder.imageView.setImageResource(Avatar.identificarAvatar(usuario.getIcone()));
@@ -155,25 +156,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
                         Drawable imgClicked  = mContext.getResources().getDrawable(R.drawable.ic_amigos);
                         viewHolder.btnSeguir.setCompoundDrawablesWithIntrinsicBounds(null,null,null,imgClicked);
                         viewHolder.btnSeguir.setText("Seguir");
-                    }
-
-
-                    if (usuario.getAmigos() != null)
-                    {
-                        Log.d("ADPTBUSCA",verificarListasAmigos(usuario.getAmigos()));
-
-                        if (!verificarListasAmigos(usuario.getAmigos()).contains("Sim"))
-                        {
-                            Log.d("ADPTBUSCA","IF verificarListasAmigos(usuario.getAmigos() True");
-                            viewHolder.txtSeguidores.setVisibility(View.GONE);
-                        }
-                        else
-                        {
-                            Log.d("ADPTBUSCA","ELSE verificarListasAmigos(usuario.getAmigos() False");
-                            viewHolder.txtSeguidores.setVisibility(View.VISIBLE);
-                            viewHolder.txtSeguidores.setText("segue voce");
-                        }
-                        amigos = usuario.getAmigos().size();
                     }
                 }
 
@@ -211,10 +193,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
             CircleImageView imageView;
             View parentLayout;
-            public TextView nick;
-            private Button btnSeguir;
-            public SparseBooleanArray array=new SparseBooleanArray();
-            public TextView txtSeguidores;
+            TextView nick;
+            Button btnSeguir,btnPosicao;
+            SparseBooleanArray array=new SparseBooleanArray();
+            ImageButton btnMensagem,btnNotificacao;
+
 
             public ViewHolder(@NonNull View itemView)
             {
@@ -223,8 +206,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
                 imageView = itemView.findViewById(R.id.avatar_adpt_amigo);
                 nick= (TextView)itemView.findViewById(R.id.txtNick_adpt_Amigos);
                 btnSeguir = (Button)itemView.findViewById(R.id.btnSeguir_adpt_busca);
+                btnMensagem = (ImageButton) itemView.findViewById(R.id.btnMensagem);
+                btnNotificacao = (ImageButton)itemView.findViewById(R.id.btnNotificar);
+                btnPosicao = (Button)itemView.findViewById(R.id.btnPosicao);
                 parentLayout = itemView.findViewById(R.id.parentLayout);
-                txtSeguidores = itemView.findViewById(R.id.txtSeguindo_adpt_amigos);
             }
         }
 }

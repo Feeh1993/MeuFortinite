@@ -111,14 +111,14 @@ public class Settings extends Fragment
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), SelecionarAvatar.class);
+                Bundle bundle = new Bundle();
+                Log.d("SETTINGS_","IDUSER: "+usuarios.get(0).getId());
+                bundle.putString("id_user",usuarios.get(0).getId());
                 if (db.getQTDAvatares() > 0)
                 {
-                    Bundle bundle = new Bundle();
                     bundle.putInt("id_avt",avatars.get(0).getId());
-                    Log.d("SETTINGS_","IDUSER: "+usuarios.get(0).getId());
-                    bundle.putString("id_user",usuarios.get(0).getId());
-                    intent.putExtras(bundle);
                 }
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

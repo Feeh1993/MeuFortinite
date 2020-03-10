@@ -283,6 +283,7 @@ public class Login extends AppCompatActivity
                     prgBuscar.setVisibility(View.GONE);
                 }
                 else{
+
                     name = response.body().getEpicUserHandle();
                     accountId = response.body().getAccountId();
                     lifeTimeStat = response.body().getLifeTimeStats();
@@ -433,7 +434,7 @@ public class Login extends AppCompatActivity
     private void salvar(final String id,String nick)
     {
 
-        User usuario = new User(0,nick,"logado",null);
+        User usuario = new User(0,nick,"logado", id, null);
         Map<String, Object> userMap = usuario.mapearUsuario();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/usuarios/"+id, userMap);

@@ -8,10 +8,11 @@ import java.util.Map;
 
 public class User
 {
-    private int icone;
-    private String nick;
-    private String tipo;
-    private ArrayList<String> amigos;
+    public int icone;
+    public String nick;
+    public String tipo;
+    public String id;
+    public ArrayList<String> amigos;
 
 
     public User()
@@ -19,11 +20,12 @@ public class User
 
     }
 
-    public User(int icone, String nick, String tipo, ArrayList<String> amigos)
+    public User(int icone, String nick, String tipo, String id, ArrayList<String> amigos)
     {
         this.icone = icone;
         this.nick = nick;
         this.tipo = tipo;
+        this.id = id;
         this.amigos = amigos;
     }
 
@@ -59,6 +61,8 @@ public class User
         result.put("icone",icone);
         result.put("tipo",tipo);
         result.put("amigos",amigos);
+        result.put("id",id);
+
         return result;
     }
 
@@ -68,5 +72,13 @@ public class User
 
     public void setAmigos(ArrayList<String> amigos) {
         this.amigos = amigos;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

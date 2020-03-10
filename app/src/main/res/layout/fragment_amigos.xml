@@ -31,6 +31,25 @@
         android:textColor="@color/colorPrimary"
         android:visibility="gone" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recAmigos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:layoutAnimation="@anim/layout_animation"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <TextView
+        android:id="@+id/txtResBusca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Resultado das buscas"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold|italic"
+        android:visibility="gone" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -47,9 +66,10 @@
             android:id="@+id/recBuscaUsuarios_Busca"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="3dp"
             android:layoutAnimation="@anim/layout_animation"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_margin="3dp" />
+            android:visibility="visible"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </FrameLayout>
 
 
