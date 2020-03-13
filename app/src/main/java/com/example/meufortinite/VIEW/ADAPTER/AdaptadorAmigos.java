@@ -3,8 +3,8 @@ package com.example.meufortinite.VIEW.ADAPTER;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -18,16 +18,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.MODEL.Avatar;
+import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.INTERFACE.CustomClick;
-import com.example.meufortinite.MODEL.User;
+import com.example.meufortinite.MODEL.GERAL.User;
+import com.example.meufortinite.MODEL.INTERFACE.CustomMsgeNtfc;
 import com.example.meufortinite.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -41,16 +40,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
         private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
         // Define listener member variable
         private CustomClick customBuscaClickList;
-        private int comunidades = 0 , amigos = 0;
+        private CustomMsgeNtfc customMsgeNtfc;
+        private int tipo;
         private User meuUsuario;
         private long DURATION = 500;
         private boolean on_atach = true;
 
-        public AdaptadorAmigos(Context context, ArrayList<User> usuarios, CustomClick customBuscaClickList)
+        public AdaptadorAmigos(Context context, ArrayList<User> usuarios, int tipo , CustomClick customBuscaClickList, CustomMsgeNtfc customMsgeNtfc)
         {
+            this.tipo = tipo;
             this.listUsuarios = usuarios;
             this.mContext = context;
             this.customBuscaClickList = customBuscaClickList;
+            this.customMsgeNtfc = customMsgeNtfc;
         }
 
         @NonNull
@@ -67,25 +69,46 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
             // Get the data model based on position
             final User usuario = listUsuarios.get(position);
-
-            recuperoMeuNick(viewHolder,usuario);
-            viewHolder.btnSeguir.setOnClickListener(new View.OnClickListener()
+            viewHolder.nick.setTypeface(Typeface.createFromAsset(getContext().getAssets(), getContext().getString(R.string.fortnite_font_resource)));
+            if (tipo == 1)
             {
-                @Override
-                public void onClick(View v)
+                viewHolder.btnPosicao.setVisibility(View.GONE);
+            }
+            if (usuario.getNick().equals("Você"))
+            {
+                Log.d("ADPTBUSCA","Voce passou por aqui");
+                viewHolder.btnNotificacao.setVisibility(View.INVISIBLE);
+                viewHolder.btnMensagem.setVisibility(View.INVISIBLE);
+                viewHolder.btnSeguir.setVisibility(View.INVISIBLE);
+                viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_verdes);
+            }
+            else
+            {
+                viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_escuras);
+                viewHolder.btnSeguir.setOnClickListener(new View.OnClickListener()
                 {
-                    Log.d("ADPTBUSCA","Enviando pelo onBindViewHolder");
-                    customBuscaClickList.onItemClick(viewHolder.itemView, viewHolder.getAdapterPosition(),viewHolder.btnSeguir,meuUsuario,usuario);
-                }
-            });
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    customBuscaClickList.onViewClick(viewHolder.itemView,usuario);
-                }
-            });
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Log.d("ADPTBUSCA","Enviando pelo onBindViewHolder");
+                        customBuscaClickList.onItemClick(viewHolder.itemView, viewHolder.getAdapterPosition(),viewHolder.btnSeguir,meuUsuario,usuario);
+                    }
+                });
+                viewHolder.btnMensagem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        customMsgeNtfc.onMessagemClick(viewHolder.btnMensagem,viewHolder.getAdapterPosition(),usuario);
+                    }
+                });
+                viewHolder.btnNotificacao.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        customMsgeNtfc.onNotificacaoClick(viewHolder.btnNotificacao,viewHolder.getAdapterPosition(),usuario);
+                    }
+                });
+            }
+            recuperoMeuNick(viewHolder,usuario);
             iniciarAnimacao(viewHolder.itemView,position);
-
         }
 
         @Override
@@ -202,7 +225,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
             public ViewHolder(@NonNull View itemView)
             {
                 super(itemView);
-
                 imageView = itemView.findViewById(R.id.avatar_adpt_amigo);
                 nick= (TextView)itemView.findViewById(R.id.txtNick_adpt_Amigos);
                 btnSeguir = (Button)itemView.findViewById(R.id.btnSeguir_adpt_busca);

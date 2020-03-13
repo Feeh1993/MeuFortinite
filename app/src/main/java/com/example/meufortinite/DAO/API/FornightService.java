@@ -1,7 +1,7 @@
 package com.example.meufortinite.DAO.API;
 
-import com.example.meufortinite.MODEL.ItemResponse;
-import com.example.meufortinite.MODEL.Store;
+import com.example.meufortinite.MODEL.API.ItemResponse;
+import com.example.meufortinite.MODEL.API.Store;
 
 import java.util.List;
 

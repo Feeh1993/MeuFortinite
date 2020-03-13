@@ -1,4 +1,4 @@
-package com.example.meufortinite.MODEL;
+package com.example.meufortinite.MODEL.GERAL;
 
 import com.example.meufortinite.R;
 

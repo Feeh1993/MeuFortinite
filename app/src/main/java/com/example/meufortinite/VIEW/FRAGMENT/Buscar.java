@@ -1,6 +1,7 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,6 +31,7 @@ public class Buscar extends Fragment
     private Switch swtchMeuHS,swtchSeuHS,swtchDuo,swtchSQD;
     ImageButton imgbtnPlaneta;
     private FrameLayout frmlTopo;
+    private Typeface fortniteFont;
 
     public Buscar()
     {
@@ -94,6 +96,15 @@ public class Buscar extends Fragment
         rotateAnimation.setRepeatMode(Animation.RESTART);
         rotateAnimation.setDuration(5000);
         imgbtnPlaneta = (ImageButton)view.findViewById(R.id.imgbSearch_BUSCAR);
+
+        fortniteFont = Typeface.createFromAsset(getActivity().getAssets(),getString(R.string.fortnite_font_resource));
+        swtchDuo.setTypeface(fortniteFont);
+        swtchSQD.setTypeface(fortniteFont);
+        swtchMeuHS.setTypeface(fortniteFont);
+        swtchSeuHS.setTypeface(fortniteFont);
+        txtBuscar.setTypeface(fortniteFont);
+        txtResumo.setTypeface(fortniteFont);
+        txtInfo.setTypeface(fortniteFont);
     }
 
 }

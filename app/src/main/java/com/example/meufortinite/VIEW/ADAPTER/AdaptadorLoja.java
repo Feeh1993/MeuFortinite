@@ -1,22 +1,19 @@
 package com.example.meufortinite.VIEW.ADAPTER;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meufortinite.MODEL.Store;
+import com.example.meufortinite.MODEL.API.Store;
 import com.example.meufortinite.R;
 import com.squareup.picasso.Picasso;
 
@@ -89,7 +86,6 @@ public class AdaptadorLoja extends RecyclerView.Adapter<AdaptadorLoja.CustomView
         CustomViewHolder(View itemView)
         {
             super(itemView);
-
             image = itemView.findViewById(R.id.imgSkinLoja);
             //rarity = itemView.findViewById(R.id.textview_storeactivity_rarity);
             category = itemView.findViewById(R.id.categoriaLoja);

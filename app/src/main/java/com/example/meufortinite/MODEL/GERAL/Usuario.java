@@ -1,4 +1,4 @@
-package com.example.meufortinite.MODEL;
+package com.example.meufortinite.MODEL.GERAL;
 
 import android.text.TextUtils;
 
@@ -13,8 +13,10 @@ public class Usuario
     public String trespri;
     public String vitorias;
     public String criado;
+    public String nickname;
 
-    public Usuario(String id, String score, String kd, String kill, String vintecincopri, String dezpri, String trespri, String vitorias, String criado) {
+    public Usuario(String id, String score, String kd, String kill, String vintecincopri, String dezpri, String trespri, String vitorias, String criado,String nickname)
+    {
         this.id = id;
         this.score = score;
         this.kd = kd;
@@ -24,6 +26,7 @@ public class Usuario
         this.trespri = trespri;
         this.vitorias = vitorias;
         this.criado = criado;
+        this.nickname = nickname;
     }
 
     public Usuario() {
@@ -101,4 +104,11 @@ public class Usuario
         this.vitorias = vitorias;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

@@ -82,7 +82,7 @@
                         android:background="@null"
                         android:drawableRight="@drawable/ic_seta_cima"
                         android:text="1°"
-                        android:textColor="@color/verde" />
+                        android:textColor="?attr/colorPrimary" />
                 </LinearLayout>
 
             </LinearLayout>

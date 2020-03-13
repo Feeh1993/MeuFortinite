@@ -1,6 +1,6 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
-import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -8,18 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
-import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.MODEL.Stats;
-import com.example.meufortinite.MODEL.Usuario;
+import com.example.meufortinite.MODEL.API.Stats;
+import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
-import com.example.meufortinite.VIEW.Login;
-import com.google.firebase.database.DatabaseReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +31,7 @@ public class Estatisticas extends Fragment
     private ArrayList<Usuario> usuarios = new ArrayList<>();
 
     public String vitorias = "",trespri = "",dezpri = "",vintecincopri = "",id = "",kd = "",kill = "",score = "";
+    private Typeface fortniteFont;
 
     public Estatisticas()
     {
@@ -86,6 +84,17 @@ public class Estatisticas extends Fragment
         txt10Pri = view.findViewById(R.id.txt10PriInfo);
         txt3Pri = view.findViewById(R.id.txt3PriInfo);
         txtId = view.findViewById(R.id.txtIDInfo);
+
+        fortniteFont = Typeface.createFromAsset(getActivity().getAssets(),getString(R.string.fortnite_font_resource));
+        txtVitorias.setTypeface(fortniteFont);
+        txtScore.setTypeface(fortniteFont);
+        txtKill.setTypeface(fortniteFont);
+        txtKD.setTypeface(fortniteFont);
+        txt25Prim.setTypeface(fortniteFont);
+        txt10Pri.setTypeface(fortniteFont);
+        txt3Pri.setTypeface(fortniteFont);
+        txtId.setTypeface(fortniteFont);
+
         btnCopiar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)

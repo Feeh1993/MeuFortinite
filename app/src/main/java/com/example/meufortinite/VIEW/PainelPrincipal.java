@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.MODEL.Usuario;
+import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.PPPagerAdapter;
 import com.google.android.material.tabs.TabLayout;

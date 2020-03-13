@@ -11,6 +11,7 @@
         android:id="@+id/edtBuscar_busca"
         android:layout_width="match_parent"
         android:layout_height="35dp"
+        android:layout_margin="5dp"
         android:background="@drawable/rounded_edittext"
         android:drawableLeft="@drawable/search_icon"
         android:ems="10"
@@ -19,26 +20,6 @@
         android:padding="6dp"
         android:textColor="@color/colorPrimary"
         android:textColorHint="@color/colorPrimary" />
-
-    <TextView
-        android:id="@+id/txtUsuarios_Busca"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginRight="3dp"
-        android:text="Usuarios encontrados"
-        android:textColor="@color/colorPrimary"
-        android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recAmigos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:layoutAnimation="@anim/layout_animation"
-        android:visibility="visible"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <TextView
         android:id="@+id/txtResBusca"
@@ -71,6 +52,25 @@
             android:visibility="visible"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/txtUsuarios_Busca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seus amigos"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold|italic"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recAmigos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:layoutAnimation="@anim/layout_animation"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
 </LinearLayout>

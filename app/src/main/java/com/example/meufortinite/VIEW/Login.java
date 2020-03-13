@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -26,11 +28,11 @@ import com.example.meufortinite.DAO.API.FornightService;
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.DAO.REMOTO.PermissionsUtils;
-import com.example.meufortinite.MODEL.ItemResponse;
-import com.example.meufortinite.MODEL.User;
-import com.example.meufortinite.MODEL.Usuario;
+import com.example.meufortinite.MODEL.API.ItemResponse;
+import com.example.meufortinite.MODEL.GERAL.User;
+import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
-import com.example.meufortinite.MODEL.Stats;
+import com.example.meufortinite.MODEL.API.Stats;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -88,6 +90,7 @@ public class Login extends AppCompatActivity
     private DatabaseHelper db;
     private ArrayList<Usuario> usuarios = new ArrayList<>();
     private String name = "";
+    private Typeface fortniteFont;
 
     @Override
     protected void onStart()
@@ -170,6 +173,7 @@ public class Login extends AppCompatActivity
                         else{
                             prgBuscar.setVisibility(View.VISIBLE);
                             prgBuscar.setElevation(2);
+                            closeKeyboard(v);
                             getAccountData(platform, username.getText().toString());
                         }
                     }
@@ -283,7 +287,6 @@ public class Login extends AppCompatActivity
                     prgBuscar.setVisibility(View.GONE);
                 }
                 else{
-
                     name = response.body().getEpicUserHandle();
                     accountId = response.body().getAccountId();
                     lifeTimeStat = response.body().getLifeTimeStats();
@@ -294,7 +297,7 @@ public class Login extends AppCompatActivity
                     Usuario user = new Usuario(accountId,score[0]+"."+score[1],lifeTimeStat.get(11).getValue(),
                             lifeTimeStat.get(10).getValue(),lifeTimeStat.get(5).getValue(),
                             lifeTimeStat.get(3).getValue(),lifeTimeStat.get(1).getValue(),
-                            lifeTimeStat.get(8).getValue(),DatabaseHelper.getDateTime());
+                            lifeTimeStat.get(8).getValue(),DatabaseHelper.getDateTime(),name);
                     Log.d("LOGIN_ACVTY", "DADOS USER: " +
                             "\n ID: " + user.getId()+
                             "\n KILL: "+ user.getKill()+
@@ -304,13 +307,9 @@ public class Login extends AppCompatActivity
                             "\n 10PRI: "+ user.getDezpri()+
                             "\n 25PRI: " + user.getVintecincopri()+
                             "\n Vitoria: "+ user.getVitorias()+
-                            "\n HORAS: "+user.getCriado()+
-                            "\n"+ lifeTimeStat.get(0).getKey()+":" + lifeTimeStat.get(0).getValue()+
-                            "\n"+ lifeTimeStat.get(2).getKey()+":" + lifeTimeStat.get(2).getValue()+
-                            "\n"+ lifeTimeStat.get(4).getKey()+":" + lifeTimeStat.get(4).getValue()+
-                            "\n"+ lifeTimeStat.get(7).getKey()+":" + lifeTimeStat.get(7).getValue()+
-                            "\n"+ lifeTimeStat.get(9).getKey()+":" + lifeTimeStat.get(9).getValue()
+                            "\n HORAS: "+user.getCriado()
                           );
+
                     //salvando dados de acesso localmente
                     db.inserirUser(user);
 
@@ -319,8 +318,10 @@ public class Login extends AppCompatActivity
                     Log.d("LOGIN_ACVTY", "Banco atualizado: " + db.getQTDUsuarios()+" usuarios salvos");
 
                     //SALVANDO USUARIO NO BANCO FIREBASE
-                    salvar(user.id,name);
+                    salvar(user.id,name,"0");
                     ref.child("nick").child(name).setValue(user.id);
+
+
                 }
             }
 
@@ -348,6 +349,12 @@ public class Login extends AppCompatActivity
         frmlPost = findViewById(R.id.frml_post);
         edtSenha = findViewById(R.id.edtSenhaAdmLogin);
         btnLogar = findViewById(R.id.btnConectarLogin);
+
+        fortniteFont = Typeface.createFromAsset(getAssets(),getString(R.string.fortnite_font_resource));
+        username.setTypeface(fortniteFont);
+        btnPro.setTypeface(fortniteFont);
+        edtSenha.setTypeface(fortniteFont);
+        btnLogar.setTypeface(fortniteFont);
 
     }
     private void iniciarAnimacao()
@@ -431,10 +438,13 @@ public class Login extends AppCompatActivity
         }
     }
 
-    private void salvar(final String id,String nick)
+    private void salvar(final String id,String nick,String rank)
     {
 
-        User usuario = new User(0,nick,"logado", id, null);
+        User usuario = new User(0,nick,"logado", id, null, rank);
+        // salvar no banco local como amigo para recuperar futuramente; usuario lista0
+        db.inserirAmigo(usuario);
+
         Map<String, Object> userMap = usuario.mapearUsuario();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/usuarios/"+id, userMap);
@@ -459,6 +469,11 @@ public class Login extends AppCompatActivity
             }
         });
 
+    }
+    private void closeKeyboard(View view)
+    {
+        final InputMethodManager imm = (InputMethodManager) getApplication().getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

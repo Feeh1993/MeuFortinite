@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.MODEL.Usuario;
+import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,10 +26,12 @@ import java.util.ArrayList;
 
 public class Loading extends AppCompatActivity
 {
-    private TextView txt;
+    private TextView txt,txtLogo;
     private DatabaseHelper dbLocal;
     private  ArrayList<Usuario> usuarios = new ArrayList<>();
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
+    private Typeface fortniteFont;
+    private Animation animation;
 
 
     @Override
@@ -37,6 +40,10 @@ public class Loading extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         txt = (TextView) findViewById(R.id.txt_descricao);
+        txtLogo = (TextView) findViewById(R.id.txt_logo);
+        fortniteFont = Typeface.createFromAsset(getAssets(), getString(R.string.fortnite_font_resource));
+        txtLogo.setTypeface(fortniteFont);
+        txt.setTypeface(fortniteFont);
         startAnimations();
 
     }
@@ -53,7 +60,8 @@ public class Loading extends AppCompatActivity
         anim = AnimationUtils.loadAnimation(this, R.anim.translate);
         anim.reset();
 
-
+        animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        txtLogo.startAnimation(animation);
         int SPLASH_DISPLAY_LENGTH = 2500;
         new Handler().postDelayed(new Runnable()
         {

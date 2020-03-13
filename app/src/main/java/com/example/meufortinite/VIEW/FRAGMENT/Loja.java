@@ -1,7 +1,6 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,14 +15,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.meufortinite.DAO.API.FornightService;
-import com.example.meufortinite.HELPER.GridSpacingItemDecoration;
 import com.example.meufortinite.HELPER.NetworkCheckingClass;
-import com.example.meufortinite.MODEL.Store;
+import com.example.meufortinite.MODEL.API.Store;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorLoja;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;

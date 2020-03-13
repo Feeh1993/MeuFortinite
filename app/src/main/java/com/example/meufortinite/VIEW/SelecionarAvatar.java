@@ -2,7 +2,6 @@ package com.example.meufortinite.VIEW;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +11,8 @@ import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.MODEL.Avatar;
-import com.example.meufortinite.MODEL.Usuario;
+import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#516FAB</color>
+    <color name="branco">#FDFEFE</color>
     <color name="colorPrimaryDark">#203473</color>
     <color name="colorAccent">#8AAAD9</color>
     <color name="verde">#04B404</color>
@@ -9,5 +10,6 @@
     <color name="epica">#8643BA</color>
     <color name="raro">#2C71B6</color>
     <color name="incomum">#41852D</color>
+    <color name="verde_agua">#00FA9A</color>
 
 </resources>
