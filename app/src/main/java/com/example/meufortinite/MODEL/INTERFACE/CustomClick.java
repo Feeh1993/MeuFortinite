@@ -4,11 +4,11 @@ import android.view.View;
 import android.widget.Button;
 
 
-import com.example.meufortinite.MODEL.GERAL.User;
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 
 public interface CustomClick
 {
     void onItemClick(View itemView, int position, Button button,
-                     User meuUsario, User usuario);
+                     Amigo meuUsario, Amigo usuario);
 
 }

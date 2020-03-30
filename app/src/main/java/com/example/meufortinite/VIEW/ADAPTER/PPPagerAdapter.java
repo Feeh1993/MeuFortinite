@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.meufortinite.VIEW.FRAGMENT.Amigos;
 import com.example.meufortinite.VIEW.FRAGMENT.Buscar;
-import com.example.meufortinite.VIEW.FRAGMENT.Chat;
+import com.example.meufortinite.VIEW.FRAGMENT.Conversas;
 import com.example.meufortinite.VIEW.FRAGMENT.Estatisticas;
 import com.example.meufortinite.VIEW.FRAGMENT.Loja;
 import com.example.meufortinite.VIEW.FRAGMENT.Noticias;
@@ -34,7 +34,7 @@ public class PPPagerAdapter extends FragmentPagerAdapter
             case 1:
                 return new Amigos();
             case 2:
-                return new Chat();
+                return new Conversas();
             case 3:
                 return new Buscar();
             case 4:

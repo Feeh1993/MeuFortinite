@@ -1,4 +1,4 @@
-package com.example.meufortinite.VIEW;
+package com.example.meufortinite.VIEW.ACTIVITY;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -29,7 +29,7 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.DAO.REMOTO.PermissionsUtils;
 import com.example.meufortinite.MODEL.API.ItemResponse;
-import com.example.meufortinite.MODEL.GERAL.User;
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.MODEL.API.Stats;
@@ -441,7 +441,7 @@ public class Login extends AppCompatActivity
     private void salvar(final String id,String nick,String rank)
     {
 
-        User usuario = new User(0,nick,"logado", id, null, rank);
+        Amigo usuario = new Amigo(0,nick,"logado", id, null, rank);
         // salvar no banco local como amigo para recuperar futuramente; usuario lista0
         db.inserirAmigo(usuario);
 

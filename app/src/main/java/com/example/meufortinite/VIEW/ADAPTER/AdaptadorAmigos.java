@@ -18,9 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.INTERFACE.CustomClick;
-import com.example.meufortinite.MODEL.GERAL.User;
 import com.example.meufortinite.MODEL.INTERFACE.CustomMsgeNtfc;
 import com.example.meufortinite.R;
 import com.google.firebase.database.DataSnapshot;
@@ -35,18 +35,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
     public class AdaptadorAmigos extends RecyclerView.Adapter<AdaptadorAmigos.ViewHolder>
     {
 
-        private ArrayList<User> listUsuarios;
+        private ArrayList<Amigo> listUsuarios;
         private Context mContext;
         private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
         // Define listener member variable
         private CustomClick customBuscaClickList;
         private CustomMsgeNtfc customMsgeNtfc;
         private int tipo;
-        private User meuUsuario;
+        private Amigo meuUsuario;
         private long DURATION = 500;
         private boolean on_atach = true;
 
-        public AdaptadorAmigos(Context context, ArrayList<User> usuarios, int tipo , CustomClick customBuscaClickList, CustomMsgeNtfc customMsgeNtfc)
+        public AdaptadorAmigos(Context context, ArrayList<Amigo> usuarios, int tipo , CustomClick customBuscaClickList, CustomMsgeNtfc customMsgeNtfc)
         {
             this.tipo = tipo;
             this.listUsuarios = usuarios;
@@ -68,7 +68,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
         {
 
             // Get the data model based on position
-            final User usuario = listUsuarios.get(position);
+            final Amigo usuario = listUsuarios.get(position);
             viewHolder.nick.setTypeface(Typeface.createFromAsset(getContext().getAssets(), getContext().getString(R.string.fortnite_font_resource)));
             if (tipo == 1)
             {
@@ -143,7 +143,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
             animator.start();
         }
 
-        private void recuperoMeuNick(final AdaptadorAmigos.ViewHolder viewHolder, final User usuario)
+        private void recuperoMeuNick(final AdaptadorAmigos.ViewHolder viewHolder, final Amigo usuario)
         {
 
             ref.child("usuarios").child(usuario.getId()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -151,7 +151,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
-                    meuUsuario = dataSnapshot.getValue(User.class);
+                    meuUsuario = dataSnapshot.getValue(Amigo.class);
                     viewHolder.nick.setText(usuario.getNick());
                     if (usuario.getIcone() != 0)
                     {

@@ -1,6 +1,6 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,10 +25,10 @@ import android.widget.TextView;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.MODEL.INTERFACE.CustomClick;
-import com.example.meufortinite.MODEL.GERAL.User;
 import com.example.meufortinite.MODEL.INTERFACE.CustomMsgeNtfc;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorAmigos;
@@ -53,12 +52,12 @@ public class Amigos extends Fragment
     private AdaptadorAmigos adapterBusca,adaptadorAmigos ;
     private DatabaseHelper db;
 
-    private ArrayList<User> listAmigos = new ArrayList<>();
-    private ArrayList<User> listaBusca = new ArrayList<>();
+    private ArrayList<Amigo> listAmigos = new ArrayList<>();
+    private ArrayList<Amigo> listaBusca = new ArrayList<>();
 
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
     private ArrayList<Avatar> meuAvatar = new ArrayList<>();
-    private User meuUser;
+    private Amigo meuAmigo;
     private Typeface fortniteFont;
     private ViewPager viewPager;
 
@@ -87,7 +86,7 @@ public class Amigos extends Fragment
         Log.d("AMIGOS_","AVATAR"+meuUsuario.get(0).getNickname());
         if (db.getQTDAmigos() < 1)
         {
-            db.inserirAmigo(new User(Integer.parseInt(meuAvatar.get(0).getAvatar()),"Você","online",meuUsuario.get(0).getId(),null,"0"));
+            db.inserirAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),"Você","online",meuUsuario.get(0).getId(),null,"0"));
             Log.d("AMIGOS_","Me Salvando pela primeira vez heheheheheh");
         }
     }
@@ -139,7 +138,7 @@ public class Amigos extends Fragment
         txtBusca.setTypeface(fortniteFont);
         txtUsuario.setTypeface(fortniteFont);
         srchBuscar.setTypeface(fortniteFont);
-        //listAmigos.add(new User())
+        //listAmigos.add(new Amigo())
 
         srchBuscar.setOnKeyListener(new View.OnKeyListener()
         {
@@ -209,7 +208,7 @@ public class Amigos extends Fragment
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                     {
-                            User usuario = dataSnapshot.getValue(User.class);
+                            Amigo usuario = dataSnapshot.getValue(Amigo.class);
                             Log.d("AMIGOS_", usuario.getNick());
                             prgUser.setVisibility(View.GONE);
                             txtUsuario.setVisibility(View.VISIBLE);
@@ -252,7 +251,7 @@ public class Amigos extends Fragment
         adaptadorAmigos = new AdaptadorAmigos(getContext(), listAmigos,0, new CustomClick()
         {
             @Override
-            public void onItemClick(View itemView, int position, Button button, User meuUsario, User usuario)
+            public void onItemClick(View itemView, int position, Button button, Amigo meuUsario, Amigo usuario)
             {
                 //Toast.makeText(getApplicationContext(), "Amigo adicionado: Posição da Lista"+listaUsuarios.get(position).getNome(), Toast.LENGTH_LONG).show();
                 Drawable imgClicked  = getActivity().getResources().getDrawable(R.drawable.ic_amigos_check);
@@ -263,7 +262,7 @@ public class Amigos extends Fragment
                 {
                     if (meuUsario.getAmigos().contains(usuario.getNick()))
                     {
-                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuUser: " + meuUsario.getNick());
+                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsario.getNick());
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null,imgOutClicked);
                         button.setText("Seguir");
                         meuUsario.getAmigos().remove(usuario.getNick());
@@ -277,7 +276,7 @@ public class Amigos extends Fragment
                         Log.i("AMIGOs","atualizando banco,Depois: "+db.getQTDAmigos()+" amigos");
                     } else
                     {
-                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null ELSE  | Nick usuario " + usuario.getNick() + " E Nick meuUser: " + meuUsario.getNick());
+                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null ELSE  | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsario.getNick());
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
                         button.setText("Seguindo");
                         //inserindo novo amigo no banco local
@@ -292,7 +291,7 @@ public class Amigos extends Fragment
 
                 } else
                 {
-                    Log.d("AMIGOs", "meuUsuario.getAmigos() != null ELSE | Nick usuario " + usuario.getNick() + " E Nick meuUser: " + meuUsario.getNick());
+                    Log.d("AMIGOs", "meuUsuario.getAmigos() != null ELSE | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsario.getNick());
                     button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
                     button.setText("Seguindo");
                     ArrayList<String> staticList = new ArrayList<>();
@@ -314,16 +313,17 @@ public class Amigos extends Fragment
         },new CustomMsgeNtfc()
         {
             @Override
-            public void onNotificacaoClick(ImageButton button, int position, User usuario)
+            public void onNotificacaoClick(ImageButton button, int position, Amigo usuario)
             {
 
             }
 
+            @SuppressLint("ResourceType")
             @Override
-            public void onMessagemClick(ImageButton button, int position, User usuario)
+            public void onMessagemClick(ImageButton button, int position, Amigo usuario)
             {
-
-                viewPager.setCurrentItem(2);
+                ref.child("novaMensagem").child(meuUsuario.get(0).getId()).setValue(usuario.getNick());
+                //viewPager.setCurrentItem(2);
             }
         });
 
@@ -338,7 +338,7 @@ public class Amigos extends Fragment
         adapterBusca = new AdaptadorAmigos(getContext(), listaBusca, 1, new CustomClick() {
             @Override
             public void onItemClick(View itemView, int position, Button button,
-                                    User meuUsuario, User usuario) {
+                                    Amigo meuUsuario, Amigo usuario) {
                 //Toast.makeText(getApplicationContext(), "Amigo adicionado: Posição da Lista"+listaUsuarios.get(position).getNome(), Toast.LENGTH_LONG).show();
                 Drawable imgClicked = getActivity().getResources().getDrawable(R.drawable.ic_amigos_check);
                 Drawable imgOutClicked = getActivity().getResources().getDrawable(R.drawable.ic_amigos);
@@ -346,7 +346,7 @@ public class Amigos extends Fragment
                 Log.d("Busca", "REC CLICADO : " + usuario.getNick());
                 if (meuUsuario.getAmigos() != null) {
                     if (meuUsuario.getAmigos().contains(usuario.getNick())) {
-                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuUser: " + meuUsuario.getNick());
+                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsuario.getNick());
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgOutClicked);
                         button.setText("Seguir");
                         meuUsuario.getAmigos().remove(usuario.getNick());
@@ -360,7 +360,7 @@ public class Amigos extends Fragment
                         adaptadorAmigos.notifyDataSetChanged();
                         Log.i("AMIGOs", "atualizando banco,Depois: " + db.getQTDAmigos() + " amigos");
                     } else {
-                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null ELSE  | Nick usuario " + usuario.getNick() + " E Nick meuUser: " + meuUsuario.getNick());
+                        Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null ELSE  | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsuario.getNick());
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
                         button.setText("Seguindo");
                         //inserindo novo amigo no banco local
@@ -374,7 +374,7 @@ public class Amigos extends Fragment
                     }
 
                 } else {
-                    Log.d("AMIGOs", "meuUsuario.getAmigos() != null ELSE | Nick usuario " + usuario.getNick() + " E Nick meuUser: " + meuUsuario.getNick());
+                    Log.d("AMIGOs", "meuUsuario.getAmigos() != null ELSE | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsuario.getNick());
                     button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
                     button.setText("Seguindo");
                     ArrayList<String> staticList = new ArrayList<>();
@@ -397,18 +397,23 @@ public class Amigos extends Fragment
         }, new CustomMsgeNtfc()
         {
             @Override
-            public void onNotificacaoClick(ImageButton button, int position, User usuario)
+            public void onNotificacaoClick(ImageButton button, int position, Amigo usuario)
             {
                //inserir dados
             }
 
+            @SuppressLint("ResourceType")
             @Override
-            public void onMessagemClick(ImageButton button, int position, User usuario)
+            public void onMessagemClick(ImageButton button, int position, Amigo usuario)
             {
-                viewPager.setCurrentItem(2);
+                //ref.child(meuUsuario.get(0).getId()).child("newMessage").setValue(usuario.getNick());
+
+                //viewPager.setCurrentItem(2);
             }
         });
         recBusca.setAdapter(adapterBusca);
     }
+
+
 
 }

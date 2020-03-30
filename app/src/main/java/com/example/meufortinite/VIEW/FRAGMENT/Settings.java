@@ -20,8 +20,8 @@ import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
-import com.example.meufortinite.VIEW.Login;
-import com.example.meufortinite.VIEW.SelecionarAvatar;
+import com.example.meufortinite.VIEW.ACTIVITY.Login;
+import com.example.meufortinite.VIEW.ACTIVITY.SelecionarAvatar;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;

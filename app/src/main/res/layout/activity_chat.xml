@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".VIEW.ACTIVITY.Chat">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_chat_internal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/rv_messages_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_message_input"
+        app:dateHeaderPadding="@dimen/half_padding"
+        app:dateHeaderTextColor="@color/colorPrimary"
+        app:dateHeaderTextSize="16sp"
+        app:incomingBubblePaddingBottom="@dimen/half_padding"
+        app:incomingBubblePaddingLeft="@dimen/padding"
+        app:incomingBubblePaddingRight="@dimen/padding"
+        app:incomingBubblePaddingTop="@dimen/half_padding"
+        app:incomingDefaultBubbleColor="@color/verde"
+        app:incomingDefaultBubblePressedColor="@color/verde_agua"
+        app:incomingDefaultBubbleSelectedColor="@color/epica"
+        app:incomingTextColor="@color/white"
+        app:incomingTextSize="12sp"
+        app:incomingTimeTextColor="@color/white"
+        app:incomingTimeTextSize="10sp"
+        app:outcomingBubblePaddingBottom="@dimen/half_padding"
+        app:outcomingBubblePaddingLeft="@dimen/padding"
+        app:outcomingBubblePaddingRight="@dimen/padding"
+        app:outcomingBubblePaddingTop="@dimen/half_padding"
+        app:outcomingDefaultBubbleColor="@color/colorPrimary"
+        app:outcomingDefaultBubblePressedColor="@color/colorPrimary"
+        app:outcomingDefaultBubbleSelectedColor="@color/colorPrimary"
+        app:outcomingTextColor="@color/white"
+        app:outcomingTextSize="12sp"
+        app:outcomingTimeTextColor="@color/white"
+        app:outcomingTimeTextSize="10sp" />
+
+    <com.stfalcon.chatkit.messages.MessageInput
+        android:id="@+id/layout_message_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:inputTextColor="@color/colorPrimaryDark"
+        app:inputTextSize="16sp"
+        app:inputHintColor="@color/colorPrimaryDark"
+        app:inputHint="Digite alguma coisa"
+        app:showAttachmentButton="true"
+        app:inputButtonIcon="@drawable/selector_send_icon"
+        app:inputButtonDefaultBgColor="@color/white_four"
+        app:inputButtonDefaultBgPressedColor="@color/white_five"
+        app:attachmentButtonIcon="@drawable/ic_add_icon"
+        android:background="@color/branco"
+        app:inputBackground="@drawable/shape_chat_input_background"/>
+
+    <Switch
+        android:id="@+id/switch_user_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        android:checked="true"
+        android:thumbTint="@color/white"
+        android:backgroundTint="@color/dourado"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

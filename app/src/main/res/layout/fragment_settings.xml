@@ -63,8 +63,8 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@null"
-                tools:src="@drawable/ic_add_attachment" />
+                android:src="@drawable/ic_user_big_placeholder"
+                android:background="@null" />
         </FrameLayout>
 
         <Switch

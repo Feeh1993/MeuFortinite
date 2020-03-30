@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class User
+public class Amigo
 {
     public int icone;
     public String nick;
@@ -16,12 +16,12 @@ public class User
     public ArrayList<String> amigos;
 
 
-    public User()
+    public Amigo()
     {
 
     }
 
-    public User(int icone, String nick, String tipo, String id, ArrayList<String> amigos,String rank)
+    public Amigo(int icone, String nick, String tipo, String id, ArrayList<String> amigos, String rank)
     {
         this.icone = icone;
         this.nick = nick;

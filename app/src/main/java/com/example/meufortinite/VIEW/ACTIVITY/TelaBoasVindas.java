@@ -1,4 +1,4 @@
-package com.example.meufortinite.VIEW;
+package com.example.meufortinite.VIEW.ACTIVITY;
 import com.example.meufortinite.R;
 import com.stephentuso.welcome.BasicPage;
 import com.stephentuso.welcome.TitlePage;

@@ -1,4 +1,4 @@
-package com.example.meufortinite.VIEW;
+package com.example.meufortinite.VIEW.ACTIVITY;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

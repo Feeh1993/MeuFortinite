@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
-import com.example.meufortinite.MODEL.GERAL.User;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 
 import java.text.SimpleDateFormat;
@@ -115,16 +115,16 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // Create tables again
         onCreate(db);
     }
-    public long inserirAmigo(User user)
+    public long inserirAmigo(Amigo amigo)
     {
         // ABRIR MODO DE LEITURA DO BANCO
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_ID, user.id);
-        values.put(COLUMN_AMIGOS, user.nick);
-        values.put(COLUMN_ICONE, user.icone);
-        values.put(COLUMN_RANK, user.rank);
+        values.put(COLUMN_ID, amigo.id);
+        values.put(COLUMN_AMIGOS, amigo.nick);
+        values.put(COLUMN_ICONE, amigo.icone);
+        values.put(COLUMN_RANK, amigo.rank);
 
 
         //INSERIR LINHA
@@ -184,7 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return id;
     }
 
-    public User getAmigo(long id)
+    public Amigo getAmigo(long id)
     {
         // get readable database as we are not inserting anything
         SQLiteDatabase db = this.getReadableDatabase();
@@ -195,7 +195,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         if (cursor != null)
             cursor.moveToFirst();
-        User user = new User
+        Amigo amigo = new Amigo
                 (cursor.getInt(cursor.getColumnIndex(COLUMN_ICONE)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_AMIGOS)),
                 null,cursor.getString(cursor.getColumnIndex(COLUMN_ID)),null,cursor.getString(cursor.getColumnIndex(COLUMN_RANK)));
@@ -203,7 +203,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // close the db connection
         cursor.close();
 
-        return user;
+        return amigo;
     }
 
     public Avatar getAvatar(long id)
@@ -255,9 +255,9 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return usuario;
     }
 
-    public List<User> recuperaAmigos()
+    public List<Amigo> recuperaAmigos()
     {
-        List<User> amigos = new ArrayList<>();
+        List<Amigo> amigos = new ArrayList<>();
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " +TABLE_NAME_AMIGOS;
@@ -270,13 +270,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             do
             {
-                User user = new User();
-                user.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
-                user.setIcone(cursor.getInt(cursor.getColumnIndex(COLUMN_ICONE)));
-                user.setRank(cursor.getString(cursor.getColumnIndex(COLUMN_RANK)));
-                user.setNick(cursor.getString(cursor.getColumnIndex(COLUMN_AMIGOS)));
+                Amigo amigo = new Amigo();
+                amigo.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
+                amigo.setIcone(cursor.getInt(cursor.getColumnIndex(COLUMN_ICONE)));
+                amigo.setRank(cursor.getString(cursor.getColumnIndex(COLUMN_RANK)));
+                amigo.setNick(cursor.getString(cursor.getColumnIndex(COLUMN_AMIGOS)));
 
-                amigos.add(user);
+                amigos.add(amigo);
             } while (cursor.moveToNext());
         }
 
@@ -386,18 +386,18 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
 
 
-    public int atualizarAmigo(User user)
+    public int atualizarAmigo(Amigo amigo)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_AMIGOS, user.nick);
-        values.put(COLUMN_ICONE, user.icone);
-        values.put(COLUMN_ID, user.id);
-        values.put(COLUMN_RANK, user.rank);
+        values.put(COLUMN_AMIGOS, amigo.nick);
+        values.put(COLUMN_ICONE, amigo.icone);
+        values.put(COLUMN_ID, amigo.id);
+        values.put(COLUMN_RANK, amigo.rank);
 
         return db.update(TABLE_NAME_AMIGOS, values, COLUMN_ID+ " = ?",
-                new String[]{String.valueOf(user.getId())});
+                new String[]{String.valueOf(amigo.getId())});
     }
     public int atualizarAvatar(Avatar avatar)
     {
@@ -430,13 +430,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 new String[]{String.valueOf(usuario.getId())});
     }
 
-    public void deletarAmigo(User user,String ID)
+    public void deletarAmigo(Amigo amigo, String ID)
     {
         if (ID == "")
         {
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete(TABLE_NAME_AMIGOS, COLUMN_ID+ " = ?",
-                    new String[]{String.valueOf(user.getId())});
+                    new String[]{String.valueOf(amigo.getId())});
             db.close();
         }
         else
