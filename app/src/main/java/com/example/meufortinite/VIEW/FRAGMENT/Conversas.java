@@ -157,10 +157,16 @@ public class Conversas extends Fragment
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
         conversasLocais.addAll(db.recuperaConversas());
+        try
+        {
+            Log.d("AMIGOS_","AVATAR: "+meuAvatar.get(0).getAvatar());
+            Log.d("AMIGOS_","USUARIO: "+meuUsuario.get(0).getNickname());
+            Log.d("AMIGOS_","QTD CONVERSAS: "+conversasLocais.size());
+        }catch (IndexOutOfBoundsException e)
+        {
+            Log.d("AMIGOS_","PRIMEIRO ACESSO");
+        }
 
-        Log.d("AMIGOS_","AVATAR: "+meuAvatar.get(0).getAvatar());
-        Log.d("AMIGOS_","USUARIO: "+meuUsuario.get(0).getNickname());
-        Log.d("AMIGOS_","QTD CONVERSAS: "+conversasLocais.size());
     }
     private void iniciarRecycler()
     {
