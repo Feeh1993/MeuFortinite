@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
+import com.example.meufortinite.MODEL.GERAL.Conversa;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 
 import java.text.SimpleDateFormat;
@@ -36,6 +37,10 @@ public class DatabaseHelper extends SQLiteOpenHelper
     //DADOS TABELA AVATAR
     public static final String COLUMN_AVATAR =  "icone";
     public static  final String TABLE_NAME_AVATAR = "avatar";
+
+    //DADOS TABELA CONVERSA
+    public static final String COLUMN_ULT_MSG =  "ultmsg";
+    public static  final String TABLE_NAME_CONVERSA = "conversa";
 
     //DADOS TABELA USUARIO
     public static final String TABLE_NAME_USER = "usuario";
@@ -72,7 +77,16 @@ public class DatabaseHelper extends SQLiteOpenHelper
                     + COLUMN_CRIADO + " DATETIME"
                     + ")";
 
-    // Create table SQL query
+    //CRIANDO TABELA CONVERSA
+    public static final String CREATE_TABLECONVERSA =
+            "CREATE TABLE " + TABLE_NAME_CONVERSA + "("
+                    + COLUMN_ID + " TEXT PRIMARY KEY,"
+                    + COLUMN_ULT_MSG + " TEXT,"
+                    + COLUMN_NICKNAME + " TEXT,"
+                    + COLUMN_CRIADO + " TEXT"
+                    + ")";
+
+    // CRIANDO TABELA USUARIO
     public static final String CREATE_TABLEUSER =
             "CREATE TABLE " + TABLE_NAME_USER + "("
                     + COLUMN_ID + " TEXT PRIMARY KEY,"
@@ -101,6 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         db.execSQL(CREATE_TABLEUSER);
         db.execSQL(CREATE_TABLEAVATAR);
         db.execSQL(CREATE_TABLEAMIGOS);
+        db.execSQL(CREATE_TABLECONVERSA);
     }
 
     // Upgrading database
@@ -111,6 +126,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_AVATAR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_AMIGOS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CONVERSA);
 
         // Create tables again
         onCreate(db);
@@ -136,6 +152,29 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // RETORNA ID INSERIDO
         return id;
     }
+
+    public long inserirConversa(Conversa conversa)
+    {
+        // ABRIR MODO DE LEITURA DO BANCO
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ID, conversa.id);
+        values.put(COLUMN_AMIGOS, conversa.nickname);
+        values.put(COLUMN_CRIADO,this.getDateTime());
+        values.put(COLUMN_ULT_MSG, conversa.mensagem);
+
+
+        //INSERIR LINHA
+        long id = db.insert(TABLE_NAME_AMIGOS, null, values);
+
+        // FECHAR CONEXAO
+        db.close();
+
+        // RETORNA ID INSERIDO
+        return id;
+    }
+
     public long inserirAvatar(Avatar avatar)
     {
         // ABRIR MODO DE LEITURA DO BANCO
@@ -206,6 +245,28 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return amigo;
     }
 
+    public Conversa getConversa(long id)
+    {
+        // get readable database as we are not inserting anything
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_CONVERSA,
+                new String[]{COLUMN_ULT_MSG},
+                COLUMN_ULT_MSG + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+        Conversa conversa = new Conversa(cursor.getString(cursor.getColumnIndex(COLUMN_ULT_MSG)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
+
+        // close the db connection
+        cursor.close();
+
+        return conversa;
+    }
+
     public Avatar getAvatar(long id)
     {
         // get readable database as we are not inserting anything
@@ -226,6 +287,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         return avatar;
     }
+
     public Usuario getUsuario(long id)
     {
         // get readable database as we are not inserting anything
@@ -286,6 +348,39 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // return notes list
         return amigos;
     }
+
+    public List<Conversa> recuperaConversas()
+    {
+        List<Conversa> conversas= new ArrayList<>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " +TABLE_NAME_CONVERSA;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                Conversa conversa = new Conversa();
+                conversa.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
+                conversa.setCriado(cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)));
+                conversa.setMensagem(cursor.getString(cursor.getColumnIndex(COLUMN_ULT_MSG)));
+                conversa.setNickname(cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
+
+                conversas.add(conversa);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+
+        // return notes list
+        return conversas;
+    }
+
     public List<Avatar> recuperarAvatar()
     {
         List<Avatar> avatars = new ArrayList<>();
@@ -316,6 +411,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // return notes list
         return avatars;
     }
+
     public List<Usuario> recuperarUsuarios()
     {
         List<Usuario> usuarios = new ArrayList<>();
@@ -353,7 +449,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return usuarios;
     }
 
-//
     public int getQTDAmigos()
     {
         String countQuery = "SELECT  * FROM " + TABLE_NAME_AMIGOS;
@@ -365,6 +460,19 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // return count
         return count;
     }
+
+    public int getQTDConversas()
+    {
+        String countQuery = "SELECT  * FROM " + TABLE_NAME_CONVERSA;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        // return count
+        return count;
+    }
+
     public int getQTDAvatares()
     {
         String countQuery = "SELECT  * FROM " + TABLE_NAME_AVATAR;
@@ -374,6 +482,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         cursor.close();
         return count;
     }
+
     public int getQTDUsuarios()
     {
         String countQuery = "SELECT  * FROM " + TABLE_NAME_USER;
@@ -383,8 +492,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
         cursor.close();
         return count;
     }
-
-
 
     public int atualizarAmigo(Amigo amigo)
     {
@@ -399,6 +506,21 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return db.update(TABLE_NAME_AMIGOS, values, COLUMN_ID+ " = ?",
                 new String[]{String.valueOf(amigo.getId())});
     }
+
+    public int atualizarConversa(Conversa conversa)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NICKNAME, conversa.nickname);
+        values.put(COLUMN_ULT_MSG, conversa.mensagem);
+        values.put(COLUMN_ID, conversa.id);
+        values.put(COLUMN_CRIADO,this.getDateTime());
+
+        return db.update(TABLE_NAME_CONVERSA, values, COLUMN_ID+ " = ?",
+                new String[]{String.valueOf(conversa.getId())});
+    }
+
     public int atualizarAvatar(Avatar avatar)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -410,6 +532,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return db.update(TABLE_NAME_AVATAR, values, COLUMN_ID+ " = ?",
                 new String[]{String.valueOf(avatar.getId())});
     }
+
     public int atualizarUsuario(Usuario usuario)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -430,6 +553,24 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 new String[]{String.valueOf(usuario.getId())});
     }
 
+    public void deletarAmigo(Conversa conversa, String ID)
+    {
+        if (ID == "")
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_CONVERSA, COLUMN_ID+ " = ?",
+                    new String[]{String.valueOf(conversa.getId())});
+            db.close();
+        }
+        else
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_CONVERSA, COLUMN_ID+ " = ?",
+                    new String[]{ID});
+            db.close();
+        }
+    }
+
     public void deletarAmigo(Amigo amigo, String ID)
     {
         if (ID == "")
@@ -447,6 +588,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             db.close();
         }
     }
+
     public void deletarAvatar(Avatar avatar, String ID)
     {
         if (ID == "")
@@ -464,6 +606,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             db.close();
         }
     }
+
     public void deletarUser(Usuario usuario, String ID)
     {
         if (ID == "")
@@ -482,6 +625,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
 
     }
+
     public static String getDateTime()
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());

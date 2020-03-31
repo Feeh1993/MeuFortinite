@@ -3,37 +3,31 @@ package com.example.meufortinite.VIEW.ADAPTER;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
-import com.example.meufortinite.MODEL.GERAL.Avatar;
-import com.example.meufortinite.MODEL.GERAL.CHAT.ChatModel;
+import com.example.meufortinite.MODEL.GERAL.Chat;
 import com.example.meufortinite.MODEL.INTERFACE.CustomClick;
 import com.example.meufortinite.MODEL.INTERFACE.CustomMsgeNtfc;
 import com.example.meufortinite.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ChatListViewHolder>
+public class AdaptadorConversa extends RecyclerView.Adapter<AdaptadorConversa.ChatListViewHolder>
 {
 
-    private ArrayList<ChatModel> listConversa;
+    private ArrayList<Chat> listConversa;
     private Context mContext;
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
     // Define listener member variable
@@ -44,7 +38,7 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ChatListVi
     private long DURATION = 500;
     private boolean on_atach = true;
 
-    public AdaptadorChat(Context context, ArrayList<ChatModel> conversa, int tipo , CustomClick customBuscaClickList, CustomMsgeNtfc customMsgeNtfc)
+    public AdaptadorConversa(Context context, ArrayList<Chat> conversa, int tipo , CustomClick customBuscaClickList, CustomMsgeNtfc customMsgeNtfc)
     {
         this.tipo = tipo;
         this.listConversa = conversa;
@@ -55,18 +49,18 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.ChatListVi
 
     @NonNull
     @Override
-    public AdaptadorChat.ChatListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public AdaptadorConversa.ChatListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         final View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adaptador_amigo, viewGroup, false);
-        final AdaptadorChat.ChatListViewHolder mViewHolder = new AdaptadorChat.ChatListViewHolder(itemView);
+        final AdaptadorConversa.ChatListViewHolder mViewHolder = new AdaptadorConversa.ChatListViewHolder(itemView);
         return mViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final AdaptadorChat.ChatListViewHolder viewHolder, int position)
+    public void onBindViewHolder(@NonNull final AdaptadorConversa.ChatListViewHolder viewHolder, int position)
     {
 
         // Get the data model based on position
-        final ChatModel usuario = listConversa.get(position);
+        final Chat usuario = listConversa.get(position);
         iniciarAnimacao(viewHolder.itemView,position);
     }
 

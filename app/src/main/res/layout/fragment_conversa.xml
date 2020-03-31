@@ -22,15 +22,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <Button
+            android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:text="Para iniciar uma nova conversa selecione o amigo na aba amigos "
-            android:textAlignment="center"
+            android:background="@null"
+            android:drawableRight="@drawable/ic_chat"
+            android:text="Para iniciar uma nova conversa selecione o amigo na aba amigos ou clique no icone "
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
-            android:textStyle="bold" />
+            android:textSize="14sp"
+            android:typeface="normal" />
 
         <Button
             android:id="@+id/btnAmigos"

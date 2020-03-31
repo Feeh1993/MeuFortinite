@@ -322,7 +322,7 @@ public class Amigos extends Fragment
             @Override
             public void onMessagemClick(ImageButton button, int position, Amigo usuario)
             {
-                ref.child("novaMensagem").child(meuUsuario.get(0).getId()).setValue(usuario.getNick());
+                ref.child("novaMensagem").child(meuUsuario.get(0).getId()).setValue(usuario.getId());
                 //viewPager.setCurrentItem(2);
             }
         });
