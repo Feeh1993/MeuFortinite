@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.R;
 import com.google.firebase.database.DatabaseReference;

@@ -82,13 +82,18 @@ public class Amigos extends Fragment
     {
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
-        Log.d("AMIGOS_","AVATAR"+meuAvatar.get(0).getAvatar());
-        Log.d("AMIGOS_","AVATAR"+meuUsuario.get(0).getNickname());
-        if (db.getQTDAmigos() < 1)
+        //db.atualizarAmigo(new Amigo(meuAvatar.get(0).getAvatar(),meuUsuario.get(0).getNickname(),"online",))
+
+        try
         {
-            db.inserirAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),"Você","online",meuUsuario.get(0).getId(),null,"0"));
-            Log.d("AMIGOS_","Me Salvando pela primeira vez heheheheheh");
+            Log.d("AMIGOS_","AVATAR"+meuAvatar.get(0).getAvatar());
+            Log.d("AMIGOS_","AVATAR"+meuUsuario.get(0).getNickname());
+
+        }catch (IndexOutOfBoundsException e)
+        {
+
         }
+
     }
 
     @Override
@@ -116,8 +121,15 @@ public class Amigos extends Fragment
         {
             listAmigos.clear();
             listAmigos.addAll(db.recuperaAmigos());
+            if (db.getQTDAmigos() <= 1)
+            {
+//                listAmigos.get(0).setIcone(Integer.parseInt(meuAvatar.get(0).getAvatar()));
+                listAmigos.get(0).setNick("Você");
+                Log.d("AMIGOS_","Me Salvando pela primeira vez heheheheheh");
+            }
             txtUsuario.setVisibility(View.VISIBLE);
             Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
+            Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
         }
         iniciRecAmigos();
         iniciarRecBusca();
@@ -127,6 +139,7 @@ public class Amigos extends Fragment
 
     private void fazerCast(final View view)
     {
+        Log.d("AMIGOS_","FAzendo CASt");
         viewPager = (ViewPager) getActivity().findViewById(R.id.vp_painel);
         srchBuscar = view.findViewById(R.id.edtBuscar_busca);
         txtUsuario = view.findViewById(R.id.txtUsuarios_Busca);
@@ -147,6 +160,7 @@ public class Amigos extends Fragment
             {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER))
                 {
+                    Log.d("AMIGOS_","Dentro do srch");
                     limparRecycler(0);
                     iniciarRecBusca();
                     prgUser.setVisibility(View.GONE);
@@ -174,7 +188,7 @@ public class Amigos extends Fragment
                                     {
                                         for (DataSnapshot dados : dataSnapshot.getChildren())
                                         {
-                                            Log.d("Busca", "Resultado: " + query);
+                                            Log.d("AMIGOS_", "Resultado: " + query);
                                             String nicks = dados.getKey();
                                             if (nicks.equals(query))
                                             {
@@ -244,7 +258,9 @@ public class Amigos extends Fragment
     }
     private void iniciRecAmigos()
     {
-        //recycler Amigos
+        // adicionar modificações user
+
+        //recycler Amigo
         LinearLayoutManager lnlMAmigos = new LinearLayoutManager(getContext());
         lnlMAmigos.setOrientation(LinearLayoutManager.VERTICAL);
         recAmigos.setLayoutManager(lnlMAmigos);
