@@ -13,6 +13,7 @@ public class Usuario
     public String trespri;
     public String vitorias;
     public String criado;
+
     public String nickname;
 
     public Usuario(String id, String score, String kd, String kill, String vintecincopri, String dezpri, String trespri, String vitorias, String criado,String nickname)
