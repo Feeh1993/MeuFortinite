@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
@@ -82,6 +83,8 @@ public class Amigos extends Fragment
     {
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
+        Log.d("AMIGOS_","ICONE ATUAL "+meuAvatar.get(0).getAvatar());
+
         //db.atualizarAmigo(new Amigo(meuAvatar.get(0).getAvatar(),meuUsuario.get(0).getNickname(),"online",))
 
         try
@@ -121,16 +124,25 @@ public class Amigos extends Fragment
         {
             listAmigos.clear();
             listAmigos.addAll(db.recuperaAmigos());
-            if (db.getQTDAmigos() <= 1)
-            {
-//                listAmigos.get(0).setIcone(Integer.parseInt(meuAvatar.get(0).getAvatar()));
-                listAmigos.get(0).setNick("Você");
-                Log.d("AMIGOS_","Me Salvando pela primeira vez heheheheheh");
-            }
+
             txtUsuario.setVisibility(View.VISIBLE);
             Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
             Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
         }
+        try
+        {
+            if (db.getQTDAmigos() <= 1)
+            {
+                Log.d("AMIGOS_","ICONE ATUAL "+meuAvatar.get(0).getAvatar());
+                listAmigos.get(0).setIcone(Integer.parseInt(meuAvatar.get(0).getAvatar()));
+                listAmigos.get(0).setNick("Você");
+                Log.d("AMIGOS_","Me Salvando pela primeira vez heheheheheh");
+            }
+        }catch (IndexOutOfBoundsException e)
+        {
+            listAmigos.get(0).setNick("Você");
+        }
+
         iniciRecAmigos();
         iniciarRecBusca();
         //atualizarRank(listAmigos);
@@ -165,50 +177,58 @@ public class Amigos extends Fragment
                     iniciarRecBusca();
                     prgUser.setVisibility(View.GONE);
                     final String query = srchBuscar.getText().toString();
-                    if (query.length() != 1)
+                    if (meuUsuario.get(0).getNickname().equals(query))
                     {
-                        if (query.isEmpty())
+                        Toast.makeText(getContext(),"Voce digitou seu nick???\n Digite um nick que não seja o seu !!!!",Toast.LENGTH_LONG).show();
+                    }
+                    else
                         {
-                            if (db.getQTDAmigos() > 0)
+                            if (query.length() != 1)
                             {
-                                listAmigos.clear();
-                                listAmigos.addAll(db.recuperaAmigos());
-                                Log.d("AMIGOS_","(IF query.isEMPTY)Tamanho da Lista "+listAmigos.size());
-                            }
-                            srchBuscar.clearFocus();
-                            iniciRecAmigos();
-                            adaptadorAmigos.notifyDataSetChanged();
-                        }
-                        else
-                            {
-                                ref.child("nick").addListenerForSingleValueEvent(new ValueEventListener()
+                                if (query.isEmpty())
                                 {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                                    if (db.getQTDAmigos() > 0)
                                     {
-                                        for (DataSnapshot dados : dataSnapshot.getChildren())
+                                        listAmigos.clear();
+                                        listAmigos.addAll(db.recuperaAmigos());
+                                        Log.d("AMIGOS_","(IF query.isEMPTY)Tamanho da Lista "+listAmigos.size());
+                                    }
+                                    srchBuscar.clearFocus();
+                                    iniciRecAmigos();
+                                    adaptadorAmigos.notifyDataSetChanged();
+                                }
+                                else
+                                {
+                                    ref.child("nick").addListenerForSingleValueEvent(new ValueEventListener()
+                                    {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                                         {
-                                            Log.d("AMIGOS_", "Resultado: " + query);
-                                            String nicks = dados.getKey();
-                                            if (nicks.equals(query))
+                                            for (DataSnapshot dados : dataSnapshot.getChildren())
                                             {
-                                                prgUser.setVisibility(View.VISIBLE);
-                                                srchBuscar.clearFocus();
-                                                txtBusca.setVisibility(View.VISIBLE);
-                                                Log.d("AMIGOS_", "Contém: " + dados.getValue().toString());
-                                                popularLista(dados.getValue().toString());
+                                                Log.d("AMIGOS_", "Resultado: " + query);
+                                                String nicks = dados.getKey();
+                                                if (nicks.equals(query))
+                                                {
+                                                    prgUser.setVisibility(View.VISIBLE);
+                                                    srchBuscar.clearFocus();
+                                                    txtBusca.setVisibility(View.VISIBLE);
+                                                    Log.d("AMIGOS_", "Contém: " + dados.getValue().toString());
+                                                    popularLista(dados.getValue().toString());
+                                                }
                                             }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError)
-                                    {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError)
+                                        {
 
-                                    }
-                                });
+                                        }
+                                    });
+                                }
                             }
-                    }
+                        }
+
                 }
                 return false;
             }
