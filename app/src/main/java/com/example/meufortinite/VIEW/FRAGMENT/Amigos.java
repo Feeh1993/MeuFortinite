@@ -79,24 +79,11 @@ public class Amigos extends Fragment
         return view;
     }
 
+
     private void recuperarMeusDados()
     {
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
-        Log.d("AMIGOS_","ICONE ATUAL "+meuAvatar.get(0).getAvatar());
-
-        //db.atualizarAmigo(new Amigo(meuAvatar.get(0).getAvatar(),meuUsuario.get(0).getNickname(),"online",))
-
-        try
-        {
-            Log.d("AMIGOS_","AVATAR"+meuAvatar.get(0).getAvatar());
-            Log.d("AMIGOS_","AVATAR"+meuUsuario.get(0).getNickname());
-
-        }catch (IndexOutOfBoundsException e)
-        {
-
-        }
-
     }
 
     @Override
@@ -124,23 +111,29 @@ public class Amigos extends Fragment
         {
             listAmigos.clear();
             listAmigos.addAll(db.recuperaAmigos());
-
+            db.atualizarAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),
+                    meuUsuario.get(0).getNickname(),
+                    "online",
+                    meuUsuario.get(0).getId(),
+                    listAmigos.get(0).getAmigos(),
+                    listAmigos.get(0).getRank()));
+            listAmigos.clear();
+            listAmigos.addAll(db.recuperaAmigos());
             txtUsuario.setVisibility(View.VISIBLE);
             Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
             Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
         }
+
         try
         {
             if (db.getQTDAmigos() <= 1)
             {
                 Log.d("AMIGOS_","ICONE ATUAL "+meuAvatar.get(0).getAvatar());
                 listAmigos.get(0).setIcone(Integer.parseInt(meuAvatar.get(0).getAvatar()));
-                listAmigos.get(0).setNick("Você");
-                Log.d("AMIGOS_","Me Salvando pela primeira vez heheheheheh");
             }
         }catch (IndexOutOfBoundsException e)
         {
-            listAmigos.get(0).setNick("Você");
+
         }
 
         iniciRecAmigos();
@@ -284,7 +277,7 @@ public class Amigos extends Fragment
         LinearLayoutManager lnlMAmigos = new LinearLayoutManager(getContext());
         lnlMAmigos.setOrientation(LinearLayoutManager.VERTICAL);
         recAmigos.setLayoutManager(lnlMAmigos);
-        adaptadorAmigos = new AdaptadorAmigos(getContext(), listAmigos,0, new CustomClick()
+        adaptadorAmigos = new AdaptadorAmigos(getContext(), listAmigos,meuUsuario.get(0).getId(),0, new CustomClick()
         {
             @Override
             public void onItemClick(View itemView, int position, Button button, Amigo meuUsario, Amigo usuario)
@@ -303,7 +296,7 @@ public class Amigos extends Fragment
                         button.setText("Seguir");
                         meuUsario.getAmigos().remove(usuario.getNick());
                         //atualizando banco firebase
-                        ref.child("usuarios").child(usuario.getId()).child("amigos").setValue(meuUsario.getAmigos());
+                        ref.child("usuarios").child(meuUsario.getId()).child("amigos").setValue(meuUsario.getAmigos());
                         //removendo do banco local
                         Log.i("AMIGOs","()deletando amigo,Antes: "+ db.getQTDAmigos()+" amigos");
                         db.deletarAmigo(usuario,"");
@@ -322,7 +315,7 @@ public class Amigos extends Fragment
                         adaptadorAmigos.notifyDataSetChanged();
                         Log.i("AMIGOs","(APOS_SALVAR)atualizando banco,Depois: "+db.getQTDAmigos()+" amigos");
                         meuUsario.getAmigos().add(usuario.getNick());
-                        ref.child("usuarios").child(usuario.getId()).child("amigos").setValue(meuUsario.getAmigos());
+                        ref.child("usuarios").child(meuUsario.getId()).child("amigos").setValue(meuUsario.getAmigos());
                     }
 
                 } else
@@ -333,7 +326,7 @@ public class Amigos extends Fragment
                     ArrayList<String> staticList = new ArrayList<>();
                     staticList.add(usuario.getNick());
                     meuUsario.setAmigos(staticList);
-                    ref.child("usuarios").child(usuario.getId()).child("amigos").setValue(staticList);
+                    ref.child("usuarios").child(meuUsario.getId()).child("amigos").setValue(staticList);
 
                     //adicionando no banco local
                     Log.i("AMIGOs","()deletando amigo,Antes: "+ db.getQTDAmigos()+" amigos");
@@ -371,7 +364,7 @@ public class Amigos extends Fragment
         LinearLayoutManager lnlMBusca = new LinearLayoutManager(getContext());
         lnlMBusca.setOrientation(LinearLayoutManager.VERTICAL);
         recBusca.setLayoutManager(lnlMBusca);
-        adapterBusca = new AdaptadorAmigos(getContext(), listaBusca, 1, new CustomClick() {
+        adapterBusca = new AdaptadorAmigos(getContext(), listaBusca,meuUsuario.get(0).getId(), 1, new CustomClick() {
             @Override
             public void onItemClick(View itemView, int position, Button button,
                                     Amigo meuUsuario, Amigo usuario) {
@@ -380,14 +373,16 @@ public class Amigos extends Fragment
                 Drawable imgOutClicked = getActivity().getResources().getDrawable(R.drawable.ic_amigos);
 //Tratando da lista de amigos
                 Log.d("Busca", "REC CLICADO : " + usuario.getNick());
-                if (meuUsuario.getAmigos() != null) {
-                    if (meuUsuario.getAmigos().contains(usuario.getNick())) {
+                if (meuUsuario.getAmigos() != null)
+                {
+                    if (meuUsuario.getAmigos().contains(usuario.getNick()))
+                    {
                         Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsuario.getNick());
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgOutClicked);
                         button.setText("Seguir");
                         meuUsuario.getAmigos().remove(usuario.getNick());
                         //atualizando banco firebase
-                        ref.child("usuarios").child(usuario.getId()).child("amigos").setValue(meuUsuario.getAmigos());
+                        ref.child("usuarios").child(meuUsuario.getId()).child("amigos").setValue(meuUsuario.getAmigos());
                         //removendo do banco local
                         Log.d("AMIGOs", "Chegou aqui");
                         Log.i("AMIGOs", "()deletando amigo,Antes: " + db.getQTDAmigos() + " amigos");
@@ -404,26 +399,27 @@ public class Amigos extends Fragment
                         db.inserirAmigo(usuario);
                         Log.i("AMIGOs", "(APOS_SALVAR)atualizando banco,Depois: " + db.getQTDAmigos() + " amigos");
                         meuUsuario.getAmigos().add(usuario.getNick());
-                        ref.child("usuarios").child(usuario.getId()).child("amigos").setValue(meuUsuario.getAmigos());
+                        ref.child("usuarios").child(meuUsuario.getId()).child("amigos").setValue(meuUsuario.getAmigos());
                         listAmigos.add(usuario);
                         adaptadorAmigos.notifyDataSetChanged();
                     }
 
-                } else {
-                    Log.d("AMIGOs", "meuUsuario.getAmigos() != null ELSE | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsuario.getNick());
-                    button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
-                    button.setText("Seguindo");
-                    ArrayList<String> staticList = new ArrayList<>();
-                    staticList.add(usuario.getNick());
-                    meuUsuario.setAmigos(staticList);
-                    ref.child("usuarios").child(usuario.getId()).child("amigos").setValue(staticList);
+                } else
+                    {
+                        Log.d("AMIGOs", "meuUsuario.getAmigos() != null ELSE | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsuario.getNick());
+                        button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
+                        button.setText("Seguindo");
+                        ArrayList<String> staticList = new ArrayList<>();
+                        staticList.add(usuario.getNick());
+                        meuUsuario.setAmigos(staticList);
+                        ref.child("usuarios").child(meuUsuario.getId()).child("amigos").setValue(staticList);
 
-                    //adicionando no banco local
-                    Log.i("AMIGOs", "(APOS_SALVAR)atualizando amigo,Antes: " + db.getQTDAmigos() + " amigos");
-                    db.inserirAmigo(usuario);
-                    listAmigos.add(usuario);
-                    adaptadorAmigos.notifyDataSetChanged();
-                    Log.i("AMIGOs", "(APOS_SALVAR)atualizando banco,Depois: " + db.getQTDAmigos() + " amigos");
+                        //adicionando no banco local
+                        Log.i("AMIGOs", "(APOS_SALVAR)atualizando amigo,Antes: " + db.getQTDAmigos() + " amigos");
+                        db.inserirAmigo(usuario);
+                        listAmigos.add(usuario);
+                        adaptadorAmigos.notifyDataSetChanged();
+                        Log.i("AMIGOs", "(APOS_SALVAR)atualizando banco,Depois: " + db.getQTDAmigos() + " amigos");
 
                 }
 

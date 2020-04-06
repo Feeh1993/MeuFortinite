@@ -35,6 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
     public class AdaptadorAmigos extends RecyclerView.Adapter<AdaptadorAmigos.ViewHolder>
     {
 
+        private final String seuId;
         private ArrayList<Amigo> listUsuarios;
         private Context mContext;
         private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
@@ -46,9 +47,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
         private long DURATION = 500;
         private boolean on_atach = true;
 
-        public AdaptadorAmigos(Context context, ArrayList<Amigo> usuarios, int tipo , CustomClick customBuscaClickList, CustomMsgeNtfc customMsgeNtfc)
+        public AdaptadorAmigos(Context context, ArrayList<Amigo> usuarios,String seuId, int tipo , CustomClick customBuscaClickList, CustomMsgeNtfc customMsgeNtfc)
         {
             this.tipo = tipo;
+            this.seuId = seuId;
             this.listUsuarios = usuarios;
             this.mContext = context;
             this.customBuscaClickList = customBuscaClickList;
@@ -74,8 +76,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
             {
                 viewHolder.btnPosicao.setVisibility(View.GONE);
             }
-            if (usuario.getNick().equals("Você"))
+            if (usuario.getId().equals(seuId))
             {
+                viewHolder.nick.setText("Voce");
                 Log.d("ADPTBUSCA","Voce passou por aqui");
                 viewHolder.btnNotificacao.setVisibility(View.INVISIBLE);
                 viewHolder.btnMensagem.setVisibility(View.INVISIBLE);
@@ -84,6 +87,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
             }
             else
             {
+                viewHolder.nick.setText(usuario.getNick());
                 viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_escuras);
                 viewHolder.btnSeguir.setOnClickListener(new View.OnClickListener()
                 {
@@ -146,13 +150,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
         private void recuperoMeuNick(final AdaptadorAmigos.ViewHolder viewHolder, final Amigo usuario)
         {
 
-            ref.child("usuarios").child(usuario.getId()).addListenerForSingleValueEvent(new ValueEventListener()
+            ref.child("usuarios").child(seuId).addListenerForSingleValueEvent(new ValueEventListener()
             {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     meuUsuario = dataSnapshot.getValue(Amigo.class);
-                    viewHolder.nick.setText(usuario.getNick());
+
                     if (usuario.getIcone() != 0)
                     {
                         viewHolder.imageView.setImageResource(Avatar.identificarAvatar(usuario.getIcone()));
@@ -162,6 +166,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
                     {
                         if (meuUsuario.getAmigos().contains(usuario.getNick()))
                         {
+                            Log.d("ADPTBUSCA","meuUsuario:" +meuUsuario.getAmigos().size());
                             Log.d("ADPTBUSCA","IF meuUsuario.getAmigos().contains(usuario.getNick())");
                             Drawable imgClicked  = mContext.getResources().getDrawable(R.drawable.ic_amigos_check);
                             Log.d("ADPTBUSCA", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuUser: "+ meuUsuario.getNick());

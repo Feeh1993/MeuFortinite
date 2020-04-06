@@ -1,11 +1,13 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -24,6 +26,7 @@ import com.example.meufortinite.MODEL.GERAL.Conversa;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorConversa;
+import com.example.meufortinite.VIEW.DIALOG.NovaMensagem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +47,7 @@ public class Conversas extends Fragment
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
     private ArrayList<Avatar> meuAvatar = new ArrayList<>();
     private ArrayList<Conversa> conversasLocais = new ArrayList<>();
+    private Typeface fortniteFont;
 
 
     public Conversas()
@@ -122,7 +126,8 @@ public class Conversas extends Fragment
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
 
             }
         });
@@ -131,7 +136,9 @@ public class Conversas extends Fragment
 // CRIAR CHAMADA DE NOVA MENSAGEM VINDA DA LISTA AMIGOS
     private void iniciarNovaMensagem(Amigo amigo)
     {
-
+        FragmentManager fm = getChildFragmentManager();
+        NovaMensagem novaMensagem = NovaMensagem.novaMensagem("Conversar com "+amigo.getNick(),amigo.getId(),meuUsuario.get(0).getId());
+        novaMensagem.show(fm,"fragment_alert");
     }
 
     @Override
@@ -179,6 +186,8 @@ public class Conversas extends Fragment
         fabNmsg = view.findViewById(R.id.fabNovaMsg);
         viewPager = (ViewPager) getActivity().findViewById(R.id.vp_painel);
         btnAmigos = view.findViewById(R.id.btnAmigos);
+        fortniteFont = Typeface.createFromAsset(getActivity().getAssets(),getString(R.string.fortnite_font_resource));
+        btnAmigos.setTypeface(fortniteFont);
 
         btnAmigos.setOnClickListener(new View.OnClickListener()
         {
