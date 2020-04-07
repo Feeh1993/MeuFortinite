@@ -58,28 +58,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
-                    android:showText="true"
+                    android:fontFamily="@font/font_family_fortinite"
+                    android:showText="false"
                     android:text=" O usuário precisa ter headSet?"
                     android:textAlignment="viewStart"
                     android:textColor="@color/colorPrimary"
-                    android:textOff="Não"
-                    android:textOn="Sim"
-                    android:fontFamily="@font/font_family_fortinite"
                     android:textSize="14sp"
-                    android:thumbTextPadding="2dp"/>
+                    android:thumbTextPadding="2dp" />
 
                 <Switch
                     android:id="@+id/swtchMeuHeadSet_buscar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="2dp"
-                    android:showText="true"
-                    android:text=" Voce possui HeadSet?"
                     android:fontFamily="@font/font_family_fortinite"
+                    android:showText="false"
+                    android:text=" Voce possui HeadSet?"
                     android:textColor="@color/colorPrimary"
-                    android:textOff="Não"
-                    android:textOn="Sim"
-                    android:thumbTextPadding="2dp"/>
+                    android:thumbTextPadding="2dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -92,13 +88,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="1dp"
                         android:layout_weight="0.5"
-                        android:showText="true"
-                        android:text=" Duplas?"
                         android:fontFamily="@font/font_family_fortinite"
+                        android:showText="false"
+                        android:text=" Duplas?"
                         android:textColor="@color/colorPrimary"
                         android:textOff="Não"
                         android:textOn="Sim"
-                        android:thumbTextPadding="2dp"/>
+                        android:thumbTextPadding="2dp" />
 
                     <Switch
                         android:id="@+id/swtchSquad_buscar"
@@ -106,13 +102,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="1dp"
                         android:layout_weight="0.5"
-                        android:showText="true"
+                        android:fontFamily="@font/font_family_fortinite"
+                        android:showText="false"
                         android:text=" Esquadrões?"
                         android:textColor="@color/colorPrimary"
                         android:textOff="Não"
                         android:textOn="Sim"
-                        android:thumbTextPadding="2dp"
-                        android:fontFamily="@font/font_family_fortinite"/>
+                        android:thumbTextPadding="2dp" />
                 </LinearLayout>
 
             </LinearLayout>
