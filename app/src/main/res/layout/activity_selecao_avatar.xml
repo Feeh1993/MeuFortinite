@@ -34,8 +34,7 @@
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
-            android:textStyle="bold|italic"
-            android:typeface="sans" />
+            android:fontFamily="@font/font_family_fortinite"/>
 
         <TextView
             android:id="@+id/textView01"
@@ -44,7 +43,8 @@
             android:layout_margin="2dp"
             android:text="Icones Raros"
             android:textAlignment="center"
-            android:textColor="@color/raro" />
+            android:textColor="@color/raro"
+            android:fontFamily="@font/font_family_fortinite"/>
 
         <LinearLayout
             android:id="@+id/lnl1Raro"
@@ -146,6 +146,7 @@
             android:contextClickable="false"
             android:text="Icones Epicos"
             android:textAlignment="center"
+            android:fontFamily="@font/font_family_fortinite"
             android:textColor="@color/epica" />
 
         <FrameLayout
@@ -165,8 +166,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/main_green_color"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:typeface="sans" />
+                android:fontFamily="@font/font_family_fortinite"/>
 
             <LinearLayout
                 android:id="@+id/lnlEpico"
@@ -274,7 +274,8 @@
             android:layout_margin="2dp"
             android:text="Icones Lendarios"
             android:textAlignment="center"
-            android:textColor="@color/dourado" />
+            android:textColor="@color/dourado"
+            android:fontFamily="@font/font_family_fortinite"/>
 
         <FrameLayout
             android:id="@+id/lendario"
@@ -293,8 +294,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/main_green_color"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:typeface="sans" />
+                android:fontFamily="@font/font_family_fortinite"/>
 
             <LinearLayout
                 android:id="@+id/lnlLendario"
@@ -403,7 +403,8 @@
             android:layout_margin="2dp"
             android:text="Icones Miticos"
             android:textAlignment="center"
-            android:textColor="@color/mitico" />
+            android:textColor="@color/mitico"
+            android:fontFamily="@font/font_family_fortinite"/>
 
         <FrameLayout
             android:id="@+id/mitico"
@@ -422,8 +423,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/main_green_color"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:typeface="sans" />
+                android:fontFamily="@font/font_family_fortinite"/>
 
             <LinearLayout
                 android:id="@+id/lnlMitico"

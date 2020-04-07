@@ -30,7 +30,6 @@ public class Buscar extends Fragment
     private LinearLayout lnlTopo,lnlFundo;
     private Switch swtchMeuHS,swtchSeuHS,swtchDuo,swtchSQD;
     ImageButton imgbtnPlaneta;
-    private FrameLayout frmlTopo;
     private Typeface fortniteFont;
 
     public Buscar()
@@ -56,8 +55,8 @@ public class Buscar extends Fragment
                     lnlTopo.setVisibility(View.GONE);
                     imgbtnPlaneta.startAnimation(rotateAnimation);
                     txtBuscar.setVisibility(View.VISIBLE);
-                    frmlTopo.setVisibility(View.VISIBLE);
                     lnlFundo.setVisibility(View.VISIBLE);
+                    txtInfo.setVisibility(View.VISIBLE);
                     Log.d("BUSCAR_","RESUMO: \n SWITCH MHS: "+swtchMeuHS.getShowText()+
                             "\nSWITCH SHS: "+swtchSeuHS.getShowText()+
                             "\nSWITCH DUO: "+swtchDuo.getShowText()+
@@ -69,9 +68,9 @@ public class Buscar extends Fragment
                     cont = 0;
                     lnlTopo.setVisibility(View.VISIBLE);
                     imgbtnPlaneta.clearAnimation();
+                    txtInfo.setVisibility(View.GONE);
+                    txtInfo.clearAnimation();
                     txtBuscar.setVisibility(View.GONE);
-                    frmlTopo.setVisibility(View.GONE);
-                    //lnlFundo.setVisibility(View.GONE);
                 }
             }
         });
@@ -81,7 +80,6 @@ public class Buscar extends Fragment
 
     public void fazerCast(View view)
     {
-        frmlTopo = (FrameLayout) view.findViewById(R.id.frmlTXTRESUMO_buscar);
         lnlTopo = (LinearLayout) view.findViewById(R.id.lnlTopo_buscar);
         lnlFundo = (LinearLayout) view.findViewById(R.id.lnlFundo_buscar);
         swtchDuo = (Switch) view.findViewById(R.id.swtchDuo_buscar);
@@ -105,6 +103,7 @@ public class Buscar extends Fragment
         txtBuscar.setTypeface(fortniteFont);
         txtResumo.setTypeface(fortniteFont);
         txtInfo.setTypeface(fortniteFont);
+
     }
 
 }

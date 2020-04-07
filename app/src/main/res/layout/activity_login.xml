@@ -16,8 +16,7 @@
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="50dp"
-        android:textStyle="bold|italic"
-        android:typeface="serif" />
+        android:fontFamily="@font/font_family_fortinite" />
 
     <LinearLayout
         android:id="@+id/lnlMeio"
@@ -37,7 +36,7 @@
             android:textAllCaps="false"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/font_family_fortinite"/>
 
         <LinearLayout
             android:layout_width="250dp"
@@ -88,6 +87,7 @@
             android:background="@drawable/bordas_fundo"
             android:ems="10"
             android:gravity="center"
+            android:fontFamily="@font/font_family_fortinite"
             android:hint="Digite seu username"
             android:inputType="textPersonName"
             android:textAlignment="center"
@@ -107,6 +107,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/bordas_fundo"
                 android:text="Conectar"
+                android:fontFamily="@font/font_family_fortinite"
                 android:textColor="@color/colorPrimaryDark" />
 
             <ProgressBar
@@ -130,8 +131,7 @@
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/main_green_color"
-            android:textStyle="bold"
-            android:typeface="sans" />
+            android:fontFamily="@font/font_family_fortinite"/>
 
     </LinearLayout>
 
@@ -163,6 +163,7 @@
                 android:layout_weight="0.7"
                 android:hint="Digite sua senha de Administrador"
                 android:inputType="textMultiLine|text|textPassword"
+                android:fontFamily="@font/font_family_fortinite"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary"
                 android:textColorLink="@color/colorPrimary" />
@@ -179,6 +180,7 @@
                     android:layout_gravity="center|center_horizontal"
                     android:background="@drawable/bordas_fundo"
                     android:paddingLeft="2dp"
+                    android:fontFamily="@font/font_family_fortinite"
                     android:paddingRight="4dp"
                     android:text="logar"
                     android:textAllCaps="false"

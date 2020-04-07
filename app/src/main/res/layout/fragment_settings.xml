@@ -17,12 +17,11 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/font_family_fortinite"
             android:text="Configurações"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:typeface="monospace" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btnPro"
@@ -30,21 +29,22 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:drawableRight="@drawable/ic_premium"
+            android:fontFamily="@font/font_family_fortinite"
             android:text="Assine o pró por apenas R$ 0,99 ao mês e obtenha acesso ilimitado ao no aplicativo além de todos os avatares desbloqueados!"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/main_green_color"
-            android:textStyle="bold"
-            android:typeface="sans" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
+            android:fontFamily="@font/font_family_fortinite"
             android:text="adicione um de nossos avatares disponiveis"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/colorPrimary" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -72,12 +72,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
+            android:fontFamily="@font/font_family_fortinite"
             android:text="  Receber notificações"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold|italic"
-            android:typeface="monospace"
+            android:textColor="@color/colorPrimary"
             tools:checked="true" />
 
         <Switch
@@ -85,12 +84,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
+            android:fontFamily="@font/font_family_fortinite"
             android:text="Exibir dados para jogadores pareados"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold|italic"
-            android:typeface="monospace"
+            android:textColor="@color/colorPrimary"
             tools:checked="true" />
 
     </LinearLayout>
@@ -118,10 +116,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
+                android:fontFamily="@font/font_family_fortinite"
                 android:text="Fazer logout da plataforma"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:typeface="monospace" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/btnLogout"
@@ -130,11 +128,11 @@
                 android:layout_weight="0.1"
                 android:background="@null"
                 android:drawableRight="@drawable/ic_close"
+                android:fontFamily="@font/font_family_fortinite"
                 android:text="Sair"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:typeface="serif" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

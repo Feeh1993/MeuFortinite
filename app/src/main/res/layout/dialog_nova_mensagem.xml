@@ -8,8 +8,8 @@
     tools:context=".VIEW.DIALOG.NovaMensagem">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
 
@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="Enviar Mensagem para..."
+            android:fontFamily="@font/font_family_fortinite"
             android:textColor="@color/colorPrimary" />
 
         <LinearLayout
@@ -28,23 +29,25 @@
 
             <Button
                 android:id="@+id/btnOk"
-                android:layout_width="20dp"
-                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/bordas_fundo"
                 android:text="Enviar Mensagem"
                 android:textAllCaps="false"
+                android:fontFamily="@font/font_family_fortinite"
                 android:textColor="@color/colorPrimary" />
 
             <Button
                 android:id="@+id/btnCancelar"
-                android:layout_width="20dp"
-                android:layout_height="30dp"
-                android:layout_margin="10dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_margin="17dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/bordas_fundo"
                 android:text="Não"
+                android:fontFamily="@font/font_family_fortinite"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>

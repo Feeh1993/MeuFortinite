@@ -17,14 +17,13 @@
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
+            android:layout_gravity="center|top"
             android:layout_margin="5dp"
+            android:fontFamily="@font/font_family_fortinite"
             android:text="Bem vindo a loja"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:typeface="sans" />
+            android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/horizontal_recycler_view"

@@ -4,6 +4,7 @@ package com.example.meufortinite.VIEW.FRAGMENT;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,7 +54,8 @@ public class Loja extends Fragment
     private void fazerCast(View view)
     {
         recyclerViewHorizontal = view.findViewById(R.id.horizontal_recycler_view);
-        recyclerViewHorizontal.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));        progressBar = view.findViewById(R.id.progressBar);
+        recyclerViewHorizontal.setLayoutManager(new GridLayoutManager(getContext(),3));
+        progressBar = view.findViewById(R.id.progressBar);
         if (NetworkCheckingClass.isNetworkAvailable(getContext()))
         {
             progressBar.setVisibility(View.VISIBLE);

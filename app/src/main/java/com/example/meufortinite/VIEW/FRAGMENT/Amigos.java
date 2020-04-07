@@ -438,9 +438,7 @@ public class Amigos extends Fragment
             @Override
             public void onMessagemClick(ImageButton button, int position, Amigo usuario)
             {
-                //ref.child(meuUsuario.get(0).getId()).child("newMessage").setValue(usuario.getNick());
-
-                //viewPager.setCurrentItem(2);
+                ref.child("novaMensagem").child(meuUsuario.get(0).getId()).setValue(usuario.getId());
             }
         });
         recBusca.setAdapter(adapterBusca);

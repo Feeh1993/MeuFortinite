@@ -53,14 +53,15 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/font_family_fortinite"/>
 
                 <TextView
                     android:id="@+id/txtUltimaConversa"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:layout_weight="1"
-                    android:text="..." />
+                    android:text="..."
+                    android:fontFamily="@font/font_family_fortinite"/>
 
             </LinearLayout>
 

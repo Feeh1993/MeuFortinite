@@ -17,8 +17,7 @@
         android:textAllCaps="false"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:typeface="serif" />
+        android:fontFamily="@font/font_family_fortinite"/>
 
     <LinearLayout
         android:id="@+id/lnlMeio"
@@ -49,8 +48,7 @@
                 android:text="..."
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
         </LinearLayout>
 
         <LinearLayout
@@ -75,8 +73,7 @@
                 android:text="..."
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
         </LinearLayout>
 
         <LinearLayout
@@ -101,8 +98,7 @@
                 android:text="..."
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
         </LinearLayout>
 
         <LinearLayout
@@ -129,8 +125,7 @@
                 android:text="..."
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
         </LinearLayout>
 
         <LinearLayout
@@ -155,8 +150,7 @@
                 android:text="..."
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
         </LinearLayout>
 
         <LinearLayout
@@ -181,8 +175,7 @@
                 android:text="..."
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
         </LinearLayout>
 
         <LinearLayout
@@ -207,8 +200,7 @@
                 android:text="..."
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -243,8 +235,7 @@
                 android:textAlignment="viewStart"
                 android:textColor="@color/colorPrimary"
                 android:textSize="10sp"
-                android:textStyle="bold|italic"
-                android:typeface="serif" />
+                android:fontFamily="@font/font_family_fortinite"/>
 
             <ImageButton
                 android:id="@+id/btnShareIdInfo"

@@ -15,6 +15,6 @@
         android:textAllCaps="false"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
-        android:textStyle="bold|italic"
-        android:typeface="serif" />
+        android:fontFamily="@font/font_family_fortinite"
+ />
 </FrameLayout>

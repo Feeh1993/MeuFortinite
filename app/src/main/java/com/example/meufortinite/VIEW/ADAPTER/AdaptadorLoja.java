@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,22 +50,7 @@ public class AdaptadorLoja extends RecyclerView.Adapter<AdaptadorLoja.CustomView
         holder.vBucks.setText(currentStore.getvBucks() + "");
         holder.name.setText(currentStore.getName());
         //holder.rarity.setText(currentStore.getRarity());
-        holder.category.setText(currentStore.getStoreCategory());
         Picasso.get().load(currentStore.getImageUrl()).into(holder.image);
-        if (currentStore.getRarity().contains("Quality"))
-        {
-            holder.lnlADPT.setBackgroundResource(R.color.epica);
-        }
-        else if (currentStore.getRarity().contains("Handmade")||currentStore.getRarity().contains("Sturdy"))
-        {
-            holder.lnlADPT.setBackgroundResource(R.color.incomum);
-        }
-        else if (currentStore.getRarity().contains("Rare"))
-        {
-            holder.lnlADPT.setBackgroundResource(R.color.raro);
-        }
-        //falta lendario e mitico
-
     }
 
 
@@ -77,21 +64,17 @@ public class AdaptadorLoja extends RecyclerView.Adapter<AdaptadorLoja.CustomView
     {
 
         ImageView image;
-        TextView rarity;
-        TextView category;
         TextView vBucks;
         TextView name;
-        CardView lnlADPT;
+        LinearLayout lnlADPT;
 
         CustomViewHolder(View itemView)
         {
             super(itemView);
             image = itemView.findViewById(R.id.imgSkinLoja);
-            //rarity = itemView.findViewById(R.id.textview_storeactivity_rarity);
-            category = itemView.findViewById(R.id.categoriaLoja);
             vBucks = itemView.findViewById(R.id.vBucksLoja);
             name = itemView.findViewById(R.id.nameLoja);
-            lnlADPT = itemView.findViewById(R.id.card_view);
+            lnlADPT = itemView.findViewById(R.id.lnl);
 
         }
 
