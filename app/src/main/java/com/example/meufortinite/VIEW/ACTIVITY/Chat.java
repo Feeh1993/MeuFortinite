@@ -49,6 +49,8 @@ public class Chat extends AppCompatActivity
     private ProgressBar progressBar;
     private long last_message_timestamp = 0;
     private String caminho = "";
+    private String meuNick,nickAmigo;
+    private String icone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,6 +61,9 @@ public class Chat extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         meuId = bundle.getString("meu_id");
         idUser = bundle.getString("id_user");
+        meuNick = bundle.getString("meu_nick");
+        nickAmigo = bundle.getString("nick_amigo");
+        icone = bundle.getString("icone");
         Log.d("CHAT_","CHAT INICIADO IDUSER: "+idUser);
         Log.d("CHAT_","CHAT INICIADO MEUID: "+meuId);
 
@@ -107,7 +112,6 @@ public class Chat extends AppCompatActivity
                     {
                         caminho = possibil1;
                         recuperarMensagensRede(possibil1);
-
                     }
                 }catch (NullPointerException e)
                 {
@@ -204,9 +208,16 @@ public class Chat extends AppCompatActivity
             new_message = new_message.replaceAll(ProfanityFilter.censorWords(ProfanityFilter.ENGLISH), ":)");
         }
 
-        Mensagem xmessage = new Mensagem(new_message, System.currentTimeMillis() / 1000L, isNotification,meuId);
+        Mensagem xmessage = new Mensagem(new_message, System.currentTimeMillis() / 1000L, isNotification,meuNick+":"+icone);
         String key = ref.child("chat").child(meuId).child(idUser).push().getKey();
-        ref.child("chat").child(caminho).child(key).setValue(xmessage);
+        if (caminho != "")
+        {
+            ref.child("chat").child(caminho).child(key).setValue(xmessage);
+        }
+        else
+            {
+                ref.child("chat").child(meuId+"||"+idUser).child(key).setValue(xmessage);
+            }
 
         last_message_timestamp = System.currentTimeMillis() / 1000L;
     }

@@ -135,7 +135,12 @@ public class Conversas extends Fragment
     private void iniciarNovaMensagem(Amigo amigo)
     {
         FragmentManager fm = getChildFragmentManager();
-        NovaMensagem novaMensagem = NovaMensagem.novaMensagem("Conversar com "+amigo.getNick(),amigo.getId(),meuUsuario.get(0).getId());
+        NovaMensagem novaMensagem = NovaMensagem.novaMensagem("Conversar com "+amigo.getNick(),
+                amigo.getId(),
+                meuUsuario.get(0).getId(),
+                meuUsuario.get(0).getNickname(),
+                amigo.getNick(),
+                meuAvatar.get(0).getAvatar());
         novaMensagem.show(fm,"fragment_alert");
     }
 

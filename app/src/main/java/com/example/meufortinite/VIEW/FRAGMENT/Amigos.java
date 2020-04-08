@@ -66,6 +66,31 @@ public class Amigos extends Fragment
     {
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    private void atualizarBancoLocal( ArrayList<Amigo> amigos)
+    {
+        amigos.addAll(db.recuperaAmigos());
+        for (int i = 0; i < amigos.size(); i++)
+        {
+            ref.child("usuarios").child(amigos.get(i).getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                {
+                    Amigo usuario = dataSnapshot.getValue(Amigo.class);
+                    db.atualizarAmigo(usuario);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,10 +134,11 @@ public class Amigos extends Fragment
         Log.d("AMIGOS_","RESUMO");
         try
         {
-            if (db.getQTDAmigos() <= 1)
+            if (db.getQTDAmigos() >= 1)
             {
                 listAmigos.clear();
                 listAmigos.addAll(db.recuperaAmigos());
+                atualizarBancoLocal(listAmigos);
                 db.atualizarAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),
                         meuUsuario.get(0).getNickname(),
                         "online",
@@ -125,12 +151,12 @@ public class Amigos extends Fragment
                 Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
                 Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
                 Log.d("AMIGOS_","ICONE ATUAL "+meuAvatar.get(0).getAvatar());
-                listAmigos.get(0).setIcone(Integer.parseInt(meuAvatar.get(0).getAvatar()));
             }
         }catch (IndexOutOfBoundsException e)
         {
             listAmigos.clear();
             listAmigos.addAll(db.recuperaAmigos());
+            atualizarBancoLocal(listAmigos);
             txtUsuario.setVisibility(View.VISIBLE);
         }
 

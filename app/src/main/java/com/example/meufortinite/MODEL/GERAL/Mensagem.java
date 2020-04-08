@@ -22,7 +22,6 @@ public class Mensagem
     this.recebido = recebido;
     this.username = username;
   }
-
   public boolean isRecebido() {
     return recebido;
   }

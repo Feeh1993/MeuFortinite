@@ -15,7 +15,8 @@ public class Conversa
     public Conversa()
     {
     }
-    public Conversa(String mensagem, String criado, String id, String nickname) {
+    public Conversa(String mensagem, String criado, String id, String nickname)
+    {
         this.mensagem = mensagem;
         this.criado = criado;
         this.id = id;
