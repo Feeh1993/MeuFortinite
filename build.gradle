@@ -6,6 +6,7 @@ buildscript {
         mavenCentral()
         maven{ url "https://jitpack.io"}
         maven{ url "https://github.com/pagseguro/pagseguro-android-sdk-checkout-in-app/raw/master/repositorio"}
+        maven { url "https://dl.bintray.com/hani-momanii/maven"}
         jcenter()
     }
     dependencies {

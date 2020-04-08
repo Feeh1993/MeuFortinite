@@ -107,33 +107,31 @@ public class Amigos extends Fragment
     {
         super.onResume();
         Log.d("AMIGOS_","RESUMO");
-        if (db.getQTDAmigos() > 0)
-        {
-            listAmigos.clear();
-            listAmigos.addAll(db.recuperaAmigos());
-            db.atualizarAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),
-                    meuUsuario.get(0).getNickname(),
-                    "online",
-                    meuUsuario.get(0).getId(),
-                    listAmigos.get(0).getAmigos(),
-                    listAmigos.get(0).getRank()));
-            listAmigos.clear();
-            listAmigos.addAll(db.recuperaAmigos());
-            txtUsuario.setVisibility(View.VISIBLE);
-            Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
-            Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
-        }
-
         try
         {
             if (db.getQTDAmigos() <= 1)
             {
+                listAmigos.clear();
+                listAmigos.addAll(db.recuperaAmigos());
+                db.atualizarAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),
+                        meuUsuario.get(0).getNickname(),
+                        "online",
+                        meuUsuario.get(0).getId(),
+                        listAmigos.get(0).getAmigos(),
+                        listAmigos.get(0).getRank()));
+                listAmigos.clear();
+                listAmigos.addAll(db.recuperaAmigos());
+                txtUsuario.setVisibility(View.VISIBLE);
+                Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
+                Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
                 Log.d("AMIGOS_","ICONE ATUAL "+meuAvatar.get(0).getAvatar());
                 listAmigos.get(0).setIcone(Integer.parseInt(meuAvatar.get(0).getAvatar()));
             }
         }catch (IndexOutOfBoundsException e)
         {
-
+            listAmigos.clear();
+            listAmigos.addAll(db.recuperaAmigos());
+            txtUsuario.setVisibility(View.VISIBLE);
         }
 
         iniciRecAmigos();

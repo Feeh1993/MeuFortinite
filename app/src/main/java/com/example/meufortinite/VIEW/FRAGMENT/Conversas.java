@@ -25,7 +25,6 @@ import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Conversa;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
-import com.example.meufortinite.VIEW.ADAPTER.AdaptadorConversa;
 import com.example.meufortinite.VIEW.DIALOG.NovaMensagem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +41,6 @@ public class Conversas extends Fragment
     private FloatingActionButton fabNmsg;
     private Button btnAmigos;
     private ViewPager viewPager;
-    private AdaptadorConversa adaptadorConversa;
     private DatabaseHelper db;
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
     private ArrayList<Avatar> meuAvatar = new ArrayList<>();
