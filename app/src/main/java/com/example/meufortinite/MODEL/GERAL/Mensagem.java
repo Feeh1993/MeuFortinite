@@ -1,5 +1,7 @@
 package com.example.meufortinite.MODEL.GERAL;
 
+import com.example.meufortinite.HELPER.RandomColor;
+import com.example.meufortinite.R;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
@@ -56,6 +58,13 @@ public class Mensagem
 
   public void setData(long data) {
     this.data = data;
+  }
+
+  private static int corRandom()
+  {
+    RandomColor randomColor = new RandomColor();
+    int cor = randomColor.randomColor();
+    return cor;
   }
 
 }

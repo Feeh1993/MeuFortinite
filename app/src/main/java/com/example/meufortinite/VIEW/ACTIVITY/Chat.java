@@ -78,7 +78,7 @@ public class Chat extends AppCompatActivity
 
         progressBar.setVisibility(View.VISIBLE);
         recChat.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AdaptadorChat(mContext, mensagemArrayList);
+        adapter = new AdaptadorChat(mContext, mensagemArrayList,meuNick);
         recChat.setAdapter(adapter);
 
         imgButtonSend.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +96,8 @@ public class Chat extends AppCompatActivity
             }
         });
     }
+
+
     private void fazerCast()
     {
         mContext = Chat.this;
