@@ -1,21 +1,22 @@
 package com.example.meufortinite.VIEW.ACTIVITY;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.HELPER.ProfanityFilter;
@@ -51,6 +52,7 @@ public class Chat extends AppCompatActivity
     private String caminho = "";
     private String meuNick,nickAmigo;
     private String icone;
+    private Toolbar mTopToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -58,6 +60,8 @@ public class Chat extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         fazerCast();
+        mTopToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mTopToolbar);
         Bundle bundle = getIntent().getExtras();
         meuId = bundle.getString("meu_id");
         idUser = bundle.getString("id_user");
@@ -220,5 +224,32 @@ public class Chat extends AppCompatActivity
             }
 
         last_message_timestamp = System.currentTimeMillis() / 1000L;
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+        switch (id)
+        {
+            case R.id.back_mn :
+
+                break;
+            case R.id.iconAmigo_mn :
+
+                break;
+            case R.id.iconMeu_mn :
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

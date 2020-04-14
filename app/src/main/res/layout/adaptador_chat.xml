@@ -3,41 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:orientation="horizontal">
+    android:layout_margin="3dp"
+    android:orientation="horizontal"
+    android:padding="3dp">
 
-  <LinearLayout
+  <ImageView
+      android:id="@+id/imgAVT"
       android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
+      android:layout_height="50dp"
+      android:layout_gravity="center"
+      android:layout_margin="3dp"
+      app:srcCompat="@drawable/ic_emojis" />
 
-    <ImageView
-        android:id="@+id/imgAVT"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_margin="3dp"
-        app:srcCompat="@drawable/ic_emojis" />
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_weight="0.6"
+      android:background="@drawable/bordas_selecionada">
 
     <TextView
-        android:id="@+id/nickname"
+        android:id="@+id/textView_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="3dp"
-        android:fontFamily="@font/font_family_fortinite"
-        android:text="nick"
-        android:textColor="@color/colorPrimary"
-        android:textSize="11sp" />
-  </LinearLayout>
+        android:layout_margin="15dp"
+        android:autoLink="all"
+        android:maxLines="3"
+        android:text="Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem  "
+        android:textAlignment="center"
+        android:textColor="@color/branco"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:typeface="sans" />
+  </FrameLayout>
 
-  <TextView
-      android:id="@+id/textView_message"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="3dp"
-      android:autoLink="all"
-      android:fontFamily="@font/font_family_fortinite"
-      android:maxLines="3"
-      android:text="Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem Long mensagem  "
-      android:textAlignment="center"
-      android:textColor="@color/colorPrimary"
-      android:textSize="16sp" />
 </LinearLayout>

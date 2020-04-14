@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.meufortinite.VIEW.FRAGMENT.Amigos;
 import com.example.meufortinite.VIEW.FRAGMENT.Buscar;
 import com.example.meufortinite.VIEW.FRAGMENT.Conversas;
-import com.example.meufortinite.VIEW.FRAGMENT.Estatisticas;
 import com.example.meufortinite.VIEW.FRAGMENT.Loja;
 import com.example.meufortinite.VIEW.FRAGMENT.Noticias;
 import com.example.meufortinite.VIEW.FRAGMENT.Settings;
@@ -30,18 +29,16 @@ public class PPPagerAdapter extends FragmentPagerAdapter
         switch (position)
         {
             case 0:
-                return new Estatisticas();
-            case 1:
                 return new Amigos();
-            case 2:
+            case 1:
                 return new Conversas();
-            case 3:
+            case 2:
                 return new Buscar();
-            case 4:
+            case 3:
                 return new Noticias();
-            case 5:
+            case 4:
                 return new Loja();
-            case 6:
+            case 5:
                 return new Settings();
         }
         return null;
@@ -49,7 +46,7 @@ public class PPPagerAdapter extends FragmentPagerAdapter
 
     @Override
     public int getCount() {
-        return 7;
+        return 6;
     }
 
     @Override

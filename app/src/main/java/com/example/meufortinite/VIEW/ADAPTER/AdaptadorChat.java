@@ -44,12 +44,12 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.MyViewHold
 
     if (mensagem.recebido())
     {
-      myViewHolder.nickname.setText(userAndIcon[0]);
+      //myViewHolder.nickname.setText(userAndIcon[0]);
       myViewHolder.imgAvtar.setImageResource(Avatar.identificarAvatar(Integer.parseInt(userAndIcon[1])));
       myViewHolder.textView_message.setText(mensagem.getMessagem());
     }else
       {
-        myViewHolder.nickname.setText(userAndIcon[0]);
+       // myViewHolder.nickname.setText(userAndIcon[0]);
         myViewHolder.imgAvtar.setImageResource(Avatar.identificarAvatar(Integer.parseInt(userAndIcon[1])));
         myViewHolder.textView_message.setText(mensagem.getMessagem());
     }
@@ -60,14 +60,14 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.MyViewHold
   }
 
   public class MyViewHolder extends RecyclerView.ViewHolder {
-    protected TextView textView_message,nickname;
+    protected TextView textView_message;
     protected ImageView imgAvtar;
 
     public MyViewHolder(View view)
     {
       super(view);
       this.textView_message = (TextView) view.findViewById(R.id.textView_message);
-      this.nickname = (TextView) view.findViewById(R.id.nickname);
+     // this.nickname = (TextView) view.findViewById(R.id.nickname);
       this.imgAvtar = (ImageView) view.findViewById(R.id.imgAVT);
     }
   }
