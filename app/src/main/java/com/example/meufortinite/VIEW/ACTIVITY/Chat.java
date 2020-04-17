@@ -1,11 +1,14 @@
 package com.example.meufortinite.VIEW.ACTIVITY;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,11 +22,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.HELPER.ProfanityFilter;
 import com.example.meufortinite.HELPER.SCUtils;
+import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,23 +55,25 @@ public class Chat extends AppCompatActivity
     private long last_message_timestamp = 0;
     private String caminho = "";
     private String meuNick,nickAmigo;
-    private String icone;
-    private Toolbar mTopToolbar;
+    private Toolbar toolbar;
 
+    String mensagem;
+    private String iconeA,mIcone;
+
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         fazerCast();
-        mTopToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mTopToolbar);
         Bundle bundle = getIntent().getExtras();
         meuId = bundle.getString("meu_id");
         idUser = bundle.getString("id_user");
         meuNick = bundle.getString("meu_nick");
         nickAmigo = bundle.getString("nick_amigo");
-        icone = bundle.getString("icone");
+        iconeA = bundle.getString("iconeA");
+        mIcone = bundle.getString("mIcone");
         Log.d("CHAT_","CHAT INICIADO IDUSER: "+idUser);
         Log.d("CHAT_","CHAT INICIADO MEUID: "+meuId);
 
@@ -76,6 +82,13 @@ public class Chat extends AppCompatActivity
         String possibil2 = idUser+"||"+meuId;
         localizarExistencia(possibil1,possibil2);
 
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationIcon(Avatar.identificarAvatar(Integer.parseInt(iconeA)));
+        toolbar.setTitle(nickAmigo);
+
         progressBar.setVisibility(View.VISIBLE);
         recChat.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AdaptadorChat(mContext, mensagemArrayList,meuNick);
@@ -83,7 +96,7 @@ public class Chat extends AppCompatActivity
 
         imgButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                process_new_message(edtMensagem.getText().toString().trim(), false);
+                enviarMsg(edtMensagem.getText().toString().trim(), false);
             }
         });
 
@@ -194,11 +207,35 @@ public class Chat extends AppCompatActivity
             });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-    private void process_new_message(String new_message, boolean isNotification)
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_chat,menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id)
+        {
+            case R.id.mn_back:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void enviarMsg(String new_message, boolean isNotification)
     {
         edtMensagem.setText("");
-
         if (new_message.isEmpty())
         {
             return;
@@ -208,50 +245,38 @@ public class Chat extends AppCompatActivity
             SCUtils.showErrorSnackBar(mContext, findViewById(android.R.id.content), "Texto muito grande,limite se a menos de 1000 caracteres").show();
             return;
         }
-        //yes, admins can swear ;)
-        if ((PROFANITY_FILTER_ACTIVE) && (!IS_ADMIN))
+        TarefaMensagem tarefaMensagem = new TarefaMensagem();
+        tarefaMensagem.execute(new_message);
+    }
+
+    private class TarefaMensagem extends AsyncTask<String, Void , Void>
+    {
+        @Override
+        protected void onPreExecute()
         {
-            new_message = new_message.replaceAll(ProfanityFilter.censorWords(ProfanityFilter.ENGLISH), ":)");
+            super.onPreExecute();
+
         }
 
-        Mensagem xmessage = new Mensagem(new_message, System.currentTimeMillis() / 1000L, isNotification,meuNick+":"+icone);
-        String key = ref.child("chat").child(meuId).child(idUser).push().getKey();
-        if (caminho != "")
+        @Override
+        protected Void doInBackground(String... strings)
         {
-            ref.child("chat").child(caminho).child(key).setValue(xmessage);
-        }
-        else
+            mensagem = strings[0];
+            Mensagem xmessage = new Mensagem(mensagem, System.currentTimeMillis() / 1000L, false,meuNick+":"+mIcone);
+            String key = ref.child("chat").child(meuId).child(idUser).push().getKey();
+            if (caminho != "")
+            {
+                ref.child("chat").child(caminho).child(key).setValue(xmessage);
+            }
+            else
             {
                 ref.child("chat").child(meuId+"||"+idUser).child(key).setValue(xmessage);
             }
 
-        last_message_timestamp = System.currentTimeMillis() / 1000L;
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chat, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int id = item.getItemId();
-        switch (id)
-        {
-            case R.id.back_mn :
-
-                break;
-            case R.id.iconAmigo_mn :
-
-                break;
-            case R.id.iconMeu_mn :
-
-                break;
+            last_message_timestamp = System.currentTimeMillis() / 1000L;
+            return null;
         }
-        return super.onOptionsItemSelected(item);
+
+
     }
 }

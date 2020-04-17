@@ -4,20 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue_btn_bg_pressed_color"
     android:fitsSystemWindows="true"
     tools:context=".VIEW.ACTIVITY.Chat">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:titleTextColor="@color/branco"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -60,8 +61,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
         android:layout_margin="8dp"
+        android:background="@drawable/bordas_selecionada"
         android:elevation="4dp"
         android:orientation="horizontal"
+        android:padding="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -71,19 +74,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_margin="3dp"
             android:layout_weight="1"
             android:ems="10"
             android:hint="digite alguma coisa"
             android:imeOptions="actionSend"
             android:inputType="text"
-            android:shadowColor="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:textColorHighlight="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textColorLink="@color/colorPrimary" />
-        "
-        android:inputType="text"
-        />
+            android:shadowColor="@color/branco"
+            android:textColor="@color/branco"
+            android:textColorHighlight="@color/branco"
+            android:textColorHint="@color/branco"
+            android:textColorLink="@color/branco" />
 
         <ImageButton
 
@@ -92,6 +93,7 @@
             android:layout_width="46dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_margin="3dp"
             android:layout_weight="0.06"
             android:text="Send"
             app:srcCompat="@drawable/ic_send_icon_enabled" />

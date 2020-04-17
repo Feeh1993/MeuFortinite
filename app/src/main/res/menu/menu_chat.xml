@@ -1,26 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".VIEW.ACTIVITY.Chat">
-
     <item
-        android:id="@+id/back_mn"
-        android:orderInCategory="300"
-        android:icon="@drawable/ic_back_icon"
-        app:showAsAction="always"
-        android:title=""></item>
-    <item
-        android:id="@+id/iconAmigo_mn"
-        android:orderInCategory="200"
-        android:icon="@drawable/ic_emojis"
-        app:showAsAction="ifRoom"
-        android:title=""></item>
-    <item
-        android:id="@+id/iconMeu_mn"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_emojis"
-        app:showAsAction="ifRoom"
-        android:title=""></item>
+        android:id="@+id/mn_back"
+        android:icon="@drawable/ic_close"
+        android:title=""
+        app:showAsAction="ifRoom"/>
 
 </menu>

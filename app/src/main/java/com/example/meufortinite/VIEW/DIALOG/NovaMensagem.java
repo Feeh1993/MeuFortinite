@@ -34,7 +34,7 @@ public class NovaMensagem extends DialogFragment
 
     }
 
-    public static  NovaMensagem novaMensagem(String texto,String idAmigo,String meuId,String meuNick,String nickAmigo,String icone)
+    public static  NovaMensagem novaMensagem(String texto,String idAmigo,String meuId,String meuNick,String nickAmigo,String meuIcone,String iconeAmigo)
     {
         NovaMensagem frag = new NovaMensagem();
         Bundle bundle = new Bundle();
@@ -43,7 +43,8 @@ public class NovaMensagem extends DialogFragment
         bundle.putString("meuId",meuId);
         bundle.putString("nickAmigo",nickAmigo);
         bundle.putString("meuNick",meuNick);
-        bundle.putString("icone",icone);
+        bundle.putString("mIcone",meuIcone);
+        bundle.putString("iconeA",iconeAmigo);
 
         frag.setArguments(bundle);
         return frag;
@@ -73,7 +74,8 @@ public class NovaMensagem extends DialogFragment
         final String meuId = getArguments().getString("meuId");
         final String meuNick = getArguments().getString("meuNick");
         final String nickAmigo = getArguments().getString("nickAmigo");
-        final String icone = getArguments().getString("icone");
+        final String mIcone = getArguments().getString("mIcone");
+        final String iconeA = getArguments().getString("iconeA");
 
         Log.d("NM_","TT: "+titulo+" \n ID: "+id+" \n MID: "+meuId);
         txtTitulo.setText(titulo);
@@ -93,7 +95,8 @@ public class NovaMensagem extends DialogFragment
                 bundle.putString("meu_id",meuId);
                 bundle.putString("meu_nick",meuNick);
                 bundle.putString("nick_amigo",nickAmigo);
-                bundle.putString("icone",icone);
+                bundle.putString("mIcone",mIcone);
+                bundle.putString("iconeA",iconeA);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

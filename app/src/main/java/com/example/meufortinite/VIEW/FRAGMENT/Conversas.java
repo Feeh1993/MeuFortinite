@@ -140,7 +140,8 @@ public class Conversas extends Fragment
                 meuUsuario.get(0).getId(),
                 meuUsuario.get(0).getNickname(),
                 amigo.getNick(),
-                meuAvatar.get(0).getAvatar());
+                meuAvatar.get(0).getAvatar(),
+                String.valueOf(amigo.getIcone()));
         novaMensagem.show(fm,"fragment_alert");
     }
 
