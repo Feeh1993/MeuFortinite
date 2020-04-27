@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
         android:layout_marginTop="110dp"
-        android:text="Meu Fortinite"
+        android:fontFamily="@font/font_family_fortinite"
+        android:text="Meu Battle Royale"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
-        android:textSize="50dp"
-        android:fontFamily="@font/font_family_fortinite" />
+        android:textSize="50dp" />
 
     <LinearLayout
         android:id="@+id/lnlMeio"

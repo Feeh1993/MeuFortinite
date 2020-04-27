@@ -21,13 +21,13 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.HELPER.SCUtils;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,7 +50,8 @@ public class Chat extends AppCompatActivity
     private AdaptadorChat adapter;
     private ImageButton imgButtonSend;
     private EditText edtMensagem;
-    ArrayList<Mensagem> mensagemArrayList = new ArrayList<>();
+    private ArrayList<Mensagem> mensagemArrayList = new ArrayList<>();
+    private ArrayList<Mensagem> listaBancoLocal = new ArrayList<>();
     private ProgressBar progressBar;
     private long last_message_timestamp = 0;
     private String caminho = "";
@@ -59,6 +60,7 @@ public class Chat extends AppCompatActivity
 
     String mensagem;
     private String iconeA,mIcone;
+    private DatabaseHelper db;
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
@@ -66,6 +68,7 @@ public class Chat extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        db = new DatabaseHelper(getApplicationContext());
         fazerCast();
         Bundle bundle = getIntent().getExtras();
         meuId = bundle.getString("meu_id");
@@ -130,6 +133,7 @@ public class Chat extends AppCompatActivity
                     if (dataSnapshot.getValue().toString() != null)
                     {
                         caminho = possibil1;
+                        progressBar.setVisibility(View.VISIBLE);
                         recuperarMensagensRede(possibil1);
                     }
                 }catch (NullPointerException e)
@@ -154,6 +158,7 @@ public class Chat extends AppCompatActivity
                     if (dataSnapshot.getValue().toString() != null)
                     {
                         caminho = possibil2;
+                        progressBar.setVisibility(View.VISIBLE);
                         recuperarMensagensRede(possibil2);
                     }
                 }catch (NullPointerException e)
@@ -262,21 +267,41 @@ public class Chat extends AppCompatActivity
         protected Void doInBackground(String... strings)
         {
             mensagem = strings[0];
-            Mensagem xmessage = new Mensagem(mensagem, System.currentTimeMillis() / 1000L, false,meuNick+":"+mIcone);
+            Mensagem msgRemota = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(), "0",meuNick+":"+mIcone);
+            Mensagem msgLocal = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(),iconeA,meuNick);
             String key = ref.child("chat").child(meuId).child(idUser).push().getKey();
             if (caminho != "")
             {
-                ref.child("chat").child(caminho).child(key).setValue(xmessage);
+                ref.child("chat").child(caminho).child(key).setValue(msgRemota);
+                //IMPLEMENTAR OS BANCOS LOCAIS
+                verificarEsalvar(msgLocal);
             }
             else
             {
-                ref.child("chat").child(meuId+"||"+idUser).child(key).setValue(xmessage);
+                ref.child("chat").child(meuId+"||"+idUser).child(key).setValue(msgRemota);
+                //UNE O USUARIO COM O AMIGO PARA SE CRIAR O CAMINHO DO CHAT
+                String possibil1 = meuId+"||"+idUser;
+                String possibil2 = idUser+"||"+meuId;
+                localizarExistencia(possibil1,possibil2);
+                verificarEsalvar(msgLocal);
             }
 
             last_message_timestamp = System.currentTimeMillis() / 1000L;
             return null;
         }
-
-
+        private  void verificarEsalvar(Mensagem mensagem)
+        {
+            listaBancoLocal.addAll(db.recuperaConversas());
+            for (int i = 0; i < listaBancoLocal.size(); i++)
+            {
+                    if (listaBancoLocal.get(i).getId().equals(mensagem.getId()))
+                    {
+                        Log.d("CHAT_","Verificar = true");
+                        db.deletarConversa(mensagem,"");
+                    }
+            }
+            Log.d("CHAT_","AVATAR RECEBIDO: "+mensagem.getRecebido() );
+            db.inserirConversa(mensagem);
+        }
     }
 }

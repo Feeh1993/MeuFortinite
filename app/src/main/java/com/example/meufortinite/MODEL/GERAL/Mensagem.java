@@ -8,24 +8,31 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class Mensagem
 {
 
+  private String id;
   private String messagem;
-  private long data;
-  private boolean recebido;
+  private String data;
+  private String recebido;
   private String username;
 
   public Mensagem() {
 
   }
 
-  public Mensagem(String messagem, long data, boolean recebido, String username)
+  public Mensagem(String id,String messagem, String data, String recebido, String username)
   {
+    this.id = id;
     this.messagem = messagem;
     this.data = data;
     this.recebido = recebido;
     this.username = username;
   }
-  public boolean isRecebido() {
-    return recebido;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getUsername() {
@@ -36,12 +43,12 @@ public class Mensagem
     this.username = username;
   }
 
-  public boolean recebido() {
+  public String getRecebido() {
     return recebido;
   }
 
-  public void setRecebido(boolean recebido) {
-    recebido = recebido;
+  public void setRecebido(String recebido) {
+    this.recebido = recebido;
   }
 
   public String getMessagem() {
@@ -52,11 +59,11 @@ public class Mensagem
     this.messagem = messagem;
   }
 
-  public long getData() {
+  public String getData() {
     return data;
   }
 
-  public void setData(long data) {
+  public void setData(String data) {
     this.data = data;
   }
 

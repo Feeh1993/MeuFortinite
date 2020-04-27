@@ -113,33 +113,24 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.MyViewHold
 
 
     String userAndIcon[] = mensagem.getUsername().split(":");
-    String formatted_date = SCUtils.formatted_date(mensagem.getData());
     Log.d("ADPT_CHAT","meuUSer: "+meuUser+"\n userMSG: "+userAndIcon[0] );
     if(meuUser.equals(userAndIcon[0]))
     {
-      if (mensagem.recebido())
+      if (mensagem.getRecebido() == "0")
       {
-        //myViewHolder.nickname.setText(userAndIcon[0]);
-       // myViewHolder.imgAvtarE.setImageResource(Avatar.identificarAvatar(Integer.parseInt(userAndIcon[1])));
         myViewHolder.txt.setText(mensagem.getMessagem());
       }else
       {
-        // myViewHolder.nickname.setText(userAndIcon[0]);
-        //myViewHolder.imgAvtarE.setImageResource(Avatar.identificarAvatar(Integer.parseInt(userAndIcon[1])));
         myViewHolder.txt.setText(mensagem.getMessagem());
       }
     }
     else
     {
-      if (mensagem.recebido())
+      if (mensagem.getRecebido() == "1")
       {
-        //myViewHolder.nickname.setText(userAndIcon[0]);
-        //myViewHolder.imgAvtarD.setImageResource(Avatar.identificarAvatar(Integer.parseInt(userAndIcon[1])));
         myViewHolder.txt.setText(mensagem.getMessagem());
       }else
       {
-        // myViewHolder.nickname.setText(userAndIcon[0]);
-        //myViewHolder.imgAvtarD.setImageResource(Avatar.identificarAvatar(Integer.parseInt(userAndIcon[1])));
         myViewHolder.txt.setText(mensagem.getMessagem());
       }
     }

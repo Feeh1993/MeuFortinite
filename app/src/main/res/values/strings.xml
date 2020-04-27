@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Meu Fortinite</string>
+    <string name="app_name">Meu Battle Royale</string>
     <string name="title_activity_painel_principal">PainelPrincipal</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>

@@ -29,7 +29,7 @@
         android:layout_centerVertical="false"
         android:layout_marginTop="280dp"
         android:elevation="10dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/linLayout_text"
         app:layout_constraintEnd_toEndOf="@+id/main_recycler_view"
         app:layout_constraintHorizontal_bias="0.498"

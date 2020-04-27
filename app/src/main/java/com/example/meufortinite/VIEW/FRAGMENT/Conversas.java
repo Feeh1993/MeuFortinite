@@ -1,13 +1,13 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -22,11 +22,15 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
-import com.example.meufortinite.MODEL.GERAL.Conversa;
+import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
+import com.example.meufortinite.MODEL.INTERFACE.CustomConversa;
 import com.example.meufortinite.R;
+import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
+import com.example.meufortinite.VIEW.ADAPTER.AdaptadorConversa;
 import com.example.meufortinite.VIEW.DIALOG.NovaMensagem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,8 +48,8 @@ public class Conversas extends Fragment
     private DatabaseHelper db;
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
     private ArrayList<Avatar> meuAvatar = new ArrayList<>();
-    private ArrayList<Conversa> conversasLocais = new ArrayList<>();
-    private Typeface fortniteFont;
+    private ArrayList<Mensagem> listConversa = new ArrayList<>();
+    private AdaptadorConversa adapter;
 
 
     public Conversas()
@@ -55,20 +59,21 @@ public class Conversas extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("CHAT_","onStart");
+        Log.d("CONVERSAS_","onStart");
+        recuperarDadosLocais();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("CHAT_","onStop");
+        Log.d("CONVERSAS_","onStop");
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        Log.d("CHAT_","onPause");
+        Log.d("CONVERSAS_","onPause");
     }
 
     @Override
@@ -85,7 +90,7 @@ public class Conversas extends Fragment
                     if (dataSnapshot.getValue().toString() != null)
                     {
                         Toast.makeText(getContext(),"Alteração",Toast.LENGTH_LONG).show();
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(1);
                         recuperandoAmigo(dataSnapshot.getValue().toString());
                         //REMOVE VALOR DO BANCO PARA QUE OUTRA NOVA MENSAGEM ENTRE
                         ref.child("novaMensagem").child(meuUsuario.get(0).getId()).removeValue();
@@ -103,6 +108,7 @@ public class Conversas extends Fragment
 
             }
         });
+
     }
 
     private void recuperandoAmigo(String nick)
@@ -149,7 +155,7 @@ public class Conversas extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("CHAT_","onViewCreated");
+        Log.d("CONVERSAS_","onViewCreated");
     }
 
     @Override
@@ -158,25 +164,70 @@ public class Conversas extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_conversa, container, false);
         fazerCast(view);
-        db = new DatabaseHelper(getContext());
         recuperarDadosLocais();
-        iniciarRecycler();
+        recuperarBanco();
         return view;
     }
+// IMPLEMENTAR BANCO REMOTO :<
+    private void recuperarBanco()
+    {
+        ref.child("chat").addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                try
+                {
+                    if (dataSnapshot.getValue().toString() != null)
+                    {
+
+                    }
+
+                }catch (NullPointerException e)
+                {
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void recuperarDadosLocais()
     {
+        db = new DatabaseHelper(getContext());
+        meuUsuario.clear();
+        meuAvatar.clear();
+        listConversa.clear();
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
-        conversasLocais.addAll(db.recuperaConversas());
+        listConversa.addAll(db.recuperaConversas());
         try
         {
-            Log.d("AMIGOS_","AVATAR: "+meuAvatar.get(0).getAvatar());
-            Log.d("AMIGOS_","USUARIO: "+meuUsuario.get(0).getNickname());
-            Log.d("AMIGOS_","QTD CONVERSAS: "+conversasLocais.size());
+            Log.d("CONVERSAS_","AVATAR: "+listConversa.get(0).getRecebido());
+            Log.d("CONVERSAS_","USUARIO: "+meuUsuario.get(0).getNickname());
+            Log.d("CONVERSAS_","QTD CONVERSAS: "+listConversa.size());
+            Log.d("CONVERSAS_","DADOS CONVERSA 1 : "+listConversa.get(0).getUsername());
+
         }catch (IndexOutOfBoundsException e)
         {
-            Log.d("AMIGOS_","PRIMEIRO ACESSO");
+            Log.d("CONVERSAS_","PRIMEIRO ACESSO");
         }
+        recChat.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new AdaptadorConversa(getContext(), listConversa,meuUsuario.get(0).getId(), new CustomConversa() {
+            @Override
+            public void onItemClick(View itemView, int position, Mensagem conversa)
+            {
+                //FALTA IMPLEMENTAR CLIQUE
+
+            }
+        });
+        recChat.setAdapter(adapter);
 
     }
     private void iniciarRecycler()
@@ -190,8 +241,6 @@ public class Conversas extends Fragment
         fabNmsg = view.findViewById(R.id.fabNovaMsg);
         viewPager = (ViewPager) getActivity().findViewById(R.id.vp_painel);
         btnAmigos = view.findViewById(R.id.btnAmigos);
-        fortniteFont = Typeface.createFromAsset(getActivity().getAssets(),getString(R.string.fortnite_font_resource));
-        btnAmigos.setTypeface(fortniteFont);
 
         btnAmigos.setOnClickListener(new View.OnClickListener()
         {
@@ -207,12 +256,13 @@ public class Conversas extends Fragment
                 abrirListaAmigos();
             }
         });
-
-
     }
-//criar algo para ab
+//criar algo para abrir lista amigos
     private void abrirListaAmigos()
     {
+        FragmentManager fm = getChildFragmentManager();
+        //NovaMensagem novaMensagem = NovaMensagem.novaMensagem();
+        //novaMensagem.show(fm,"fragment_alert");
 
     }
 

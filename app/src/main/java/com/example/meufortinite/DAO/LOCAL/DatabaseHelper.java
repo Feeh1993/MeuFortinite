@@ -11,8 +11,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
-import com.example.meufortinite.MODEL.GERAL.Conversa;
+import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
+import com.example.meufortinite.VIEW.FRAGMENT.Conversas;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     //DADOS TABELA CONVERSA
     public static final String COLUMN_ULT_MSG =  "ultmsg";
+    public static final String COLUMN_RECEBIDO =  "recebido";
     public static  final String TABLE_NAME_CONVERSA = "conversa";
 
     //DADOS TABELA USUARIO
@@ -82,8 +84,9 @@ public class DatabaseHelper extends SQLiteOpenHelper
             "CREATE TABLE " + TABLE_NAME_CONVERSA + "("
                     + COLUMN_ID + " TEXT PRIMARY KEY,"
                     + COLUMN_ULT_MSG + " TEXT,"
-                    + COLUMN_NICKNAME + " TEXT,"
-                    + COLUMN_CRIADO + " TEXT"
+                    + COLUMN_CRIADO + " TEXT,"
+                    + COLUMN_RECEBIDO + " TEXT,"
+                    + COLUMN_NICKNAME + " TEXT"
                     + ")";
 
     // CRIANDO TABELA USUARIO
@@ -153,20 +156,21 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return id;
     }
 
-    public long inserirConversa(Conversa conversa)
+    public long inserirConversa(Mensagem conversa)
     {
         // ABRIR MODO DE LEITURA DO BANCO
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_ID, conversa.id);
-        values.put(COLUMN_AMIGOS, conversa.nickname);
+        values.put(COLUMN_ID, conversa.getId());
+        values.put(COLUMN_NICKNAME, conversa.getUsername());
+        values.put(COLUMN_RECEBIDO, conversa.getRecebido());
         values.put(COLUMN_CRIADO,this.getDateTime());
-        values.put(COLUMN_ULT_MSG, conversa.mensagem);
+        values.put(COLUMN_ULT_MSG, conversa.getMessagem());
 
 
         //INSERIR LINHA
-        long id = db.insert(TABLE_NAME_AMIGOS, null, values);
+        long id = db.insert(TABLE_NAME_CONVERSA, null, values);
 
         // FECHAR CONEXAO
         db.close();
@@ -245,7 +249,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return amigo;
     }
 
-    public Conversa getConversa(long id)
+    public Mensagem getConversa(long id)
     {
         // get readable database as we are not inserting anything
         SQLiteDatabase db = this.getReadableDatabase();
@@ -256,10 +260,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         if (cursor != null)
             cursor.moveToFirst();
-        Conversa conversa = new Conversa(cursor.getString(cursor.getColumnIndex(COLUMN_ULT_MSG)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
+        Mensagem conversa = new Mensagem(cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
+                                         cursor.getString(cursor.getColumnIndex(COLUMN_ULT_MSG)),
+                                         cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)),
+                                         cursor.getString(cursor.getColumnIndex(COLUMN_RECEBIDO)),
+                                         cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME))
+                );
 
         // close the db connection
         cursor.close();
@@ -349,9 +355,9 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return amigos;
     }
 
-    public List<Conversa> recuperaConversas()
+    public List<Mensagem> recuperaConversas()
     {
-        List<Conversa> conversas= new ArrayList<>();
+        List<Mensagem> conversas= new ArrayList<>();
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " +TABLE_NAME_CONVERSA;
@@ -364,11 +370,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             do
             {
-                Conversa conversa = new Conversa();
+                Mensagem conversa = new Mensagem();
                 conversa.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
-                conversa.setCriado(cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)));
-                conversa.setMensagem(cursor.getString(cursor.getColumnIndex(COLUMN_ULT_MSG)));
-                conversa.setNickname(cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
+                conversa.setMessagem(cursor.getString(cursor.getColumnIndex(COLUMN_ULT_MSG)));
+                conversa.setData(cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)));
+                conversa.setRecebido(cursor.getString(cursor.getColumnIndex(COLUMN_RECEBIDO)));
+                conversa.setUsername(cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
 
                 conversas.add(conversa);
             } while (cursor.moveToNext());
@@ -507,15 +514,16 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 new String[]{String.valueOf(amigo.getId())});
     }
 
-    public int atualizarConversa(Conversa conversa)
+    public int atualizarConversa(Mensagem conversa)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NICKNAME, conversa.nickname);
-        values.put(COLUMN_ULT_MSG, conversa.mensagem);
-        values.put(COLUMN_ID, conversa.id);
+        values.put(COLUMN_ID, conversa.getId());
+        values.put(COLUMN_ULT_MSG, conversa.getMessagem());
         values.put(COLUMN_CRIADO,this.getDateTime());
+        values.put(COLUMN_RECEBIDO, conversa.getRecebido());
+        values.put(COLUMN_NICKNAME,conversa.getUsername());
 
         return db.update(TABLE_NAME_CONVERSA, values, COLUMN_ID+ " = ?",
                 new String[]{String.valueOf(conversa.getId())});
@@ -553,7 +561,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 new String[]{String.valueOf(usuario.getId())});
     }
 
-    public void deletarAmigo(Conversa conversa, String ID)
+    public void deletarAmigo(Mensagem conversa, String ID)
     {
         if (ID == "")
         {
@@ -602,6 +610,23 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete(TABLE_NAME_AVATAR, COLUMN_AVATAR+ " = ?",
+                    new String[]{ID});
+            db.close();
+        }
+    }
+    public void deletarConversa(Mensagem conversa, String ID)
+    {
+        if (ID == "")
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_CONVERSA, COLUMN_ID+ " = ?",
+                    new String[]{String.valueOf(conversa.getId())});
+            db.close();
+        }
+        else
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_CONVERSA, COLUMN_ID+ " = ?",
                     new String[]{ID});
             db.close();
         }

@@ -4,12 +4,7 @@ package com.example.meufortinite.VIEW.DIALOG;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,32 +13,34 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ACTIVITY.Chat;
-import com.example.meufortinite.VIEW.ACTIVITY.SelecionarAvatar;
+
+import java.util.ArrayList;
 
 
-public class NovaMensagem extends DialogFragment
+public class ExibirAmigos extends DialogFragment
 {
-    private Button btnEnviar,btnCancelar;
-    private TextView txtTitulo;
+    private RecyclerView recAmigos;
+    private Typeface fortniteFont;
 
-    public NovaMensagem()
+    public ExibirAmigos()
     {
 
     }
 
-    public static  NovaMensagem novaMensagem(String texto,String idAmigo,String meuId,String meuNick,String nickAmigo,String meuIcone,String iconeAmigo)
+    public static ExibirAmigos exibirAmigos(ArrayList<Amigo> amigos)
     {
-        NovaMensagem frag = new NovaMensagem();
+        ExibirAmigos frag = new ExibirAmigos();
         Bundle bundle = new Bundle();
-        bundle.putString("titulo",texto);
-        bundle.putString("idUser",idAmigo);
-        bundle.putString("meuId",meuId);
-        bundle.putString("nickAmigo",nickAmigo);
-        bundle.putString("meuNick",meuNick);
-        bundle.putString("mIcone",meuIcone);
-        bundle.putString("iconeA",iconeAmigo);
+       // bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) amigos);
+
 
         frag.setArguments(bundle);
         return frag;
@@ -61,23 +58,18 @@ public class NovaMensagem extends DialogFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        btnCancelar = (Button)view.findViewById(R.id.btnCancelar);
-        btnEnviar = (Button)view.findViewById(R.id.btnOk);
-        txtTitulo = (TextView)view.findViewById(R.id.txtTitulo_NM);
+        recAmigos = (RecyclerView) view.findViewById(R.id.recAmigos);
 
-        final String titulo = getArguments().getString("titulo");
-        final String id = getArguments().getString("idUser");
-        final String meuId = getArguments().getString("meuId");
-        final String meuNick = getArguments().getString("meuNick");
-        final String nickAmigo = getArguments().getString("nickAmigo");
-        final String mIcone = getArguments().getString("mIcone");
-        final String iconeA = getArguments().getString("iconeA");
 
-        Log.d("NM_","TT: "+titulo+" \n ID: "+id+" \n MID: "+meuId);
-        txtTitulo.setText(titulo);
 
-        getDialog().setTitle("Nova Mensagem");
+        ArrayList<? extends Amigo> amigos = getArguments().getParcelableArrayList("list");
+
+        Log.d("EA_","AMIGOS SIZE: "+amigos.size());
+
+
+        getDialog().setTitle("EXIBIR AMIGOS");
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        /*
         btnEnviar.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -105,5 +97,7 @@ public class NovaMensagem extends DialogFragment
                 dismiss();
             }
         });
+
+         */
     }
 }

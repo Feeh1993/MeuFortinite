@@ -13,9 +13,9 @@ public class TelaBoasVindas extends WelcomeActivity
     {
         return new WelcomeConfiguration.Builder(this)
                 .defaultBackgroundColor(R.color.colorAccent)
-                .page(new TitlePage(R.drawable.ic_playstation, "Olá Seja bem vindo ao MeuForti"))
+                .page(new TitlePage(R.drawable.ic_playstation, "Olá Seja bem vindo ao Meu Battle Royale"))
                 .page(new BasicPage(R.drawable.ic_score, "Estatisticas", "Aqui voce poderá suas estatisticas"))
-                .page(new BasicPage(R.drawable.ic_copiar, "Noticias", "Noticias sobre o Fortinite!"))
+                .page(new BasicPage(R.drawable.ic_copiar, "Noticias", "Noticias sobre o seu Battle Royale Favorito!"))
                 .build();
     }
 
