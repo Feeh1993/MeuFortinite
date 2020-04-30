@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
@@ -24,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -57,12 +60,14 @@ public class AdaptadorConversa extends RecyclerView.Adapter<AdaptadorConversa.Vi
         return mViewHolder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
 
         // Get the data model based on position
         final Mensagem conversa = listConversa.get(position);
+        //formatar horas
         Log.d("ADPTC","DADOS CONVERSA: "+ conversa.getRecebido());
         String horas[] = conversa.getData().split(" ");
         Log.d("ADPTC","DADOS CONVERSA:HORA  "+ horas[1]);

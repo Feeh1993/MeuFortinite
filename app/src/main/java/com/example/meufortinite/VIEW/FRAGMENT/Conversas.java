@@ -50,6 +50,7 @@ public class Conversas extends Fragment
     private ArrayList<Avatar> meuAvatar = new ArrayList<>();
     private ArrayList<Mensagem> listConversa = new ArrayList<>();
     private AdaptadorConversa adapter;
+    private String TAG = "CONVERSAS_";
 
 
     public Conversas()
@@ -59,21 +60,21 @@ public class Conversas extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("CONVERSAS_","onStart");
+        Log.d(TAG,"onStart");
         recuperarDadosLocais();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("CONVERSAS_","onStop");
+        Log.d(TAG,"onStop");
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        Log.d("CONVERSAS_","onPause");
+        Log.d(TAG,"onPause");
     }
 
     @Override
@@ -122,7 +123,7 @@ public class Conversas extends Fragment
                 {
                     Amigo amigo = dataSnapshot.getValue(Amigo.class);
                     iniciarNovaMensagem(amigo);
-                    Log.d("CONVERSAS_","DADOS AMIGO RECEBIDO \n Nick: "+amigo.nick);
+                    Log.d(TAG,"DADOS AMIGO RECEBIDO \n Nick: "+amigo.nick);
                 }catch (NullPointerException e)
                 {
                     Toast.makeText(getContext(),"Usuário não encontrado \n tente novamente!",Toast.LENGTH_LONG).show();
@@ -137,7 +138,7 @@ public class Conversas extends Fragment
         });
     }
 
-// CRIAR CHAMADA DE NOVA MENSAGEM VINDA DA LISTA AMIGOS
+    // CRIAR CHAMADA DE NOVA MENSAGEM VINDA DA LISTA AMIGOS
     private void iniciarNovaMensagem(Amigo amigo)
     {
         FragmentManager fm = getChildFragmentManager();
@@ -155,7 +156,7 @@ public class Conversas extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("CONVERSAS_","onViewCreated");
+        Log.d(TAG,"onViewCreated");
     }
 
     @Override
@@ -165,29 +166,36 @@ public class Conversas extends Fragment
         View view = inflater.inflate(R.layout.fragment_conversa, container, false);
         fazerCast(view);
         recuperarDadosLocais();
-        recuperarBanco();
+        //recuperarBanco();
         return view;
     }
 // IMPLEMENTAR BANCO REMOTO :<
+    /*
     private void recuperarBanco()
     {
-        ref.child("chat").addValueEventListener(new ValueEventListener()
+
+        ref.child("conversas").child(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 try
                 {
-                    if (dataSnapshot.getValue().toString() != null)
+                    listConversa.clear();
+                    for (DataSnapshot ds : dataSnapshot.getChildren())
                     {
-
+                        Mensagem new_mensagem = ds.getValue(Mensagem.class);
+                        Log.d(TAG, "ICONE DATA"+new_mensagem.getRecebido());
+                        listConversa.add(new_mensagem);
+                        Log.d(TAG, "TAM LIST CONVRS: "+listConversa.size());
+                        adapter.notifyDataSetChanged();
                     }
 
                 }catch (NullPointerException e)
                 {
 
                 }
-
+                Toast.makeText(getContext(),"Nova mensagem ADD"+" : ",Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -197,6 +205,9 @@ public class Conversas extends Fragment
         });
 
     }
+
+     */
+
 
     private void recuperarDadosLocais()
     {
@@ -219,7 +230,8 @@ public class Conversas extends Fragment
             Log.d("CONVERSAS_","PRIMEIRO ACESSO");
         }
         recChat.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new AdaptadorConversa(getContext(), listConversa,meuUsuario.get(0).getId(), new CustomConversa() {
+        adapter = new AdaptadorConversa(getContext(), listConversa,meuUsuario.get(0).getId(), new CustomConversa()
+        {
             @Override
             public void onItemClick(View itemView, int position, Mensagem conversa)
             {
@@ -228,10 +240,6 @@ public class Conversas extends Fragment
             }
         });
         recChat.setAdapter(adapter);
-
-    }
-    private void iniciarRecycler()
-    {
 
     }
 
@@ -257,7 +265,7 @@ public class Conversas extends Fragment
             }
         });
     }
-//criar algo para abrir lista amigos
+    //criar algo para abrir lista amigos
     private void abrirListaAmigos()
     {
         FragmentManager fm = getChildFragmentManager();

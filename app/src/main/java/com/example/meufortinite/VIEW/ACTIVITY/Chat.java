@@ -178,38 +178,38 @@ public class Chat extends AppCompatActivity
     //Recuperar Banco firebase com mensagens
     private void recuperarMensagensRede(String caminho)
     {
-            ref.child("chat").child(caminho).limitToLast(50).addChildEventListener(new ChildEventListener()
+        ref.child("chat").child(caminho).limitToLast(50).addChildEventListener(new ChildEventListener()
+        {
+            @Override public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
-                @Override public void onChildAdded(DataSnapshot dataSnapshot, String s)
-                {
-                    progressBar.setVisibility(View.GONE);
-                    Mensagem new_mensagem = dataSnapshot.getValue(Mensagem.class);
-                    mensagemArrayList.add(new_mensagem);
-                    adapter.notifyDataSetChanged();
-                    recChat.scrollToPosition(adapter.getItemCount() - 1);
-                }
+                progressBar.setVisibility(View.GONE);
+                Mensagem new_mensagem = dataSnapshot.getValue(Mensagem.class);
+                mensagemArrayList.add(new_mensagem);
+                adapter.notifyDataSetChanged();
+                recChat.scrollToPosition(adapter.getItemCount() - 1);
+            }
 
-                @Override public void onChildChanged(DataSnapshot dataSnapshot, String s)
-                {
+            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
 
-                }
+            }
 
-                @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    Log.d("REMOVED", dataSnapshot.getValue(Mensagem.class).toString());
-                    mensagemArrayList.remove(dataSnapshot.getValue(Mensagem.class));
-                    adapter.notifyDataSetChanged();
-                }
+            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d("REMOVED", dataSnapshot.getValue(Mensagem.class).toString());
+                mensagemArrayList.remove(dataSnapshot.getValue(Mensagem.class));
+                adapter.notifyDataSetChanged();
+            }
 
-                @Override public void onChildMoved(DataSnapshot dataSnapshot, String s)
-                {
+            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s)
+            {
 
-                }
+            }
 
-                @Override public void onCancelled(DatabaseError databaseError)
-                {
+            @Override public void onCancelled(DatabaseError databaseError)
+            {
 
-                }
-            });
+            }
+        });
     }
 
     @Override
@@ -278,11 +278,10 @@ public class Chat extends AppCompatActivity
             }
             else
             {
-                ref.child("chat").child(meuId+"||"+idUser).child(key).setValue(msgRemota);
                 //UNE O USUARIO COM O AMIGO PARA SE CRIAR O CAMINHO DO CHAT
-                String possibil1 = meuId+"||"+idUser;
-                String possibil2 = idUser+"||"+meuId;
-                localizarExistencia(possibil1,possibil2);
+                caminho = meuId+"||"+idUser;
+                ref.child("chat").child(caminho).child(key).setValue(msgRemota);
+                localizarExistencia(caminho,"");
                 verificarEsalvar(msgLocal);
             }
 
@@ -294,14 +293,15 @@ public class Chat extends AppCompatActivity
             listaBancoLocal.addAll(db.recuperaConversas());
             for (int i = 0; i < listaBancoLocal.size(); i++)
             {
-                    if (listaBancoLocal.get(i).getId().equals(mensagem.getId()))
-                    {
-                        Log.d("CHAT_","Verificar = true");
-                        db.deletarConversa(mensagem,"");
-                    }
+                if (listaBancoLocal.get(i).getId().equals(mensagem.getId()))
+                {
+                    Log.d("CHAT_","Verificar = true");
+                    db.deletarConversa(mensagem,"");
+                }
             }
             Log.d("CHAT_","AVATAR RECEBIDO: "+mensagem.getRecebido() );
             db.inserirConversa(mensagem);
+            ref.child("conversas").child(caminho).setValue(mensagem);
         }
     }
 }
