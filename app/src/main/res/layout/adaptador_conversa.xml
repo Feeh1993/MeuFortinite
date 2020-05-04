@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:background="@drawable/bordas_escuras">
+    android:background="@drawable/bordas_1logo">
 
     <LinearLayout
         android:id="@+id/parentLayout"
@@ -44,7 +44,7 @@
                     android:elevation="5dp"
                     android:fontFamily="@font/font_family_fortinite"
                     android:text="..."
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/branco"
                     android:textSize="14sp" />
 
                 <TextView

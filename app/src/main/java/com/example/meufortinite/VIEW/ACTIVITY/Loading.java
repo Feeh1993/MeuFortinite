@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 
 public class Loading extends AppCompatActivity
 {
-    private TextView txt,txtLogo;
+    private TextView txt;
     private DatabaseHelper dbLocal;
     private  ArrayList<Usuario> usuarios = new ArrayList<>();
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
@@ -40,10 +41,6 @@ public class Loading extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         txt = (TextView) findViewById(R.id.txt_descricao);
-        txtLogo = (TextView) findViewById(R.id.txt_logo);
-        fortniteFont = Typeface.createFromAsset(getAssets(), getString(R.string.fortnite_font_resource));
-        txtLogo.setTypeface(fortniteFont);
-        txt.setTypeface(fortniteFont);
         startAnimations();
 
     }
@@ -51,7 +48,7 @@ public class Loading extends AppCompatActivity
     {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();
-        LinearLayout l = (LinearLayout) findViewById(R.id.main_layout);
+        FrameLayout l = (FrameLayout) findViewById(R.id.frml);
         if (l != null)
         {
             l.clearAnimation();
@@ -61,7 +58,6 @@ public class Loading extends AppCompatActivity
         anim.reset();
 
         animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
-        txtLogo.startAnimation(animation);
         int SPLASH_DISPLAY_LENGTH = 2500;
         new Handler().postDelayed(new Runnable()
         {

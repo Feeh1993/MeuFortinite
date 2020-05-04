@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="6dp"
-        android:background="@drawable/bordas_mitica"
+        android:background="@drawable/bordas_2logo"
         android:visibility="visible">
 
         <TextView

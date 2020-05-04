@@ -15,19 +15,5 @@
         <item>Lembre-se,os filtros retardam a busca</item>
         <item>Quanto mais filtros,mais tempo leva para encontrar :)</item>
     </string-array>
-    <string-array name="textResumo">
-        <item>Enquanto aguarda vamos a algumas frase inspiradoras </item>
-        <item>... </item>
-        <item>Quem espera sempre alcança</item>
-        <item>...</item>
-        <item>A melhor defesa é o ataque</item>
-        <item>...</item>
-        <item>Ser zé moitinha não é feio</item>
-        <item>... </item>
-        <item>Camperar é um dom pra poucos</item>
-        <item>...</item>
-        <item>Rushar não é a solução</item>
-        <item>...</item>
-        <item>Essas foram as nossas frases inspiradoras :P</item>
-    </string-array>
+
 </resources>

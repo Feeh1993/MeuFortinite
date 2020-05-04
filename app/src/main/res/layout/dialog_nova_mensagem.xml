@@ -11,6 +11,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@color/branco"
         android:orientation="vertical">
 
         <TextView
@@ -18,9 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Enviar Mensagem para..."
             android:fontFamily="@font/font_family_fortinite"
-            android:textColor="@color/colorPrimary" />
+            android:text="Enviar Mensagem para..."
+            android:textColor="@color/colorPrimaryDark" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,22 +35,22 @@
                 android:layout_margin="10dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/bordas_fundo"
+                android:fontFamily="@font/font_family_fortinite"
                 android:text="Enviar Mensagem"
                 android:textAllCaps="false"
-                android:fontFamily="@font/font_family_fortinite"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimaryDark" />
 
             <Button
                 android:id="@+id/btnCancelar"
                 android:layout_width="30dp"
                 android:layout_height="40dp"
-                android:layout_margin="17dp"
+                android:layout_margin="10dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/bordas_fundo"
-                android:text="Não"
                 android:fontFamily="@font/font_family_fortinite"
+                android:text="Não"
                 android:textAllCaps="false"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimaryDark" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

@@ -51,6 +51,9 @@ dependencies {
     // chat
     implementation 'com.github.stfalcon:chatkit:0.3.3'
 
+    //efeitos de animação
+    implementation 'com.airbnb.android:lottie:3.4.0'
+
     //Método de pagamento
     implementation 'com.android.billingclient:billing:2.0.3'
 

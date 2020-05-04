@@ -4,25 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".VIEW.FRAGMENT.Buscar">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <com.tomer.fadingtextview.FadingTextView
-            android:id="@+id/fdngtxtResumo_buscar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="14sp"
-            android:visibility="visible"
-            android:fontFamily="@font/font_family_fortinite"
-            app:texts="@array/textResumo"
-            app:timeout="2000" />
 
         <LinearLayout
             android:id="@+id/lnlTopo_buscar"
@@ -36,10 +24,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:fontFamily="@font/font_family_fortinite"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:fontFamily="@font/font_family_fortinite"
                 android:visibility="visible"
                 app:texts="@array/textInfo"
                 app:timeout="2000" />
@@ -109,6 +97,7 @@
                         android:textOff="Não"
                         android:textOn="Sim"
                         android:thumbTextPadding="2dp" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -122,24 +111,40 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <ImageButton
-                android:id="@+id/imgbSearch_BUSCAR"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@null"
-                android:src="@drawable/ic_world" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/loading_efeito" />
+
+                <ImageButton
+                    android:id="@+id/imgbSearch_BUSCAR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@null"
+                    android:elevation="10dp"
+                    android:src="@mipmap/ic_circulo_azul" />
+            </FrameLayout>
 
             <com.tomer.fadingtextview.FadingTextView
                 android:id="@+id/fdngtxtBuscando_buscar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:fontFamily="@font/font_family_fortinite"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                android:fontFamily="@font/font_family_fortinite"
                 android:visibility="gone"
                 app:texts="@array/text"
                 app:timeout="1000" />
@@ -158,78 +163,10 @@
             android:padding="3dp"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/lnlUser1"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recBusca"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imgUserUm_buscar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:src="@drawable/ic_img01avt" />
-
-                <TextView
-                    android:id="@+id/txtUserUm_buscar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.9"
-                    android:text="..."
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/font_family_fortinite" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/lnlUser2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imgUserDois_buscar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:src="@drawable/ic_img01avt" />
-
-                <TextView
-                    android:id="@+id/txtUserDois_buscar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.9"
-                    android:text="..."
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/font_family_fortinite"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lnlUser3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imgUserTres_buscar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:src="@drawable/ic_img01avt" />
-
-                <TextView
-                    android:id="@+id/txtUserTres_buscar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.9"
-                    android:text="..."
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
-                    android:fontFamily="@font/font_family_fortinite"/>
-            </LinearLayout>
+                android:layout_height="match_parent" />
         </LinearLayout>
 
     </LinearLayout>

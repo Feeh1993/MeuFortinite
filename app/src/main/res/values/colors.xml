@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#516FAB</color>
+    <color name="colorPrimary">#FDFEFE</color>
+    <color name="logo1">#ff0b53</color>
+    <color name="logo2">#05ffff</color>
+    <color name="logo3">#8057cb</color>
     <color name="branco">#FDFEFE</color>
-    <color name="colorPrimaryDark">#203473</color>
-    <color name="colorAccent">#8AAAD9</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#FDFEFE</color>
     <color name="verde">#04B404</color>
     <color name="dourado">#FFD700</color>
     <color name="mitico">#DAA520</color>

@@ -16,7 +16,7 @@
       android:layout_alignParentStart="true"
       android:layout_alignParentEnd="false"
       android:layout_marginTop="6dp"
-      android:background="@drawable/bordas_epica"
+      android:background="@drawable/bordas_1logo"
       android:visibility="visible">
 
     <TextView

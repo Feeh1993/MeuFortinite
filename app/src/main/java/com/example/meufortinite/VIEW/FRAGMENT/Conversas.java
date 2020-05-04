@@ -43,7 +43,6 @@ public class Conversas extends Fragment
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
     private RecyclerView recChat;
     private FloatingActionButton fabNmsg;
-    private Button btnAmigos;
     private ViewPager viewPager;
     private DatabaseHelper db;
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
@@ -248,15 +247,6 @@ public class Conversas extends Fragment
         recChat = view.findViewById(R.id.recChat);
         fabNmsg = view.findViewById(R.id.fabNovaMsg);
         viewPager = (ViewPager) getActivity().findViewById(R.id.vp_painel);
-        btnAmigos = view.findViewById(R.id.btnAmigos);
-
-        btnAmigos.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                viewPager.setCurrentItem(1);
-            }
-        });
         fabNmsg.setOnClickListener(new View.OnClickListener()
         {
             @Override

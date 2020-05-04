@@ -59,7 +59,6 @@ public class Amigos extends Fragment
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
     private ArrayList<Avatar> meuAvatar = new ArrayList<>();
     private Amigo meuAmigo;
-    private Typeface fortniteFont;
     private ViewPager viewPager;
 
     public Amigos()
@@ -176,10 +175,7 @@ public class Amigos extends Fragment
         recBusca = view.findViewById(R.id.recBuscaUsuarios_Busca);
         recAmigos = view.findViewById(R.id.recAmigos);
         prgUser = view.findViewById(R.id.prgbUser_Busca);
-        fortniteFont = Typeface.createFromAsset(getContext().getAssets(), getContext().getString(R.string.fortnite_font_resource));
-        txtBusca.setTypeface(fortniteFont);
-        txtUsuario.setTypeface(fortniteFont);
-        srchBuscar.setTypeface(fortniteFont);
+
         //listAmigos.add(new Amigo())
 
         srchBuscar.setOnKeyListener(new View.OnKeyListener()

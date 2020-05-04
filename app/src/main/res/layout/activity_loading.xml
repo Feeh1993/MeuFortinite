@@ -2,76 +2,38 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frml"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".VIEW.ACTIVITY.Loading">
 
-    <LinearLayout
-        android:id="@+id/main_layout"
+    <FrameLayout
+        android:id="@+id/grdlt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/txt_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:clickable="true"
-            android:text="@string/app_name"
-            android:fontFamily="@font/font_family_fortinite"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/colorPrimary"
-            android:textSize="45dp"
-            android:textStyle="bold" />
-
-        <GridLayout
-            android:id="@+id/grdlt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:columnCount="2">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                app:srcCompat="@drawable/ic_pc" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                app:srcCompat="@drawable/ic_playstation" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                app:srcCompat="@drawable/ic_xbox" />
-
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                app:srcCompat="@drawable/ic_kd" />
-
-        </GridLayout>
-
-        <TextView
-            android:id="@+id/txt_descricao"
+        <ImageView
+            android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Entrando..."
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/colorPrimary" />
-    </LinearLayout>
+            android:elevation="3dp"
+            app:srcCompat="@drawable/logo_transp" />
+
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/txt_descricao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="20dp"
+        android:fontFamily="@font/font_family_fortinite"
+        android:text="Entrando..."
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/colorPrimary" />
 
 </FrameLayout>

@@ -83,12 +83,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
                 viewHolder.btnNotificacao.setVisibility(View.INVISIBLE);
                 viewHolder.btnMensagem.setVisibility(View.INVISIBLE);
                 viewHolder.btnSeguir.setVisibility(View.INVISIBLE);
-                viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_verdes);
+                viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_3logo);
             }
             else
             {
                 viewHolder.nick.setText(usuario.getNick());
-                viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_escuras);
+                viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_1logo);
                 viewHolder.btnSeguir.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
