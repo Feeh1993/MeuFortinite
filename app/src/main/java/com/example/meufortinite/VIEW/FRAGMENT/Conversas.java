@@ -34,6 +34,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class Conversas extends Fragment
     private ArrayList<Mensagem> listConversa = new ArrayList<>();
     private AdaptadorConversa adapter;
     private String TAG = "CONVERSAS_";
+
+    private ValueEventListener novamsgValueListener;
 
 
     public Conversas()
@@ -80,7 +83,7 @@ public class Conversas extends Fragment
     public void onResume()
     {
         super.onResume();
-        ref.child("novaMensagem").child(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
+        novamsgValueListener = new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
@@ -107,7 +110,8 @@ public class Conversas extends Fragment
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
+        ref.child("novaMensagem").child(meuUsuario.get(0).getId()).addValueEventListener(novamsgValueListener);
 
     }
 
@@ -165,47 +169,42 @@ public class Conversas extends Fragment
         View view = inflater.inflate(R.layout.fragment_conversa, container, false);
         fazerCast(view);
         recuperarDadosLocais();
-        //recuperarBanco();
+        recuperarBanco();
+
         return view;
     }
 // IMPLEMENTAR BANCO REMOTO :<
-    /*
     private void recuperarBanco()
     {
-
-        ref.child("conversas").child(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
+        try
         {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            Toast.makeText(getContext()," entrou na query",Toast.LENGTH_LONG).show();
+            ref.child("conversas").orderByKey().equalTo(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
             {
-                try
-                {
-                    listConversa.clear();
-                    for (DataSnapshot ds : dataSnapshot.getChildren())
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
-                        Mensagem new_mensagem = ds.getValue(Mensagem.class);
+                        Mensagem new_mensagem = snapshot.getValue(Mensagem.class);
                         Log.d(TAG, "ICONE DATA"+new_mensagem.getRecebido());
                         listConversa.add(new_mensagem);
                         Log.d(TAG, "TAM LIST CONVRS: "+listConversa.size());
                         adapter.notifyDataSetChanged();
                     }
+                }
 
-                }catch (NullPointerException e)
-                {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-                Toast.makeText(getContext(),"Nova mensagem ADD"+" : ",Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+            });
+        }catch (IndexOutOfBoundsException e)
+        {
+            Toast.makeText(getContext(),"Não entrou na query",Toast.LENGTH_LONG).show();
+        }
     }
 
-     */
+
 
 
     private void recuperarDadosLocais()
@@ -216,7 +215,7 @@ public class Conversas extends Fragment
         listConversa.clear();
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
-        listConversa.addAll(db.recuperaConversas());
+        //listConversa.addAll(db.recuperaConversas());
         try
         {
             Log.d("CONVERSAS_","AVATAR: "+listConversa.get(0).getRecebido());

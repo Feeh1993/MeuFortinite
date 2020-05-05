@@ -161,7 +161,17 @@
             android:background="@drawable/bordas_fundo"
             android:orientation="vertical"
             android:padding="3dp"
-            android:visibility="gone">
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/txtQTD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/font_family_fortinite"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recBusca"

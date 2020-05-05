@@ -82,6 +82,9 @@ public class AdaptadorBusca extends RecyclerView.Adapter<AdaptadorBusca.ViewHold
         }
         else
         {
+            viewHolder.btnMensagem.setVisibility(View.VISIBLE);
+            viewHolder.btnCopiar.setVisibility(View.VISIBLE);
+            viewHolder.txt.setVisibility(View.VISIBLE);
             viewHolder.nick.setText(usuario.getNick());
             viewHolder.parentLayout.setBackgroundResource(R.drawable.bordas_1logo);
             viewHolder.imageView.setImageResource(Avatar.identificarAvatar(usuario.getIcone()));

@@ -64,7 +64,6 @@ public class Loading extends AppCompatActivity
             @Override
             public void run()
             {
-                    txt.setText("bem vindo de volta ");
                 consultarDados();
             }
         }, SPLASH_DISPLAY_LENGTH);
@@ -91,16 +90,23 @@ public class Loading extends AppCompatActivity
                 {
                     if (dataSnapshot.exists())
                     {
-                        if (dataSnapshot.getValue().toString().equals("deslogado"))
+                        if (dataSnapshot.getValue().toString().equals("logado") || dataSnapshot.getValue().toString().equals("offline"))
                         {
-                            startActivity(new Intent(getApplicationContext(), Login.class));
+                            txt.setText("bem vindo de volta ");
+                            startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
                         }
                         else
                         {
-                            startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                            txt.setText("bem vindo a nossa plataforma");
+                            startActivity(new Intent(getApplicationContext(), Login.class));
                         }
                     }
-                    else startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                    else
+                    {
+                        txt.setText("bem vindo a nossa plataforma");
+                        startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+
+                    }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError)

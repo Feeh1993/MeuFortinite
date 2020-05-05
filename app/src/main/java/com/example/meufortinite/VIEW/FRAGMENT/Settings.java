@@ -30,7 +30,7 @@ public class Settings extends Fragment
 {
     private Button btnPro,btnLogout;
     private ImageButton imgTrocarImg;
-    private Switch swtchNtficacao,swtchOcultar;
+    private Switch swtchNtficacao;
     private DatabaseHelper db;
     private ArrayList<Avatar> avatars = new ArrayList<>();
     private ArrayList<Usuario> usuarios = new ArrayList<>();
@@ -89,7 +89,6 @@ public class Settings extends Fragment
         btnLogout = view.findViewById(R.id.btnLogout);
         imgTrocarImg = view.findViewById(R.id.imgAvatar_setting);
         swtchNtficacao = view.findViewById(R.id.swtchNotificacoes_settings);
-        swtchOcultar = view.findViewById(R.id.swtchOcultarDados_settings);
 
         btnPro.setOnClickListener(new View.OnClickListener() {
             @Override

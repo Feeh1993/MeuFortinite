@@ -3,19 +3,29 @@ package com.example.meufortinite.VIEW.ACTIVITY;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
+
+import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.PPPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.ArrayList;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class PainelPrincipal extends AppCompatActivity
 {
 
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
+    private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
     private TabLayout tabLayout;
-    private int[] imageResId = {
+    private int[] imageResId = 
+            {
             R.drawable.ic_amigos,
             R.drawable.ic_chat,
             R.drawable.ic_search,
@@ -35,6 +45,7 @@ public class PainelPrincipal extends AppCompatActivity
     private ViewPager viewPager;
     private Usuario meuUser ;
     private FirebaseAuth user = ConfiguracaoFirebase.getFirebaseAutenticacao();
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,6 +53,9 @@ public class PainelPrincipal extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_painel_principal);
         fazerCast();
+        db = new DatabaseHelper(getApplicationContext());
+        usuarios.clear();
+        usuarios.addAll(db.recuperarUsuarios());
 
         PPPagerAdapter painelPrincipalFragmentAdapter = new PPPagerAdapter(getApplicationContext(),getSupportFragmentManager());
         viewPager.setAdapter(painelPrincipalFragmentAdapter);
@@ -131,5 +145,12 @@ public class PainelPrincipal extends AppCompatActivity
                     .show();
         }
 
+    }
+
+    @Override
+    protected void onStop() 
+    {
+        super.onStop();
+        ref.child("usuarios").child(usuarios.get(0).getId()).child("tipo").setValue("offline");    
     }
 }

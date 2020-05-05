@@ -73,15 +73,6 @@
                         android:background="@null"
                         app:srcCompat="@drawable/ic_chat" />
 
-                    <Button
-                        android:id="@+id/btnPosicao"
-                        android:layout_width="5dp"
-                        android:layout_height="25dp"
-                        android:layout_weight="0.2"
-                        android:background="@null"
-                        android:drawableRight="@drawable/ic_seta_cima"
-                        android:textColor="?attr/colorPrimary"
-                        android:fontFamily="@font/font_family_fortinite"/>
                 </LinearLayout>
 
             </LinearLayout>

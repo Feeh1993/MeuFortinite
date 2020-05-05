@@ -161,6 +161,7 @@ public class Login extends AppCompatActivity
             {
                 if (username.getText().toString().equals("a1d9m9i3n"))
                 {
+                    btnPro.setVisibility(View.GONE);
                     iniciarAnimacao();
                 }
                 else

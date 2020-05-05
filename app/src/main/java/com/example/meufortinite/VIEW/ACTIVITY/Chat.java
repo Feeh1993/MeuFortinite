@@ -40,6 +40,7 @@ public class Chat extends AppCompatActivity
 {
     private String meuId,idUser;
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
+    private ChildEventListener msgmListener;
 
     //Views UI
     public static final int ANTI_FLOOD_SECONDS = 3; //simple anti-flood
@@ -178,7 +179,7 @@ public class Chat extends AppCompatActivity
     //Recuperar Banco firebase com mensagens
     private void recuperarMensagensRede(String caminho)
     {
-        ref.child("chat").child(caminho).limitToLast(50).addChildEventListener(new ChildEventListener()
+        msgmListener = new ChildEventListener()
         {
             @Override public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
@@ -209,7 +210,8 @@ public class Chat extends AppCompatActivity
             {
 
             }
-        });
+        };
+        ref.child("chat").child(caminho).limitToLast(50).addChildEventListener(msgmListener);
     }
 
     @Override
@@ -303,5 +305,12 @@ public class Chat extends AppCompatActivity
             db.inserirConversa(mensagem);
             ref.child("conversas").child(caminho).setValue(mensagem);
         }
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        ref.removeEventListener(msgmListener);
     }
 }

@@ -80,18 +80,6 @@
             android:textColor="@color/colorPrimary"
             tools:checked="true" />
 
-        <Switch
-            android:id="@+id/swtchOcultarDados_settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:fontFamily="@font/font_family_fortinite"
-            android:text="Exibir dados para jogadores pareados"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
-            tools:checked="true" />
-
     </LinearLayout>
 
     <LinearLayout

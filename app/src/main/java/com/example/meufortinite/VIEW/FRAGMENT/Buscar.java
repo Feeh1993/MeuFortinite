@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -61,6 +62,9 @@ public class Buscar extends Fragment
     private String TAG = "BUSCAR_";
     private ArrayList<Amigo> listUsers = new ArrayList<>(),meuUser = new ArrayList<>();
     private AdaptadorBusca adapter;
+    private  String mHs = "semhead",hsA = "semhead",tipoSquad = "";
+    private ChildEventListener buscaListener;
+    private TextView txt;
 
     public Buscar()
     {
@@ -70,14 +74,8 @@ public class Buscar extends Fragment
     public void onPause()
     {
         super.onPause();
-        animationView.cancelAnimation();
-        img.setVisibility(View.VISIBLE);
-        animationView.setVisibility(View.GONE);
-
-        lnlTopo.setVisibility(View.VISIBLE);
-        txtInfo.setVisibility(View.GONE);
-        txtInfo.clearAnimation();
-        txtBuscar.setVisibility(View.GONE);
+        verificarSwitchs(meuUser.get(0).getId(),1);
+        pararBusca(mHs,tipoSquad,meuUser.get(0).getId());
     }
 
     @Override
@@ -96,6 +94,7 @@ public class Buscar extends Fragment
                 // inserir funcao copiar id
                 ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("text",usuario.getNick());
+                clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(getContext(),"Copiado com sucesso",Toast.LENGTH_LONG).show();
                 button.setImageResource(R.drawable.ic_success);
             }
@@ -127,7 +126,7 @@ public class Buscar extends Fragment
                             "\nSWITCH DUO: "+swtchDuo.getShowText()+
                             "\nSWITCH SQD: "+swtchSQD.getShowText()
                     );
-                    verificarSwitchs(meuUser.get(0).getId());
+                    verificarSwitchs(meuUser.get(0).getId(),0);
                 }
                 else
                 {
@@ -139,14 +138,8 @@ public class Buscar extends Fragment
             @Override
             public void onClick(View view)
             {
-                animationView.cancelAnimation();
-                img.setVisibility(View.VISIBLE);
-                animationView.setVisibility(View.GONE);
-
-                lnlTopo.setVisibility(View.VISIBLE);
-                txtInfo.setVisibility(View.GONE);
-                txtInfo.clearAnimation();
-                txtBuscar.setVisibility(View.GONE);
+                verificarSwitchs(meuUser.get(0).getId(),1);
+                pararBusca(mHs,tipoSquad,meuUser.get(0).getId());
             }
         });
 
@@ -155,11 +148,9 @@ public class Buscar extends Fragment
      return view;
     }
 
-    private void verificarSwitchs(String meuId)
+    private void verificarSwitchs(String meuId,int tip)
     {
-        String mHs = "semhead",hsA = "semhead",tipoSquad = "";
         int qtd = 0;
-
         if (swtchSeuHS.isChecked())
         {
             Log.d(TAG, "verificarSwitchs:swtchSeuHS TRUE");
@@ -182,21 +173,44 @@ public class Buscar extends Fragment
             Log.d(TAG, "verificarSwitchs:swtchDuo TRUE");
             tipoSquad = "dupla";
         }
+        if (tip == 0)
+        {
             listUsers.clear();
             iniciarBusca(mHs,hsA,tipoSquad,meuId,qtd);
+        }
     }
 
-    private void iniciarBusca(String mHeadset,String headsetA,String tipoSquad,String meuid, int qtd)
+    private void iniciarBusca(final String mHeadset, final String headsetA, final String tipoSquad, final String meuid, final int qtd)
     {
         ref.child("pareamento").child(mHeadset).child(tipoSquad).child(meuid).setValue(meuUser.get(0));
-        ref.child("pareamento").child(headsetA).child(tipoSquad).limitToLast(qtd).addChildEventListener(new ChildEventListener()
+
+        final int quantidade = qtd -1;
+        txt.setText("Buscando "+quantidade+" amiguinhos");
+
+        //adicionando o proprio usuario
+        listUsers.add(meuUser.get(0));
+        adapter.notifyDataSetChanged();
+
+        buscaListener = new ChildEventListener()
         {
             @Override public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                 Amigo amigo = dataSnapshot.getValue(Amigo.class);
-                listUsers.add(amigo);
-                adapter.notifyDataSetChanged();
-                recbusca.scrollToPosition(adapter.getItemCount() - 1);
+                if (listUsers.size() <= quantidade)
+                {
+                    if (!amigo.getId().equals(meuUser.get(0).getId()))
+                    {
+                        txt.setText(amigo.getNick() +" adicionado a lista");
+                        listUsers.add(amigo);
+                        adapter.notifyDataSetChanged();
+                        recbusca.scrollToPosition(adapter.getItemCount() - 1);
+                    }
+                }
+                else
+                {
+                    txt.setText(" Busca concluida \n copie os nicks em seu jogo");
+                    pararBusca(mHeadset,tipoSquad,meuid);
+                }
             }
 
             @Override public void onChildChanged(DataSnapshot dataSnapshot, String s)
@@ -204,7 +218,8 @@ public class Buscar extends Fragment
 
             }
 
-            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
                 Log.d(TAG,"Removido "+ dataSnapshot.getValue(Amigo.class).toString());
                 listUsers.remove(dataSnapshot.getValue(Amigo.class));
                 adapter.notifyDataSetChanged();
@@ -219,11 +234,41 @@ public class Buscar extends Fragment
             {
 
             }
-        });
+        };
+        ref.child("pareamento").child(headsetA).child(tipoSquad).addChildEventListener(buscaListener);
+    }
+
+    private void pararBusca(final String mHeadset, final String tipoSquad, final String meuid)
+    {
+        try
+        {
+            animationView.cancelAnimation();
+            img.setVisibility(View.VISIBLE);
+            animationView.setVisibility(View.GONE);
+            txt.setText(" Busca concluida \n copie os nicks em seu jogo");
+            lnlTopo.setVisibility(View.VISIBLE);
+            txtInfo.setVisibility(View.GONE);
+            txtInfo.clearAnimation();
+            txtBuscar.setVisibility(View.GONE);
+            ref.child("pareamento").child(mHeadset).child(tipoSquad).child(meuid).removeValue();
+            ref.removeEventListener(buscaListener);
+        }catch (NullPointerException e)
+        {
+            animationView.cancelAnimation();
+            img.setVisibility(View.VISIBLE);
+            animationView.setVisibility(View.GONE);
+            txt.setText(" Busca concluida \n copie os nicks em seu jogo");
+            lnlTopo.setVisibility(View.VISIBLE);
+            txtInfo.setVisibility(View.GONE);
+            txtInfo.clearAnimation();
+            txtBuscar.setVisibility(View.GONE);
+        }
+
     }
 
     public void fazerCast(View view)
     {
+        txt = (TextView) view.findViewById(R.id.txtQTD);
         lnlTopo = (LinearLayout) view.findViewById(R.id.lnlTopo_buscar);
         lnlFundo = (LinearLayout) view.findViewById(R.id.lnlFundo_buscar);
         swtchDuo = (Switch) view.findViewById(R.id.swtchDuo_buscar);

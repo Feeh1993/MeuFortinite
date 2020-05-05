@@ -72,10 +72,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
             // Get the data model based on position
             final Amigo usuario = listUsuarios.get(position);
             viewHolder.nick.setTypeface(Typeface.createFromAsset(getContext().getAssets(), getContext().getString(R.string.fortnite_font_resource)));
-            if (tipo == 1)
-            {
-                viewHolder.btnPosicao.setVisibility(View.GONE);
-            }
             if (usuario.getId().equals(seuId))
             {
                 viewHolder.nick.setText("Voce");
@@ -222,7 +218,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
             CircleImageView imageView;
             View parentLayout;
             TextView nick;
-            Button btnSeguir,btnPosicao;
+            Button btnSeguir;
             SparseBooleanArray array=new SparseBooleanArray();
             ImageButton btnMensagem,btnNotificacao;
 
@@ -235,7 +231,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
                 btnSeguir = (Button)itemView.findViewById(R.id.btnSeguir_adpt_busca);
                 btnMensagem = (ImageButton) itemView.findViewById(R.id.btnMensagem);
                 btnNotificacao = (ImageButton)itemView.findViewById(R.id.btnNotificar);
-                btnPosicao = (Button)itemView.findViewById(R.id.btnPosicao);
                 parentLayout = itemView.findViewById(R.id.parentLayout);
             }
         }
