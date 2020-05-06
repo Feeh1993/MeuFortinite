@@ -51,7 +51,6 @@
                         android:layout_gravity="center"
                         android:layout_weight="0.8"
                         android:elevation="5dp"
-                        android:fontFamily="@font/font_family_fortinite"
                         android:text="..."
                         android:textAlignment="textStart"
                         android:textColor="@color/colorPrimary"
@@ -81,8 +80,7 @@
                         android:layout_height="25dp"
                         android:layout_weight="0.2"
                         android:elevation="5dp"
-                        android:fontFamily="@font/font_family_fortinite"
-                        android:text="Copie o nick em seu game para jogarem"
+                        android:text="Copie o nick em seu game"
                         android:textAlignment="textStart"
                         android:textColor="@color/colorPrimary"
                         android:textSize="12sp" />

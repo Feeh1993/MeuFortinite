@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:fontFamily="@font/font_family_fortinite"
             android:text="Selecione um amigo"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"

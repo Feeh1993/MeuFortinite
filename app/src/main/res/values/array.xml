@@ -8,10 +8,10 @@
         <item>Buscando jogadores online...</item>
     </string-array>
     <string-array name="textInfo">
-        <item>Bora Jogar :P</item>
-        <item>Este é a barra de filtros</item>
+        <item>Use esta aba para encontrar novos usuarios</item>
+        <item>filtre jogadores,converse,adicione e se divirta</item>
         <item>Encontre jogadores do seu modo</item>
-        <item>Selecione alguns dos filtros e clique no planeta</item>
+        <item>Selecione alguns dos filtros e clique no icone buscar que está abaixo</item>
         <item>Lembre-se,os filtros retardam a busca</item>
         <item>Quanto mais filtros,mais tempo leva para encontrar :)</item>
     </string-array>

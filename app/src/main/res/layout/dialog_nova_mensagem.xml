@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:fontFamily="@font/font_family_fortinite"
             android:text="Enviar Mensagem para..."
             android:textColor="@color/colorPrimaryDark" />
 
@@ -35,7 +34,6 @@
                 android:layout_margin="10dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/bordas_fundo"
-                android:fontFamily="@font/font_family_fortinite"
                 android:text="Enviar Mensagem"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimaryDark" />
@@ -47,7 +45,6 @@
                 android:layout_margin="10dp"
                 android:layout_weight="0.4"
                 android:background="@drawable/bordas_fundo"
-                android:fontFamily="@font/font_family_fortinite"
                 android:text="Não"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimaryDark" />
