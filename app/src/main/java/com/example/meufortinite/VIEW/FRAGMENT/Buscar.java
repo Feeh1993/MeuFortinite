@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ import com.example.meufortinite.MODEL.INTERFACE.CustomMsgeNtfc;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorBusca;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,8 +52,7 @@ import static com.makeramen.roundedimageview.RoundedDrawable.TAG;
 
 public class Buscar extends Fragment
 {
-    private FadingTextView txtBuscar,txtInfo;
-    private LinearLayout lnlTopo,lnlFundo;
+    private LinearLayout lnlTopo,lnlFundo,lnlBusca;
     private Switch swtchMeuHS,swtchSeuHS,swtchDuo,swtchSQD;
     private ImageButton img;
     private LottieAnimationView animationView;
@@ -65,6 +66,10 @@ public class Buscar extends Fragment
     private  String mHs = "semhead",hsA = "semhead",tipoSquad = "";
     private ChildEventListener buscaListener;
     private TextView txt;
+    private TextView txtTemporizador;
+    private int cont = 0;
+    private int qtd = 0;
+    private CountDownTimer countDownTimer;
 
     public Buscar()
     {
@@ -113,24 +118,11 @@ public class Buscar extends Fragment
             {
                 if (swtchDuo.isChecked() || swtchSQD.isChecked())
                 {
-                    animationView.playAnimation();
-                    animationView.setVisibility(View.VISIBLE);
-                    img.setVisibility(View.GONE);
-
-                    lnlTopo.setVisibility(View.GONE);
-                    txtBuscar.setVisibility(View.VISIBLE);
-                    lnlFundo.setVisibility(View.VISIBLE);
-                    txtInfo.setVisibility(View.VISIBLE);
-                    Log.d("BUSCAR_","RESUMO: \n SWITCH MHS: "+swtchMeuHS.getShowText()+
-                            "\nSWITCH SHS: "+swtchSeuHS.getShowText()+
-                            "\nSWITCH DUO: "+swtchDuo.getShowText()+
-                            "\nSWITCH SQD: "+swtchSQD.getShowText()
-                    );
-                    verificarSwitchs(meuUser.get(0).getId(),0);
+                    iniciarTemporizador();
                 }
                 else
                 {
-                    Toast.makeText(getContext(),"Voce precisa selecionar pelo menos ESQUADRÕES OU DUPLAS",Toast.LENGTH_LONG).show();
+                    Snackbar.make(getView(),"Voce precisa selecionar pelo menos ESQUADRÕES OU DUPLAS",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -148,9 +140,58 @@ public class Buscar extends Fragment
      return view;
     }
 
+    private void iniciarTemporizador()
+    {
+        cont = 0;
+        animationView.playAnimation();
+        animationView.setVisibility(View.VISIBLE);
+        img.setVisibility(View.GONE);
+        lnlTopo.setVisibility(View.GONE);
+        lnlFundo.setVisibility(View.VISIBLE);
+        Log.d("BUSCAR_","RESUMO: \n SWITCH MHS: "+swtchMeuHS.getShowText()+
+                "\nSWITCH SHS: "+swtchSeuHS.getShowText()+
+                "\nSWITCH DUO: "+swtchDuo.getShowText()+
+                "\nSWITCH SQD: "+swtchSQD.getShowText()
+        );
+        countDownTimer = new CountDownTimer(30000, 1000)
+        {
+            @Override
+            public void onTick(long l)
+            {
+                txtTemporizador.setText("Buscando "+ cont + " segundos");
+                switch (cont)
+                {
+                    case 5:
+                        verificarSwitchs(meuUser.get(0).getId(),0);
+                    case 15:
+                        if (listUsers.size() == qtd)
+                        {
+                            this.cancel();
+                            pararBusca(mHs,tipoSquad,meuUser.get(0).getId());
+                            txtTemporizador.setText("Clique para buscar");
+                            txt.setText("Encontramos "+ qtd + " nicks");
+                        }
+                    case 29:
+                        if (listUsers.size() != qtd)
+                        {
+                            txt.setText("Encontramos "+ (listUsers.size()) + " nicks");
+                        }
+                }
+                cont ++;
+            }
+
+            @Override
+            public void onFinish()
+            {
+                pararBusca(mHs,tipoSquad,meuUser.get(0).getId());
+                txtTemporizador.setText("Clique para buscar");
+                txt.setText("Encontramos "+ listUsers.size() + " nicks");
+            }
+        }.start();
+    }
+
     private void verificarSwitchs(String meuId,int tip)
     {
-        int qtd = 0;
         if (swtchSeuHS.isChecked())
         {
             Log.d(TAG, "verificarSwitchs:swtchSeuHS TRUE");
@@ -242,14 +283,13 @@ public class Buscar extends Fragment
     {
         try
         {
+            countDownTimer.cancel();
+            txtTemporizador.setText("Clique para buscar");
+            animationView.setVisibility(View.GONE);
             animationView.cancelAnimation();
             img.setVisibility(View.VISIBLE);
-            animationView.setVisibility(View.GONE);
             txt.setText(" Busca concluida \n copie os nicks em seu jogo");
             lnlTopo.setVisibility(View.VISIBLE);
-            txtInfo.setVisibility(View.GONE);
-            txtInfo.clearAnimation();
-            txtBuscar.setVisibility(View.GONE);
             ref.child("pareamento").child(mHeadset).child(tipoSquad).child(meuid).removeValue();
             ref.removeEventListener(buscaListener);
         }catch (NullPointerException e)
@@ -257,11 +297,7 @@ public class Buscar extends Fragment
             animationView.cancelAnimation();
             img.setVisibility(View.VISIBLE);
             animationView.setVisibility(View.GONE);
-            txt.setText(" Busca concluida \n copie os nicks em seu jogo");
             lnlTopo.setVisibility(View.VISIBLE);
-            txtInfo.setVisibility(View.GONE);
-            txtInfo.clearAnimation();
-            txtBuscar.setVisibility(View.GONE);
         }
 
     }
@@ -269,14 +305,14 @@ public class Buscar extends Fragment
     public void fazerCast(View view)
     {
         txt = (TextView) view.findViewById(R.id.txtQTD);
+        txtTemporizador = (TextView) view.findViewById(R.id.txtContagem);
+        lnlBusca = (LinearLayout) view.findViewById(R.id.lnl);
         lnlTopo = (LinearLayout) view.findViewById(R.id.lnlTopo_buscar);
         lnlFundo = (LinearLayout) view.findViewById(R.id.lnlFundo_buscar);
         swtchDuo = (Switch) view.findViewById(R.id.swtchDuo_buscar);
         swtchSQD = (Switch) view.findViewById(R.id.swtchSquad_buscar);
         swtchMeuHS = (Switch) view.findViewById(R.id.swtchMeuHeadSet_buscar);
         swtchSeuHS = (Switch) view.findViewById(R.id.swtchSeuHeadSet_buscar);
-        txtBuscar = (FadingTextView) view.findViewById(R.id.fdngtxtBuscando_buscar);
-        txtInfo = (FadingTextView) view.findViewById(R.id.fdngtxtTopo_buscar);
         img = (ImageButton)view.findViewById(R.id.imgbSearch_BUSCAR);
         animationView = (LottieAnimationView) view.findViewById(R.id.animation_view);
         recbusca = (RecyclerView)view.findViewById(R.id.recBusca);

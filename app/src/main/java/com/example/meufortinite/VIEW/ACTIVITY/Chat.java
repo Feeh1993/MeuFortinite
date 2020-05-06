@@ -270,7 +270,7 @@ public class Chat extends AppCompatActivity
         {
             mensagem = strings[0];
             Mensagem msgRemota = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(), "0",meuNick+":"+mIcone);
-            Mensagem msgLocal = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(),iconeA,meuNick);
+            Mensagem msgLocal = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(),iconeA,nickAmigo);
             String key = ref.child("chat").child(meuId).child(idUser).push().getKey();
             if (caminho != "")
             {

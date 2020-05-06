@@ -1,6 +1,7 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.MODEL.INTERFACE.CustomConversa;
 import com.example.meufortinite.R;
+import com.example.meufortinite.VIEW.ACTIVITY.Chat;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorConversa;
 import com.example.meufortinite.VIEW.DIALOG.NovaMensagem;
@@ -52,6 +54,7 @@ public class Conversas extends Fragment
     private AdaptadorConversa adapter;
     private String TAG = "CONVERSAS_";
 
+
     private ValueEventListener novamsgValueListener;
 
 
@@ -76,6 +79,7 @@ public class Conversas extends Fragment
     public void onPause()
     {
         super.onPause();
+        adapter.notifyDataSetChanged();
         Log.d(TAG,"onPause");
     }
 
@@ -92,7 +96,6 @@ public class Conversas extends Fragment
                 {
                     if (dataSnapshot.getValue().toString() != null)
                     {
-                        Toast.makeText(getContext(),"Alteração",Toast.LENGTH_LONG).show();
                         viewPager.setCurrentItem(1);
                         recuperandoAmigo(dataSnapshot.getValue().toString());
                         //REMOVE VALOR DO BANCO PARA QUE OUTRA NOVA MENSAGEM ENTRE
@@ -176,21 +179,29 @@ public class Conversas extends Fragment
 // IMPLEMENTAR BANCO REMOTO :<
     private void recuperarBanco()
     {
+        listConversa.clear();
         try
         {
-            Toast.makeText(getContext()," entrou na query",Toast.LENGTH_LONG).show();
-            ref.child("conversas").orderByKey().equalTo(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
+            ref.child("conversas").orderByKey().startAt(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
             {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
                         Mensagem new_mensagem = snapshot.getValue(Mensagem.class);
-                        Log.d(TAG, "ICONE DATA"+new_mensagem.getRecebido());
-                        listConversa.add(new_mensagem);
-                        Log.d(TAG, "TAM LIST CONVRS: "+listConversa.size());
-                        adapter.notifyDataSetChanged();
+                        Log.d(TAG, "startAt ICONE DATA"+new_mensagem.getRecebido());
+                        if (!listConversa.contains(new_mensagem))
+                        {
+                            //listConversa.add(new_mensagem);
+                            db.inserirConversa(new_mensagem);
+                            db.atualizarConversa(new_mensagem);
+                            Log.d(TAG, "startAt TAM LIST CONVRS: "+listConversa.size());
+                            Log.d(TAG, "startAt TAM LIST CONVRS BANCO IF: "+db.getQTDConversas());
+                            adapter.notifyDataSetChanged();
+                        }
                     }
+                    recuperarDadosLocais();
                 }
 
                 @Override
@@ -198,6 +209,35 @@ public class Conversas extends Fragment
 
                 }
             });
+            ref.child("conversas").orderByKey().endAt(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                    {
+                        Mensagem new_mensagem = snapshot.getValue(Mensagem.class);
+                        Log.d(TAG, "endAt ICONE DATA"+new_mensagem.getRecebido());
+                        if (!listConversa.contains(new_mensagem))
+                        {
+                            //listConversa.add(new_mensagem);
+                            db.inserirConversa(new_mensagem);
+                            db.atualizarConversa(new_mensagem);
+                            Log.d(TAG, "endAt TAM LIST CONVRS: "+listConversa.size());
+                            Log.d(TAG, "endAt TAM LIST CONVRS BANCO IF: "+db.getQTDConversas());
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                    recuperarDadosLocais();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
         }catch (IndexOutOfBoundsException e)
         {
             Toast.makeText(getContext(),"Não entrou na query",Toast.LENGTH_LONG).show();
@@ -215,7 +255,7 @@ public class Conversas extends Fragment
         listConversa.clear();
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
-        //listConversa.addAll(db.recuperaConversas());
+        listConversa.addAll(db.recuperaConversas());
         try
         {
             Log.d("CONVERSAS_","AVATAR: "+listConversa.get(0).getRecebido());
@@ -234,7 +274,18 @@ public class Conversas extends Fragment
             public void onItemClick(View itemView, int position, Mensagem conversa)
             {
                 //FALTA IMPLEMENTAR CLIQUE
-
+                Intent intent = new Intent(getContext(), Chat.class);
+                Bundle bundle = new Bundle();
+                Log.d("NM_","IDUSER: "+conversa.getId());
+                Log.d("NM_","MEUID: "+meuUsuario.get(0).getId());
+                bundle.putString("id_user",conversa.getId());
+                bundle.putString("meu_id",meuUsuario.get(0).getId());
+                bundle.putString("meu_nick",meuUsuario.get(0).getNickname());
+                bundle.putString("nick_amigo",conversa.getUsername());
+                bundle.putString("mIcone",meuAvatar.get(0).getAvatar());
+                bundle.putString("iconeA",conversa.getRecebido());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         recChat.setAdapter(adapter);
