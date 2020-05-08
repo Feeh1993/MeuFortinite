@@ -224,19 +224,7 @@ public class Login extends AppCompatActivity
             {
                 if (task.isSuccessful())
                 {
-                    prgConectar.setVisibility(View.GONE);
-                    new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("Cadastrado!")
-                            .setContentText("Seja bem vindo a nossa plataforma!")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
-                            {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog)
-                                {
-                                    startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
-                                }
-                            })
-                            .show();
+                    recuperarBancoRemoto();
                 } else{
                     prgConectar.setVisibility(View.GONE);
                     new SweetAlertDialog(Login.this, SweetAlertDialog.WARNING_TYPE)
@@ -254,6 +242,39 @@ public class Login extends AppCompatActivity
                             })
                             .show();
                 }
+            }
+        });
+    }
+
+    private void recuperarBancoRemoto()
+    {
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        ref.child("usuarios").child(id).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                Amigo user = dataSnapshot.getValue(Amigo.class);
+                db.inserirUser(new Usuario(user.getId(),DatabaseHelper.getDateTime(),user.getNick()));
+                db.inserirAmigo(user);
+                prgConectar.setVisibility(View.GONE);
+                new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText("Cadastrado!")
+                        .setContentText("Seja bem vindo a nossa plataforma!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
+                        {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog)
+                            {
+                                startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                            }
+                        })
+                        .show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

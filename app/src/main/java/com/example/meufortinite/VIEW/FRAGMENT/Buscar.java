@@ -91,6 +91,7 @@ public class Buscar extends Fragment
         View view = inflater.inflate(R.layout.fragment_buscar, container, false);
         db = new DatabaseHelper(getContext());
         meuUser.addAll(db.recuperaAmigos());
+        Log.d("BUSCAR_","meuUser.get(0).getId(): "+meuUser.get(0).getId());
         fazerCast(view);
         recbusca.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AdaptadorBusca(getContext(), listUsers, meuUser.get(0).getId(), new CustomBusca() {

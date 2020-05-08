@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
+import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -89,7 +90,7 @@ public class Loading extends AppCompatActivity
             if (mAuth.getCurrentUser() != null)
             {
                 txt.setText("bem vindo de volta ");
-                startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                atualizarBancoLocal();
             }
             else
             {
@@ -101,6 +102,26 @@ public class Loading extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(), Login.class));
         }
     }
+
+    private void atualizarBancoLocal()
+    {
+        ref.child("usuarios").child(usuarios.get(0).getId()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                Amigo meuUser = dataSnapshot.getValue(Amigo.class);
+                dbLocal.atualizarAmigo(meuUser);
+                startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     //VERIFICA SE O BANCO LOCAL NÃO ESTÁ VAZIO
     private void recuperarBancoLocal()
     {

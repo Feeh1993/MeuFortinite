@@ -256,10 +256,10 @@ public class Conversas extends Fragment
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
         listConversa.addAll(db.recuperaConversas());
+        Log.d("CONVERSAS_","USUARIO: "+meuUsuario.get(0).getNickname());
         try
         {
             Log.d("CONVERSAS_","AVATAR: "+listConversa.get(0).getRecebido());
-            Log.d("CONVERSAS_","USUARIO: "+meuUsuario.get(0).getNickname());
             Log.d("CONVERSAS_","QTD CONVERSAS: "+listConversa.size());
             Log.d("CONVERSAS_","DADOS CONVERSA 1 : "+listConversa.get(0).getUsername());
 
