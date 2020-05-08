@@ -12,7 +12,6 @@ public class Amigo
     public String nick;
     public String tipo;
     public String id;
-    public String rank;
     public ArrayList<String> amigos;
 
 
@@ -21,24 +20,14 @@ public class Amigo
 
     }
 
-    public Amigo(int icone, String nick, String tipo, String id, ArrayList<String> amigos, String rank)
+    public Amigo(int icone, String nick, String tipo, String id, ArrayList<String> amigos)
     {
         this.icone = icone;
         this.nick = nick;
         this.tipo = tipo;
         this.id = id;
         this.amigos = amigos;
-        this.rank = rank;
     }
-
-    public String getRank() {
-        return rank;
-    }
-
-    public void setRank(String rank) {
-        this.rank = rank;
-    }
-
     public int getIcone() {
         return icone;
     }
@@ -72,7 +61,6 @@ public class Amigo
         result.put("tipo",tipo);
         result.put("amigos",amigos);
         result.put("id",id);
-        result.put("rank",rank);
 
         return result;
     }

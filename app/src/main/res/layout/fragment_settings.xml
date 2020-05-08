@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/lnlTopo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="top"
         android:orientation="vertical">
 
@@ -35,14 +35,32 @@
             android:textColor="@color/main_green_color"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView3"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:text="adicione um de nossos avatares disponiveis"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:text="Email"
+                android:layout_weight="0.6"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
+                android:id="@+id/imgbAltrSenha"
+                android:layout_weight="0.9"
+                android:AllCaps="false"
+                android:drawableRight="@drawable/ic_show_password"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@null"
+                android:text="Redefinir senha"
+                android:textColor="@color/colorPrimary"/>
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -79,13 +97,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/lnlMEIO"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"></LinearLayout>
-
-    <LinearLayout
         android:id="@+id/lnlFundo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -103,7 +114,8 @@
                 android:layout_weight="0.9"
                 android:text="Fazer logout da plataforma"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp" />
+                android:textAlignment="center"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnLogout"
@@ -115,7 +127,7 @@
                 android:text="Sair"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

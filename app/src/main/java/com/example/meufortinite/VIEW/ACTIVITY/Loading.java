@@ -18,6 +18,7 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,8 +32,10 @@ public class Loading extends AppCompatActivity
     private DatabaseHelper dbLocal;
     private  ArrayList<Usuario> usuarios = new ArrayList<>();
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
-    private Typeface fortniteFont;
+    private FirebaseAuth mAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private Animation animation;
+
+
 
 
     @Override
@@ -83,37 +86,16 @@ public class Loading extends AppCompatActivity
         try
         {
             Log.d("LOADING_", "SIZE USUARIOS"+String.valueOf(usuarios.size()));
-            ref.child("usuarios").child(usuarios.get(0).id).child("tipo").addListenerForSingleValueEvent(new ValueEventListener()
+            if (mAuth.getCurrentUser() != null)
             {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                {
-                    if (dataSnapshot.exists())
-                    {
-                        if (dataSnapshot.getValue().toString().equals("logado") || dataSnapshot.getValue().toString().equals("offline"))
-                        {
-                            txt.setText("bem vindo de volta ");
-                            startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
-                        }
-                        else
-                        {
-                            txt.setText("bem vindo a nossa plataforma");
-                            startActivity(new Intent(getApplicationContext(), Login.class));
-                        }
-                    }
-                    else
-                    {
-                        txt.setText("bem vindo a nossa plataforma");
-                        startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
-
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError)
-                {
-
-                }
-            });
+                txt.setText("bem vindo de volta ");
+                startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+            }
+            else
+            {
+                txt.setText("bem vindo a nossa plataforma");
+                startActivity(new Intent(getApplicationContext(), Login.class));
+            }
         } catch (IndexOutOfBoundsException e)
         {
             startActivity(new Intent(getApplicationContext(), Login.class));

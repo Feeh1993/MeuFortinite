@@ -139,7 +139,7 @@ public class Chat extends AppCompatActivity
                     }
                 }catch (NullPointerException e)
                 {
-
+                    progressBar.setVisibility(View.GONE);
                 }
 
             }
@@ -164,7 +164,7 @@ public class Chat extends AppCompatActivity
                     }
                 }catch (NullPointerException e)
                 {
-
+                    progressBar.setVisibility(View.GONE);
                 }
 
             }
@@ -311,6 +311,6 @@ public class Chat extends AppCompatActivity
     protected void onStop()
     {
         super.onStop();
-        ref.removeEventListener(msgmListener);
+       // ref.removeEventListener(msgmListener);
     }
 }

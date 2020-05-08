@@ -46,20 +46,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     //DADOS TABELA USUARIO
     public static final String TABLE_NAME_USER = "usuario";
-    public static final String COLUMN_VITORIAS = "vitorias";
-    public static final String COLUMN_TRESPRIMEIROS = "trespri";
-    public static final String COLUMN_DEZPRIMEIROS = "dezpri";
-    public static final String COLUMN_VINTECINCOPRIMEIROS = "vintecincopri";
-    public static final String COLUMN_KD = "kd";
-    public static final String COLUMN_KILL = "kill";
-    public static final String COLUMN_SCORE = "score";
     public static final String COLUMN_NICKNAME = "nickname";
 
     //DADOS TABELA AMIGOS
     public static final String TABLE_NAME_AMIGOS = "amigos";
     public static final String COLUMN_AMIGOS =  "nickname";
     public static final String COLUMN_ICONE = "icone";
-    public static final String COLUMN_RANK = "rank";
 
 
     //CRIANDO TABELA AMIGOS
@@ -67,8 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             "CREATE TABLE " + TABLE_NAME_AMIGOS + "("
                     + COLUMN_ID + " TEXT PRIMARY KEY,"
                     + COLUMN_AMIGOS + " TEXT,"
-                    + COLUMN_ICONE + " INTEGER,"
-                    + COLUMN_RANK + " TEXT"
+                    + COLUMN_ICONE + " INTEGER"
                     + ")";
 
     //CRIANDO TABELA AVATAR
@@ -93,13 +84,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public static final String CREATE_TABLEUSER =
             "CREATE TABLE " + TABLE_NAME_USER + "("
                     + COLUMN_ID + " TEXT PRIMARY KEY,"
-                    + COLUMN_DEZPRIMEIROS + " TEXT,"
-                    + COLUMN_TRESPRIMEIROS + " TEXT,"
-                    + COLUMN_VINTECINCOPRIMEIROS + " TEXT,"
-                    + COLUMN_KD + " TEXT,"
-                    + COLUMN_KILL + " TEXT,"
-                    + COLUMN_SCORE + " TEXT,"
-                    + COLUMN_VITORIAS + " TEXT,"
                     + COLUMN_NICKNAME + " TEXT,"
                     + COLUMN_CRIADO + " DATETIME"
                     + ")";
@@ -134,6 +118,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
         // Create tables again
         onCreate(db);
     }
+
+
     public long inserirAmigo(Amigo amigo)
     {
         // ABRIR MODO DE LEITURA DO BANCO
@@ -143,8 +129,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
         values.put(COLUMN_ID, amigo.id);
         values.put(COLUMN_AMIGOS, amigo.nick);
         values.put(COLUMN_ICONE, amigo.icone);
-        values.put(COLUMN_RANK, amigo.rank);
-
 
         //INSERIR LINHA
         long id = db.insert(TABLE_NAME_AMIGOS, null, values);
@@ -206,16 +190,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         // `id` and `timestamp` will be inserted automatically.
         // no need to add them
-        values.put(COLUMN_ID, usuario.id);
-        values.put(COLUMN_DEZPRIMEIROS, usuario.dezpri);
-        values.put(COLUMN_TRESPRIMEIROS, usuario.trespri);
-        values.put(COLUMN_VINTECINCOPRIMEIROS, usuario.vintecincopri);
-        values.put(COLUMN_KD, usuario.kd);
-        values.put(COLUMN_KILL, usuario.kill);
-        values.put(COLUMN_VITORIAS, usuario.vitorias);
-        values.put(COLUMN_SCORE, usuario.score);
-        values.put(COLUMN_NICKNAME, usuario.nickname);
-
+        values.put(COLUMN_ID, usuario.getId());
+        values.put(COLUMN_NICKNAME, usuario.getNickname());
 
         // insert row
         long id = db.insert(TABLE_NAME_USER, null, values);
@@ -241,7 +217,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         Amigo amigo = new Amigo
                 (cursor.getInt(cursor.getColumnIndex(COLUMN_ICONE)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_AMIGOS)),
-                null,cursor.getString(cursor.getColumnIndex(COLUMN_ID)),null,cursor.getString(cursor.getColumnIndex(COLUMN_RANK)));
+                null,cursor.getString(cursor.getColumnIndex(COLUMN_ID)),null);
 
         // close the db connection
         cursor.close();
@@ -307,13 +283,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
             cursor.moveToFirst();
         Usuario usuario = new Usuario(
                 cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_SCORE)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_KD)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_KILL)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_VINTECINCOPRIMEIROS)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_DEZPRIMEIROS)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_TRESPRIMEIROS)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_VITORIAS)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
 
@@ -341,7 +310,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 Amigo amigo = new Amigo();
                 amigo.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
                 amigo.setIcone(cursor.getInt(cursor.getColumnIndex(COLUMN_ICONE)));
-                amigo.setRank(cursor.getString(cursor.getColumnIndex(COLUMN_RANK)));
                 amigo.setNick(cursor.getString(cursor.getColumnIndex(COLUMN_AMIGOS)));
 
                 amigos.add(amigo);
@@ -435,13 +403,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
             {
                 Usuario usuario = new Usuario();
                 usuario.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
-                usuario.setScore(cursor.getString(cursor.getColumnIndex(COLUMN_SCORE)));
-                usuario.setKd(cursor.getString(cursor.getColumnIndex(COLUMN_KD)));
-                usuario.setKill(cursor.getString(cursor.getColumnIndex(COLUMN_KILL)));
-                usuario.setVintecincopri(cursor.getString(cursor.getColumnIndex(COLUMN_VINTECINCOPRIMEIROS)));
-                usuario.setDezpri(cursor.getString(cursor.getColumnIndex(COLUMN_DEZPRIMEIROS)));
-                usuario.setTrespri(cursor.getString(cursor.getColumnIndex(COLUMN_TRESPRIMEIROS)));
-                usuario.setVitorias(cursor.getString(cursor.getColumnIndex(COLUMN_VITORIAS)));
                 usuario.setCriado(cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)));
                 usuario.setNickname(cursor.getString(cursor.getColumnIndex(COLUMN_NICKNAME)));
 
@@ -508,7 +469,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
         values.put(COLUMN_AMIGOS, amigo.nick);
         values.put(COLUMN_ICONE, amigo.icone);
         values.put(COLUMN_ID, amigo.id);
-        values.put(COLUMN_RANK, amigo.rank);
 
         return db.update(TABLE_NAME_AMIGOS, values, COLUMN_ID+ " = ?",
                 new String[]{String.valueOf(amigo.getId())});
@@ -546,15 +506,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_ID, usuario.id);
-        values.put(COLUMN_DEZPRIMEIROS, usuario.dezpri);
-        values.put(COLUMN_TRESPRIMEIROS, usuario.trespri);
-        values.put(COLUMN_VINTECINCOPRIMEIROS, usuario.vintecincopri);
-        values.put(COLUMN_KD, usuario.kd);
-        values.put(COLUMN_KILL, usuario.kill);
-        values.put(COLUMN_SCORE, usuario.score);
-        values.put(COLUMN_VITORIAS, usuario.vitorias);
-        values.put(COLUMN_NICKNAME, usuario.nickname);
+        values.put(COLUMN_ID, usuario.getId());
+        values.put(COLUMN_NICKNAME, usuario.getNickname());
         values.put(COLUMN_CRIADO,this.getDateTime());
 
         return db.update(TABLE_NAME_USER, values, COLUMN_ID + " = ?",

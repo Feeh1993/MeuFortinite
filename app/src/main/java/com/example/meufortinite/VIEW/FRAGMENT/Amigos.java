@@ -47,18 +47,17 @@ public class Amigos extends Fragment
     private TextView  txtUsuario,txtBusca;
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
     private RecyclerView recBusca,recAmigos;
-    private boolean resultado = true;
     private ProgressBar prgUser;
 
     private AdaptadorAmigos adapterBusca,adaptadorAmigos ;
     private DatabaseHelper db;
 
     private ArrayList<Amigo> listAmigos = new ArrayList<>();
+    private ArrayList<Amigo> listAmigosFirebase = new ArrayList<>();
     private ArrayList<Amigo> listaBusca = new ArrayList<>();
 
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
     private ArrayList<Avatar> meuAvatar = new ArrayList<>();
-    private Amigo meuAmigo;
     private ViewPager viewPager;
 
     public Amigos()
@@ -66,29 +65,10 @@ public class Amigos extends Fragment
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    private void atualizarBancoLocal( ArrayList<Amigo> amigos)
+    public void onStart()
     {
-        amigos.addAll(db.recuperaAmigos());
-        for (int i = 0; i < amigos.size(); i++)
-        {
-            ref.child("usuarios").child(amigos.get(i).getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                {
-                    Amigo usuario = dataSnapshot.getValue(Amigo.class);
-                    db.atualizarAmigo(usuario);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
+        super.onStart();
+        recuperarBancoRemoto();
     }
 
     @Override
@@ -97,15 +77,14 @@ public class Amigos extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_amigos, container, false);
         fazerCast(view);
-        db = new DatabaseHelper(getContext());
         Log.d("AMIGOS_","CRIANDO VIEW");
-        recuperarMeusDados();
         return view;
     }
 
 
     private void recuperarMeusDados()
     {
+        db = new DatabaseHelper(getContext());
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
     }
@@ -135,17 +114,14 @@ public class Amigos extends Fragment
         {
             if (db.getQTDAmigos() >= 1)
             {
-                listAmigos.clear();
-                listAmigos.addAll(db.recuperaAmigos());
-                atualizarBancoLocal(listAmigos);
                 db.atualizarAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),
                         meuUsuario.get(0).getNickname(),
                         "online",
                         meuUsuario.get(0).getId(),
-                        listAmigos.get(0).getAmigos(),
-                        listAmigos.get(0).getRank()));
+                        listAmigos.get(0).getAmigos()));
                 listAmigos.clear();
                 listAmigos.addAll(db.recuperaAmigos());
+                atualizarBancoLocal(listAmigos);
                 txtUsuario.setVisibility(View.VISIBLE);
                 Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
                 Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
@@ -161,8 +137,64 @@ public class Amigos extends Fragment
 
         iniciRecAmigos();
         iniciarRecBusca();
-        //atualizarRank(listAmigos);
         recAmigos.setAdapter(adaptadorAmigos);
+    }
+    private void recuperarBancoRemoto()
+    {
+        recuperarMeusDados();
+
+        ref.child("usuarios").child(meuUsuario.get(0).getId()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                Amigo usuario = dataSnapshot.getValue(Amigo.class);
+                try
+                {
+                    Log.d("AMIGOS","RECBREMOTO: QTDAMIGOS: "+usuario.getAmigos().size()+"** QTDAMIGOSLOCAL: "+(db.getQTDAmigos()-1));
+                    if (usuario.getAmigos().size() != (db.getQTDAmigos()-1))
+                    {
+                        for (int i = 0; i < usuario.getAmigos().size(); i++)
+                        {
+                            popularLista(usuario.getAmigos().get(i),1);
+                        }
+                    }
+                }catch (NullPointerException e)
+                {
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void atualizarBancoLocal( ArrayList<Amigo> amigos)
+    {
+        //amigos.addAll(db.recuperaAmigos());
+        for (int i = 0; i < amigos.size(); i++)
+        {
+            ref.child("usuarios").child(amigos.get(i).getId()).addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                {
+                    Amigo usuario = dataSnapshot.getValue(Amigo.class);
+                    db.atualizarAmigo(usuario);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError)
+                {
+
+                }
+            });
+        }
     }
 
     private void fazerCast(final View view)
@@ -227,7 +259,7 @@ public class Amigos extends Fragment
                                                     srchBuscar.clearFocus();
                                                     txtBusca.setVisibility(View.VISIBLE);
                                                     Log.d("AMIGOS_", "Contém: " + dados.getValue().toString());
-                                                    popularLista(dados.getValue().toString());
+                                                    popularLista(dados.getValue().toString(),0);
                                                 }
                                             }
                                         }
@@ -248,7 +280,7 @@ public class Amigos extends Fragment
         });
 
     }
-    private void popularLista(final String key)
+    private void popularLista(final String key, final int op)
     {
                 ref.child("usuarios").child(key).addListenerForSingleValueEvent(new ValueEventListener()
                 {
@@ -256,14 +288,31 @@ public class Amigos extends Fragment
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                     {
                             Amigo usuario = dataSnapshot.getValue(Amigo.class);
-                            Log.d("AMIGOS_", usuario.getNick());
-                            prgUser.setVisibility(View.GONE);
-                            txtUsuario.setVisibility(View.VISIBLE);
-                            txtUsuario.setText("usuarios");
-                            listaBusca.add(usuario);
-                            adapterBusca.notifyDataSetChanged();
-                            recAmigos.setVisibility(View.VISIBLE);
-                            txtBusca.setVisibility(View.VISIBLE);
+                            switch (op)
+                            {
+                                case 0:
+                                    Log.d("AMIGOS_", usuario.getNick());
+                                    prgUser.setVisibility(View.GONE);
+                                    txtUsuario.setVisibility(View.VISIBLE);
+                                    txtUsuario.setText("usuarios");
+                                    listaBusca.add(usuario);
+                                    adapterBusca.notifyDataSetChanged();
+                                    recAmigos.setVisibility(View.VISIBLE);
+                                    txtBusca.setVisibility(View.VISIBLE);
+                                case 1:
+                                    ArrayList<Amigo> amigos = new ArrayList<>();
+                                    amigos.addAll(db.recuperaAmigos());
+                                    if (amigos.contains(usuario))
+                                    {
+                                        db.atualizarAmigo(usuario);
+                                        Log.d("AMIGOS","Atualizando amigo CASE1");
+                                    }
+                                    else
+                                    {
+                                        db.inserirAmigo(usuario);
+                                        Log.d("AMIGOS","INserindo amigo CASE1");
+                                    }
+                            }
                     }
 
                     @Override

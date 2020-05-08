@@ -2,6 +2,7 @@ package com.example.meufortinite.VIEW.FRAGMENT;
 
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ACTIVITY.Login;
 import com.example.meufortinite.VIEW.ACTIVITY.SelecionarAvatar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -102,6 +104,11 @@ public class Settings extends Fragment
             {
                 Toast.makeText(getContext(),"ID desconectado :)",Toast.LENGTH_LONG).show();
                 ref.child("usuarios").child(usuarios.get(0).getId()).child("tipo").setValue("deslogado");
+                FirebaseAuth.getInstance().signOut();
+
+// DELETANDO BANCO LOCAL
+                getContext().deleteDatabase("meuForti_db");
+
                 startActivity(new Intent(getContext(), Login.class));
             }
         });

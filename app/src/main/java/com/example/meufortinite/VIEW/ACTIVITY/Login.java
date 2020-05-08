@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,25 +16,28 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.meufortinite.DAO.API.FornightService;
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.DAO.REMOTO.PermissionsUtils;
-import com.example.meufortinite.MODEL.API.ItemResponse;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
-import com.example.meufortinite.MODEL.API.Stats;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,31 +49,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class Login extends AppCompatActivity
 {
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
-    private FirebaseAuth user = ConfiguracaoFirebase.getFirebaseAutenticacao();
-    private FrameLayout frmlPost;
-    private EditText edtSenha;
-    private Button btnLogar,btnPro;
+    private FirebaseAuth mAuth = ConfiguracaoFirebase.getFirebaseAutenticacao();
 
-    private String accountId;
-    private ArrayList<Stats> lifeTimeStat;
-    private Button check;
-    private ImageButton btnXBX,btnPSN,btnPC;
-    private int XBX = 0 ,PSN = 0,PC = 0;
+    //admin
+    private FrameLayout frmlPostAdm;
+    private EditText edtSenhaAdm;
+    private Button btnLogarAdm;
+    public ProgressBar prgLoginAdm;
 
-    private String platform = "";
-    private EditText username;
-    public static final String EXTRA_ACCOUNT = "account";
-    public static final String EXTRA_STATS = "stats";
+    //pro
+    private Button btnPro;
+
+   //login
+    private EditText edtUsername,edtPassword,edtEmail;
+    private Button btnCadastrar,btnConectar;
+    private ImageButton btnShowPassword;
+    public ProgressBar prgConectar;
+
     WelcomeHelper welcomeScreen;
 
     String[] permissoes = new String[]
@@ -83,21 +81,20 @@ public class Login extends AppCompatActivity
                     Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.ACCESS_WIFI_STATE
             };
-    public ProgressBar prgLogin,prgBuscar;
 
 
-    public  MediaPlayer mp;
     private DatabaseHelper db;
     private ArrayList<Usuario> usuarios = new ArrayList<>();
-    private String name = "";
-    private Typeface fortniteFont;
 
     @Override
     protected void onStart()
     {
         super.onStart();
         db = new DatabaseHelper(getApplicationContext());
+
     }
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
@@ -114,24 +111,24 @@ public class Login extends AppCompatActivity
         welcomeScreen.show(savedInstanceState);
         PermissionsUtils.ActivePermissions(this,permissoes,1);
         fazerCast();
-        btnLogar.setOnClickListener(new View.OnClickListener()
+        btnLogarAdm.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(final View v)
             {
-                if (!edtSenha.getText().toString().isEmpty())
+                if (!edtSenhaAdm.getText().toString().isEmpty())
                 {
-                    prgLogin.setVisibility(View.VISIBLE);
-                    btnLogar.setVisibility(View.GONE);
+                    prgLoginAdm.setVisibility(View.VISIBLE);
+                    btnLogarAdm.setVisibility(View.GONE);
                     ref.child("admin").addListenerForSingleValueEvent(new ValueEventListener()
                     {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
-                            Log.d("LOGIN_ACVTY","Senha= "+edtSenha.getText().toString()+"\n Senha Server: "+dataSnapshot.getValue().toString());
-                            if (edtSenha.getText().toString().equals(dataSnapshot.getValue().toString()))
+                            Log.d("LOGIN_ACVTY","Senha= "+edtSenhaAdm.getText().toString()+"\n Senha Server: "+dataSnapshot.getValue().toString());
+                            if (edtSenhaAdm.getText().toString().equals(dataSnapshot.getValue().toString()))
                             {
-                                prgLogin.setVisibility(View.GONE);
+                                prgLoginAdm.setVisibility(View.GONE);
                                 Snackbar.make(v, "Seja bem vindo Administrador :) ", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                                 iniciarAnimacao();
@@ -139,8 +136,8 @@ public class Login extends AppCompatActivity
                             }
                             else
                             {
-                                prgLogin.setVisibility(View.GONE);
-                                btnLogar.setVisibility(View.VISIBLE);
+                                prgLoginAdm.setVisibility(View.GONE);
+                                btnLogarAdm.setVisibility(View.VISIBLE);
                                 Snackbar.make(v, "Erro!Tente novamente", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                             }
@@ -154,98 +151,56 @@ public class Login extends AppCompatActivity
                 }
             }
         });
-        check.setOnClickListener(new View.OnClickListener()
+        btnCadastrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (edtUsername.getVisibility() == View.GONE)
+                {
+                    edtUsername.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    if(edtPassword.getText().toString().equals("") || edtUsername.getText().toString().equals("")||edtEmail.getText().toString().equals(""))
+                    {
+                        Snackbar.make(getCurrentFocus(),"Digite o username,senha e email e tente novamente", BaseTransientBottomBar.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        prgConectar.setVisibility(View.VISIBLE);
+                        prgConectar.setElevation(2);
+                        closeKeyboard(view);
+                        salvarUsuario(edtPassword.getText().toString(),edtUsername.getText().toString(),edtEmail.getText().toString());
+                    }
+                }
+            }
+        });
+        btnConectar.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (username.getText().toString().equals("a1d9m9i3n"))
+                if (edtUsername.getText().toString().equals("a1d9m9i3n"))
                 {
                     btnPro.setVisibility(View.GONE);
                     iniciarAnimacao();
                 }
                 else
                     {
-                        if(platform == "" || username.getText().toString().equals(""))
+                        if(edtPassword.getText().toString().equals("") ||edtEmail.getText().toString().equals(""))
                         {
-                            Toast.makeText(Login.this, "Digite o username e selecione uma das plataformas", Toast.LENGTH_SHORT).show();
-                            username.setError("Digite o username!");
+                            Snackbar.make(getCurrentFocus(),"Digite senha,email e tente novamente", BaseTransientBottomBar.LENGTH_LONG).show();
                         }
-                        else{
-                            prgBuscar.setVisibility(View.VISIBLE);
-                            prgBuscar.setElevation(2);
-                            closeKeyboard(v);
-                            getAccountData(platform, username.getText().toString());
-                        }
+                        else
+                            {
+                                prgConectar.setVisibility(View.VISIBLE);
+                                prgConectar.setElevation(2);
+                                closeKeyboard(v);
+                                conectar(edtPassword.getText().toString(),edtEmail.getText().toString());
+                            }
                     }
             }
         });
-        btnPSN.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if (PSN == 1)
-                {
-                    PSN = 0;
-                    btnPSN.setBackgroundResource(R.drawable.bordas_vazias);
-                }
-                else
-                {
-                    platform = "psn";
-                    btnPSN.setBackgroundResource(R.drawable.bordas_verdes);
-                    btnPC.setBackgroundResource(R.drawable.bordas_vazias);
-                    btnXBX.setBackgroundResource(R.drawable.bordas_vazias);
-                    PSN = 1;
-                    XBX = 0;
-                    PC = 0;
 
-                }
-            }
-        });
-        btnXBX.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (XBX == 1)
-                {
-                    XBX = 0;
-                    btnXBX.setBackgroundResource(R.drawable.bordas_vazias);
-                }
-                else
-                {
-                    platform = "xb1";
-                    btnXBX.setBackgroundResource(R.drawable.bordas_verdes);
-                    btnPC.setBackgroundResource(R.drawable.bordas_vazias);
-                    btnPSN.setBackgroundResource(R.drawable.bordas_vazias);
-                    XBX = 1;
-                    PSN = 0;
-                    PC = 0;
-
-                }
-            }
-        });
-        btnPC.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                if (PC == 1)
-                {
-                    PC = 0;
-                    btnPC.setBackgroundResource(R.drawable.bordas_vazias);
-                }
-                else
-                {
-                    platform = "pc";
-                    btnPC.setBackgroundResource(R.drawable.bordas_verdes);
-                    btnXBX.setBackgroundResource(R.drawable.bordas_vazias);
-                    btnPSN.setBackgroundResource(R.drawable.bordas_vazias);
-                    PC = 1;
-                    PSN = 0;
-                    XBX = 0;
-
-                }
-            }
-        });
         btnPro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -257,130 +212,141 @@ public class Login extends AppCompatActivity
 
     }
 
-
-    private void getAccountData(String p, String u)
+    private void conectar(String password, String email)
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.fortnitetracker.com/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        FornightService service =
-                retrofit.create(FornightService.class);
-
-        Call<ItemResponse> itemResponseCall =
-                service.searchByPlatfrom(p, u);
-
-        itemResponseCall.enqueue(new Callback<ItemResponse>() {
+        mAuth.signInWithEmailAndPassword(
+                email,
+                password
+        ).addOnCompleteListener(new OnCompleteListener<AuthResult>()
+        {
             @Override
-            public void onResponse(Call<ItemResponse> call,
-                                   Response<ItemResponse> response) {
-
-
-                if(response.body() == (null))
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                if (task.isSuccessful())
                 {
-                    Toast.makeText(Login.this, "Usuário Não encontrado!\n tente novamente", Toast.LENGTH_SHORT).show();
-                    prgBuscar.setVisibility(View.GONE);
+                    prgConectar.setVisibility(View.GONE);
+                    new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("Cadastrado!")
+                            .setContentText("Seja bem vindo a nossa plataforma!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
+                            {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog)
+                                {
+                                    startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                                }
+                            })
+                            .show();
+                } else{
+                    prgConectar.setVisibility(View.GONE);
+                    new SweetAlertDialog(Login.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Erro de Cadastro!")
+                            .setContentText("Verifique os dados e tente novamente\n Ou digite seu username e cadastre-se!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
+                            {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog)
+                                {
+                                    edtUsername.setVisibility(View.VISIBLE);
+                                    sweetAlertDialog.dismiss();
+                                    //startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
+                                }
+                            })
+                            .show();
                 }
-                else if(response.body().getAccountId() == (null))
-                {
-                    Toast.makeText(Login.this, "Your Username didn't seem to work, maybe you forgot a capital.", Toast.LENGTH_SHORT).show();
-                    prgBuscar.setVisibility(View.GONE);
-                }
-                else{
-                    name = response.body().getEpicUserHandle();
-                    accountId = response.body().getAccountId();
-                    lifeTimeStat = response.body().getLifeTimeStats();
-
-                    String[] score = lifeTimeStat.get(6).getValue().split(",");
-
-                    //salvando usuário logado pela primeira vez
-                    Usuario user = new Usuario(accountId,score[0]+"."+score[1],lifeTimeStat.get(11).getValue(),
-                            lifeTimeStat.get(10).getValue(),lifeTimeStat.get(5).getValue(),
-                            lifeTimeStat.get(3).getValue(),lifeTimeStat.get(1).getValue(),
-                            lifeTimeStat.get(8).getValue(),DatabaseHelper.getDateTime(),name);
-                    Log.d("LOGIN_ACVTY", "DADOS USER: " +
-                            "\n ID: " + user.getId()+
-                            "\n KILL: "+ user.getKill()+
-                            "\n KD: " + user.getKd()+
-                            "\n SCORE: "+ user.getScore()+
-                            "\n 3PRI: " + user.getTrespri()+
-                            "\n 10PRI: "+ user.getDezpri()+
-                            "\n 25PRI: " + user.getVintecincopri()+
-                            "\n Vitoria: "+ user.getVitorias()+
-                            "\n HORAS: "+user.getCriado()
-                          );
-
-                    //salvando dados de acesso localmente
-                    db.inserirUser(user);
-
-                    Log.d("LOGIN_ACVTY", "DADOS USER: \n ID: " + user.getId()+
-                            "\n KILL: "+ user.getKill());
-                    Log.d("LOGIN_ACVTY", "Banco atualizado: " + db.getQTDUsuarios()+" usuarios salvos");
-
-                    //SALVANDO USUARIO NO BANCO FIREBASE
-                    salvar(user.id,name,"0");
-                    ref.child("nick").child(name).setValue(user.id);
-
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ItemResponse> call,
-                                  Throwable t) {
-                Log.d("LOGIN_ACVTY", "onFailure: " + t.getMessage());
             }
         });
+    }
 
+
+    private void salvarUsuario(String password, final String nickname, String email)
+    {
+        mAuth.createUserWithEmailAndPassword(
+                email,
+                password
+        ).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful())
+                {
+                    String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    //salvando usuário logado pela primeira vez
+                    Usuario user = new Usuario(id,DatabaseHelper.getDateTime(),nickname);
+                    db.inserirUser(user);
+                    salvar(user);
+
+                } else
+                {
+                    String erro = "";
+                    try
+                    {
+                        throw task.getException();
+                    } catch (FirebaseAuthWeakPasswordException e)
+                    {
+                        erro = "Escolha uma senha que contenha, letras e números.";
+                        prgConectar.setVisibility(View.GONE);
+                    } catch (FirebaseAuthInvalidCredentialsException e)
+                    {
+                        erro = "Email indicado não é válido.";
+                        prgConectar.setVisibility(View.GONE);
+                    } catch (FirebaseAuthUserCollisionException e)
+                    {
+                        erro = "Já existe uma conta com esse e-mail.";
+                        prgConectar.setVisibility(View.GONE);
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(Login.this, "Erro ao cadastrar usuário: " + erro, Toast.LENGTH_LONG).show();
+                    //  progressBarCC.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
 
     private void fazerCast()
     {
-        prgBuscar = findViewById(R.id.prgbBuscaLogin);
-        prgLogin = findViewById(R.id.prgbFRMLogin);
-        username = findViewById(R.id.edtUserLogin);
-        check = findViewById(R.id.btnBuscarLogin);
-        btnPC = findViewById(R.id.imbtnPC);
-        btnXBX = findViewById(R.id.imbtnXBX);
-        btnPSN = findViewById(R.id.imbtnPSN);
+        prgConectar = findViewById(R.id.prgbBuscaLogin);
+        edtEmail = findViewById(R.id.edtEmailLogin);
+        edtUsername = findViewById(R.id.edtUserLogin);
+        edtPassword = findViewById(R.id.edtSenhaLog);
+        btnConectar = findViewById(R.id.btnLogin);
         btnPro = findViewById(R.id.btnPro);
+        btnCadastrar = findViewById(R.id.btnCadLogin);
+        btnShowPassword = findViewById(R.id.imgPassLog);
 
-        frmlPost = findViewById(R.id.frml_post);
-        edtSenha = findViewById(R.id.edtSenhaAdmLogin);
-        btnLogar = findViewById(R.id.btnConectarLogin);
 
-        fortniteFont = Typeface.createFromAsset(getAssets(),getString(R.string.fortnite_font_resource));
-        username.setTypeface(fortniteFont);
-        btnPro.setTypeface(fortniteFont);
-        edtSenha.setTypeface(fortniteFont);
-        btnLogar.setTypeface(fortniteFont);
-
+        //adm
+        frmlPostAdm = findViewById(R.id.frml_adm);
+        edtSenhaAdm = findViewById(R.id.edtSenhaAdmLogin);
+        btnLogarAdm = findViewById(R.id.btnAdmLogin);
+        prgLoginAdm = findViewById(R.id.prgbLoginAdm);
     }
     private void iniciarAnimacao()
     {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.anim_fadein);
         anim.reset();
-        if (frmlPost != null && frmlPost.getVisibility() == View.GONE)
+        if (frmlPostAdm != null && frmlPostAdm.getVisibility() == View.GONE)
         {
-            frmlPost.clearAnimation();
-            frmlPost.startAnimation(anim);
-            frmlPost.setVisibility(View.VISIBLE);
+            frmlPostAdm.clearAnimation();
+            frmlPostAdm.startAnimation(anim);
+            frmlPostAdm.setVisibility(View.VISIBLE);
         }
-        else if (frmlPost != null && frmlPost.getVisibility() == View.VISIBLE)
+        else if (frmlPostAdm != null && frmlPostAdm.getVisibility() == View.VISIBLE)
         {
-            frmlPost.clearAnimation();
+            frmlPostAdm.clearAnimation();
             anim = AnimationUtils.loadAnimation(this,R.anim.anim_fadeout);
-            frmlPost.startAnimation(anim);
-            frmlPost.setVisibility(View.GONE);
+            frmlPostAdm.startAnimation(anim);
+            frmlPostAdm.setVisibility(View.GONE);
         }
-        if (edtSenha != null)
+        if (edtSenhaAdm != null)
         {
-            edtSenha.clearAnimation();
-            btnLogar.clearAnimation();
-            edtSenha.startAnimation(anim);
-            btnLogar.startAnimation(anim);
+            edtSenhaAdm.clearAnimation();
+            btnLogarAdm.clearAnimation();
+            edtSenhaAdm.startAnimation(anim);
+            btnLogarAdm.startAnimation(anim);
         }
         int SPLASH_DISPLAY_LENGTH = 1000;
         new Handler().postDelayed(new Runnable()
@@ -408,7 +374,7 @@ public class Login extends AppCompatActivity
     }
     private void ativeasPermissoes()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setTitle("Permissões negadas");
         builder.setMessage("Para utilizar este app, é necessário aceitar as permissões");
         builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
@@ -439,22 +405,25 @@ public class Login extends AppCompatActivity
         }
     }
 
-    private void salvar(final String id,String nick,String rank)
+    private void salvar(Usuario usuario)
     {
+        String nickname = usuario.getNickname().replace(" ","");
 
-        Amigo usuario = new Amigo(0,nick,"logado", id, null, rank);
+        ref.child("nick").child(nickname).setValue(usuario.getId());
+
+        Amigo amigo = new Amigo(0,nickname,"logado", usuario.getId(), null);
         // salvar no banco local como amigo para recuperar futuramente; usuario lista0
-        db.inserirAmigo(usuario);
+        db.inserirAmigo(amigo);
 
-        Map<String, Object> userMap = usuario.mapearUsuario();
+        Map<String, Object> userMap = amigo.mapearUsuario();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/usuarios/"+id, userMap);
+        childUpdates.put("/usuarios/"+amigo.getId(), userMap);
         ref.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> task)
             {
-                prgBuscar.setVisibility(View.GONE);
+                prgConectar.setVisibility(View.GONE);
                 new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText("Cadastrado!")
                         .setContentText("Seja bem vindo a nossa plataforma!")
