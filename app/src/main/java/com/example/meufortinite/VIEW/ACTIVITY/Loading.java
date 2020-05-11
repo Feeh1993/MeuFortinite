@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
+import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -112,6 +113,16 @@ public class Loading extends AppCompatActivity
             {
                 Amigo meuUser = dataSnapshot.getValue(Amigo.class);
                 dbLocal.atualizarAmigo(meuUser);
+                if (dbLocal.getQTDAvatares() == 0)
+                {
+                    Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
+                    dbLocal.inserirAvatar(avatar);
+                }
+                else
+                {
+                    Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
+                    dbLocal.atualizarAvatar(avatar);
+                }
                 startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
             }
 

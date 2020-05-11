@@ -160,7 +160,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
                     viewHolder.imageView.setVisibility(View.VISIBLE);
                     if (meuUsuario.getAmigos() != null)
                     {
-                        if (meuUsuario.getAmigos().contains(usuario.getNick()))
+                        if (meuUsuario.getAmigos().contains(usuario.getId()))
                         {
                             Log.d("ADPTBUSCA","meuUsuario:" +meuUsuario.getAmigos().size());
                             Log.d("ADPTBUSCA","IF meuUsuario.getAmigos().contains(usuario.getNick())");

@@ -53,7 +53,6 @@ public class Amigos extends Fragment
     private DatabaseHelper db;
 
     private ArrayList<Amigo> listAmigos = new ArrayList<>();
-    private ArrayList<Amigo> listAmigosFirebase = new ArrayList<>();
     private ArrayList<Amigo> listaBusca = new ArrayList<>();
 
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
@@ -69,7 +68,6 @@ public class Amigos extends Fragment
     {
         super.onStart();
        // recuperarBancoRemoto();
-        recuperarMeusDados();
     }
 
     @Override
@@ -89,11 +87,12 @@ public class Amigos extends Fragment
         meuUsuario.addAll(db.recuperarUsuarios());
         meuAvatar.addAll(db.recuperarAvatar());
         listAmigos.addAll(db.recuperaAmigos());
-        Log.d("Amigos","LISTA AMIGOS SIZE "+listAmigos.get(0).getNick());
         if (listAmigos.size() == 1)
         {
-            recuperarBF(listAmigos.get(0).getId());
+            txtUsuario.setVisibility(View.VISIBLE);
+            txtUsuario.setText("Voce não possui nenhum amigo adicionado! \n Busque por novos amigos...");
         }
+        Log.d("Amigos","LISTA AMIGOS SIZE "+listAmigos.size()+" \n Banco local TAM: "+ db.getQTDAmigos());
     }
 
     private void recuperarBF(String id)
@@ -104,8 +103,62 @@ public class Amigos extends Fragment
             {
                 Amigo meuUser = dataSnapshot.getValue(Amigo.class);
                     // implementar banco remoto que não esta atualizando
+                try
+                {
+                    if (meuUser.getAmigos().size() > 0)
+                    {
+                        for (int i = 0; i < meuUser.getAmigos().size(); i++)
+                        {
+                            buscarNicks(meuUser.getAmigos().get(i));
+                        }
+                    }
+                }catch (NullPointerException e)
+                {
+
+                }
 
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
+
+    private void buscarNicks(String id)
+    {
+        ref.child("usuarios").child(id).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                    Log.d("AMIGOS_","CHAVE: "+dataSnapshot.getValue());
+                    Amigo meuAmigo = dataSnapshot.getValue(Amigo.class);
+                    Log.d("AMIGOS_","AMIGO: "+meuAmigo.getNick());
+                boolean res = false;
+                for (int i = 0; i < listAmigos.size(); i++)
+                {
+                    if (listAmigos.get(i).getNick().contains(meuAmigo.getNick()))
+                    {
+                        res = true;
+                        if (listAmigos.get(i).getIcone() != meuAmigo.getIcone())
+                        {
+                            db.atualizarAmigo(meuAmigo);
+                            listAmigos.get(i).setIcone(meuAmigo.getIcone());
+                            listAmigos.get(i).setAmigos(meuAmigo.getAmigos());
+                            adaptadorAmigos.notifyDataSetChanged();
+                        }
+                    }
+                }
+                if (res == false)
+                {
+                    db.inserirAmigo(meuAmigo);
+                    listAmigos.add(meuAmigo);
+                    adaptadorAmigos.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -138,57 +191,19 @@ public class Amigos extends Fragment
         Log.d("AMIGOS_","RESUMO");
         try
         {
-            if (db.getQTDAmigos() >= 1)
-            {
-                /*
-                db.atualizarAmigo(new Amigo(Integer.parseInt(meuAvatar.get(0).getAvatar()),
-                        meuUsuario.get(0).getNickname(),
-                        "online",
-                        meuUsuario.get(0).getId(),
-                        listAmigos.get(0).getAmigos()));
-                    listAmigos.clear();
-                listAmigos.addAll(db.recuperaAmigos());
-                 */
-                atualizarBancoLocal();
-                txtUsuario.setVisibility(View.VISIBLE);
-                Log.d("AMIGOS_","(RESUME)Tamanho da Lista "+listAmigos.size());
-                Log.d("AMIGOS_","(RESUME)item "+listAmigos.get(0).nick);
-                Log.d("AMIGOS_","ICONE ATUAL "+meuAvatar.get(0).getAvatar());
-            }
-        }catch (IndexOutOfBoundsException e)
+            recuperarMeusDados();
+        }catch (NullPointerException e)
         {
-            listAmigos.clear();
-            listAmigos.addAll(db.recuperaAmigos());
-            atualizarBancoLocal();
-            txtUsuario.setVisibility(View.VISIBLE);
+            if (listAmigos.size() == 1)
+            {
+                txtUsuario.setVisibility(View.VISIBLE);
+                txtUsuario.setText("Voce não possui nenhum amigo adicionado! \n Busque por novos amigos...");
+            }
         }
-
         iniciRecAmigos();
+        recuperarBF(listAmigos.get(0).getId());
         iniciarRecBusca();
         recAmigos.setAdapter(adaptadorAmigos);
-    }
-
-    private void atualizarBancoLocal()
-    {
-        //listaAmigo são os amigos no banco local
-        //listaAmigo.get(0).getAmigos são os amigos que eu tenho que adicionar a lista amigo
-        if (listAmigos.get(0).getAmigos().size() != (listAmigos.size()-1))
-        {
-            for (int i = 0; i < listAmigos.get(0).getAmigos().size(); i++)
-            {
-                encontrarNicks(listAmigos.get(0).getAmigos().get(i),2);
-            }
-            listAmigos.clear();
-            listAmigos.addAll(db.recuperaAmigos());
-            adaptadorAmigos.notifyDataSetChanged();
-        }
-        else
-            {
-                listAmigos.clear();
-                listAmigos.addAll(db.recuperaAmigos());
-                adaptadorAmigos.notifyDataSetChanged();
-            }
-
     }
 
     private void fazerCast(final View view)
@@ -226,15 +241,7 @@ public class Amigos extends Fragment
                             {
                                 if (query.isEmpty())
                                 {
-                                    if (db.getQTDAmigos() > 0)
-                                    {
-                                        listAmigos.clear();
-                                        listAmigos.addAll(db.recuperaAmigos());
-                                        Log.d("AMIGOS_","(IF query.isEMPTY)Tamanho da Lista "+listAmigos.size());
-                                    }
                                     srchBuscar.clearFocus();
-                                    iniciRecAmigos();
-                                    adaptadorAmigos.notifyDataSetChanged();
                                 }
                                 else
                                 {
@@ -243,18 +250,27 @@ public class Amigos extends Fragment
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                                         {
+                                            boolean resultado = false;
                                             for (DataSnapshot dados : dataSnapshot.getChildren())
                                             {
                                                 Log.d("AMIGOS_", "Resultado: " + query);
                                                 String nicks = dados.getKey();
                                                 if (nicks.equals(query))
                                                 {
+                                                    resultado = true;
                                                     prgUser.setVisibility(View.VISIBLE);
                                                     srchBuscar.clearFocus();
                                                     txtBusca.setVisibility(View.VISIBLE);
                                                     Log.d("AMIGOS_", "Contém: " + dados.getValue().toString());
-                                                    encontrarNicks(dados.getValue().toString(),0);
+                                                    prgUser.setVisibility(View.VISIBLE);
+                                                    popularLista(dados.getValue().toString());
                                                 }
+                                            }
+                                            if (resultado == false)
+                                            {
+                                                srchBuscar.clearFocus();
+                                                txtBusca.setVisibility(View.VISIBLE);
+                                                txtBusca.setText("A busca não obteve sucesso...");
                                             }
                                         }
 
@@ -274,45 +290,7 @@ public class Amigos extends Fragment
         });
 
     }
-    private void encontrarNicks(final String nick, final int op)
-    {
-        ref.child("nick").addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                for (DataSnapshot dados : dataSnapshot.getChildren())
-                {
-                    Log.d("AMIGOS_", "Resultado: " + nick);
-                    String nicks = dados.getKey();
-                    switch (op)
-                    {
-                        case 0:
-                            if (nicks.equals(nick))
-                            {
-                                prgUser.setVisibility(View.VISIBLE);
-                                srchBuscar.clearFocus();
-                                txtBusca.setVisibility(View.VISIBLE);
-                                Log.d("AMIGOS_", "Contém: " + dados.getValue().toString());
-                                popularLista(dados.getValue().toString(),op);
-                            }
-                        case 1:
-                            popularLista(dados.getValue().toString(),op);
-                        case 2:
-                            popularLista(dados.getValue().toString(),op);
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
-
-            }
-        });
-    }
-    private void popularLista(final String key, final int op)
+    private void popularLista(final String key)
     {
                 ref.child("usuarios").child(key).addListenerForSingleValueEvent(new ValueEventListener()
                 {
@@ -320,9 +298,6 @@ public class Amigos extends Fragment
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                     {
                             Amigo usuario = dataSnapshot.getValue(Amigo.class);
-                            switch (op)
-                            {
-                                case 0:
                                     Log.d("AMIGOS_", usuario.getNick());
                                     prgUser.setVisibility(View.GONE);
                                     txtUsuario.setVisibility(View.VISIBLE);
@@ -331,11 +306,6 @@ public class Amigos extends Fragment
                                     adapterBusca.notifyDataSetChanged();
                                     recAmigos.setVisibility(View.VISIBLE);
                                     txtBusca.setVisibility(View.VISIBLE);
-                                case 1:
-                                    db.inserirAmigo(usuario);
-                                case 2:
-                                    db.atualizarAmigo(usuario);
-                            }
                     }
 
                     @Override
@@ -381,18 +351,21 @@ public class Amigos extends Fragment
                 Log.d("AMIGOS_", "REC CLICADO : " + usuario.getNick());
                 if (meuUsario.getAmigos() != null)
                 {
-                    if (meuUsario.getAmigos().contains(usuario.getNick()))
+                    if (meuUsario.getAmigos().contains(usuario.getId()))
                     {
                         Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsario.getNick());
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null,imgOutClicked);
                         button.setText("Seguir");
-                        meuUsario.getAmigos().remove(usuario.getNick());
+                        meuUsario.getAmigos().remove(usuario.getId());
                         //atualizando banco firebase
                         ref.child("usuarios").child(meuUsario.getId()).child("amigos").setValue(meuUsario.getAmigos());
                         //removendo do banco local
                         Log.i("AMIGOs","()deletando amigo,Antes: "+ db.getQTDAmigos()+" amigos");
                         db.deletarAmigo(usuario,"");
                         listAmigos.remove(usuario);
+                        // ATUALIZAR LISTA ATUAL
+                        listAmigos.clear();
+                        listAmigos.addAll(db.recuperaAmigos());
                         adaptadorAmigos.notifyDataSetChanged();
                         Log.i("AMIGOs","atualizando banco,Depois: "+db.getQTDAmigos()+" amigos");
                     } else
@@ -406,7 +379,7 @@ public class Amigos extends Fragment
                         listAmigos.add(usuario);
                         adaptadorAmigos.notifyDataSetChanged();
                         Log.i("AMIGOs","(APOS_SALVAR)atualizando banco,Depois: "+db.getQTDAmigos()+" amigos");
-                        meuUsario.getAmigos().add(usuario.getNick());
+                        meuUsario.getAmigos().add(usuario.getId());
                         ref.child("usuarios").child(meuUsario.getId()).child("amigos").setValue(meuUsario.getAmigos());
                     }
 
@@ -416,7 +389,7 @@ public class Amigos extends Fragment
                     button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
                     button.setText("Seguindo");
                     ArrayList<String> staticList = new ArrayList<>();
-                    staticList.add(usuario.getNick());
+                    staticList.add(usuario.getId());
                     meuUsario.setAmigos(staticList);
                     ref.child("usuarios").child(meuUsario.getId()).child("amigos").setValue(staticList);
 
@@ -467,19 +440,20 @@ public class Amigos extends Fragment
                 Log.d("Busca", "REC CLICADO : " + usuario.getNick());
                 if (meuUsuario.getAmigos() != null)
                 {
-                    if (meuUsuario.getAmigos().contains(usuario.getNick()))
+                    if (meuUsuario.getAmigos().contains(usuario.getId()))
                     {
                         Log.d("AMIGOs", "meuUsuario.getAmigos().contains != null IF  | Nick usuario " + usuario.getNick() + " E Nick meuAmigo: " + meuUsuario.getNick());
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgOutClicked);
                         button.setText("Seguir");
-                        meuUsuario.getAmigos().remove(usuario.getNick());
+                        meuUsuario.getAmigos().remove(usuario.getId());
                         //atualizando banco firebase
                         ref.child("usuarios").child(meuUsuario.getId()).child("amigos").setValue(meuUsuario.getAmigos());
                         //removendo do banco local
                         Log.d("AMIGOs", "Chegou aqui");
                         Log.i("AMIGOs", "()deletando amigo,Antes: " + db.getQTDAmigos() + " amigos");
                         db.deletarAmigo(usuario, "");
-                        listAmigos.remove(usuario);
+                        listAmigos.clear();
+                        listAmigos.addAll(db.recuperaAmigos());
                         adaptadorAmigos.notifyDataSetChanged();
                         Log.i("AMIGOs", "atualizando banco,Depois: " + db.getQTDAmigos() + " amigos");
                     } else {
@@ -490,10 +464,18 @@ public class Amigos extends Fragment
                         Log.i("AMIGOs", "(APOS_SALVAR)atualizando amigo,Antes: " + db.getQTDAmigos() + " amigos");
                         db.inserirAmigo(usuario);
                         Log.i("AMIGOs", "(APOS_SALVAR)atualizando banco,Depois: " + db.getQTDAmigos() + " amigos");
-                        meuUsuario.getAmigos().add(usuario.getNick());
+                        meuUsuario.getAmigos().add(usuario.getId());
                         ref.child("usuarios").child(meuUsuario.getId()).child("amigos").setValue(meuUsuario.getAmigos());
+                        if (listAmigos.contains(usuario))
+                        {
+                            listAmigos.remove(usuario);
+                        }
                         listAmigos.add(usuario);
                         adaptadorAmigos.notifyDataSetChanged();
+                        listaBusca.clear();
+                        adapterBusca.notifyDataSetChanged();
+                        txtBusca.setVisibility(View.GONE);
+                        srchBuscar.clearFocus();
                     }
 
                 } else
@@ -502,15 +484,24 @@ public class Amigos extends Fragment
                         button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, imgClicked);
                         button.setText("Seguindo");
                         ArrayList<String> staticList = new ArrayList<>();
-                        staticList.add(usuario.getNick());
+                        staticList.add(usuario.getId());
                         meuUsuario.setAmigos(staticList);
                         ref.child("usuarios").child(meuUsuario.getId()).child("amigos").setValue(staticList);
 
                         //adicionando no banco local
                         Log.i("AMIGOs", "(APOS_SALVAR)atualizando amigo,Antes: " + db.getQTDAmigos() + " amigos");
                         db.inserirAmigo(usuario);
+                        if (listAmigos.contains(usuario))
+                        {
+                            listAmigos.remove(usuario);
+                        }
                         listAmigos.add(usuario);
                         adaptadorAmigos.notifyDataSetChanged();
+
+                        listaBusca.clear();
+                        adapterBusca.notifyDataSetChanged();
+                        txtBusca.setVisibility(View.GONE);
+                        srchBuscar.clearFocus();
                         Log.i("AMIGOs", "(APOS_SALVAR)atualizando banco,Depois: " + db.getQTDAmigos() + " amigos");
 
                 }
