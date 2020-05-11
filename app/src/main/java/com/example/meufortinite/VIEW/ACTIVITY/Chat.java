@@ -44,8 +44,6 @@ public class Chat extends AppCompatActivity
 
     //Views UI
     public static final int ANTI_FLOOD_SECONDS = 3; //simple anti-flood
-    private boolean IS_ADMIN = false; //set this to true for the admin app.
-    private boolean PROFANITY_FILTER_ACTIVE = true;
     private RecyclerView recChat;
     private Chat mContext;
     private AdaptadorChat adapter;
@@ -62,6 +60,7 @@ public class Chat extends AppCompatActivity
     String mensagem;
     private String iconeA,mIcone;
     private DatabaseHelper db;
+    private boolean resultado = false;
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
@@ -188,6 +187,7 @@ public class Chat extends AppCompatActivity
                 mensagemArrayList.add(new_mensagem);
                 adapter.notifyDataSetChanged();
                 recChat.scrollToPosition(adapter.getItemCount() - 1);
+                resultado = true;
             }
 
             @Override public void onChildChanged(DataSnapshot dataSnapshot, String s)

@@ -15,14 +15,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="6dp"
-        android:background="@drawable/bordas_2logo"
+        android:background="@drawable/bordas_1logo"
         android:visibility="visible">
 
         <TextView
             android:id="@+id/txtMSG"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:autoLink="all"
             android:maxLines="3"
             android:text="Long mensagem Long "

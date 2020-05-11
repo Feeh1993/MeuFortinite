@@ -26,6 +26,7 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.DAO.REMOTO.PermissionsUtils;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
+import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -257,6 +258,16 @@ public class Login extends AppCompatActivity
                 Amigo user = dataSnapshot.getValue(Amigo.class);
                 db.inserirUser(new Usuario(user.getId(),DatabaseHelper.getDateTime(),user.getNick()));
                 db.inserirAmigo(user);
+                if (db.getQTDAvatares() == 0)
+                {
+                    Avatar avatar = new Avatar(1,String.valueOf(user.getIcone()),DatabaseHelper.getDateTime());
+                    db.inserirAvatar(avatar);
+                }
+                else
+                {
+                    Avatar avatar = new Avatar(1,String.valueOf(user.getIcone()),DatabaseHelper.getDateTime());
+                    db.atualizarAvatar(avatar);
+                }
                 prgConectar.setVisibility(View.GONE);
                 new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText("Cadastrado!")
