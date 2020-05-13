@@ -7,6 +7,19 @@
     android:background="@color/black"
     tools:context=".VIEW.FRAGMENT.Conversas">
 
+    <TextView
+        android:id="@+id/txtAviso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:text="Ainda não temos noticias,\n aguarde atualizações"
+        android:textAlignment="center"
+        android:textColor="@color/branco"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyle"

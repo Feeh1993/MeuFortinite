@@ -16,15 +16,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.MODEL.GERAL.Noticia;
+import com.example.meufortinite.MODEL.INTERFACE.BaseRecyclerAdapter;
 import com.example.meufortinite.MODEL.INTERFACE.CustomConversa;
 import com.example.meufortinite.MODEL.INTERFACE.CustomNoticia;
 import com.example.meufortinite.R;
 import com.google.firebase.database.DatabaseReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -36,10 +39,12 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.Vi
     private ArrayList<Noticia> listNoticia;
     private Context mContext;
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
-    // Define listener member variable
     private CustomNoticia customNoticia;
     private long DURATION = 500;
-    private boolean on_atach = true;
+    private boolean on_atach = true,shareclick = false;
+
+    private DatabaseHelper db;
+    private ArrayList<Noticia> listNoticiasLocal = new ArrayList<>();
 
     public AdaptadorNoticias(Context context, ArrayList<Noticia> list, CustomNoticia customNoticia)
     {
@@ -65,11 +70,29 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.Vi
         final Noticia noticia = listNoticia.get(position);
         //formatar horas
         Log.d("ADPTN","DADOS NOTICIA: "+ noticia.getTitulo());
+        db = new DatabaseHelper(mContext);
+        if (db.getQTDNoticias() >= 1)
+        {
+            listNoticiasLocal.addAll(db.recuperaNoticias());
+        }
+        for (int i = 0; i < listNoticiasLocal.size(); i++)
+        {
+            try
+            {
+                if (listNoticiasLocal.get(i).getId().equals(noticia.getId()))
+                {
+                    viewHolder.like.setImageResource(R.drawable.ic_like_checked);
+                    shareclick = true;
+                }
+            }catch (NullPointerException  e)
+            {
 
+            }
+        }
         viewHolder.data.setText(noticia.getData());
-        viewHolder.numViews.setText(noticia.getLikes() +" likes");
+        viewHolder.numViews.setText(Noticia.transformNum(noticia.getLikes()));
         viewHolder.titulo.setText(noticia.getTitulo());
-        viewHolder.imageView.setImageResource(R.drawable.ic_id);
+        Picasso.get().load(noticia.getImage()).into(viewHolder.imageView);
         viewHolder.share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +102,7 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.Vi
         viewHolder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customNoticia.onLikeClick(viewHolder.like,viewHolder.getAdapterPosition(),noticia);
+                customNoticia.onLikeClick(viewHolder.like,viewHolder.numViews,viewHolder.getAdapterPosition(),noticia,shareclick);
             }
         });
         viewHolder.itemView.setOnClickListener(new View.OnClickListener()
@@ -156,7 +179,7 @@ public class AdaptadorNoticias extends RecyclerView.Adapter<AdaptadorNoticias.Vi
             share = (ImageButton) itemView.findViewById(R.id.imgShare);
 
 
-            parentLayout = itemView.findViewById(R.id.parentLayout);
+            parentLayout = itemView.findViewById(R.id.frml);
         }
     }
 }

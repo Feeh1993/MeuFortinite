@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FDFEFE</color>
-    <color name="logo1">#ff0b53</color>
-    <color name="logo2">#05ffff</color>
-    <color name="logo3">#8057cb</color>
+    <color name="logo1">#800000</color>
+    <color name="logo2">#2F4F4F</color>
+    <color name="logo3">#191970</color>
     <color name="branco">#FDFEFE</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FDFEFE</color>

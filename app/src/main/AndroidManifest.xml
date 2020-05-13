@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VIEW.ADAPTER.AdaptadorConversa"></activity>
+        <activity android:name=".VIEW.ACTIVITY.ConteudoNoticia"></activity>
+        <activity android:name=".VIEW.ADAPTER.AdaptadorConversa" />
         <activity android:name=".VIEW.ACTIVITY.Chat" />
         <activity android:name=".VIEW.ACTIVITY.SelecionarAvatar" />
         <activity android:name=".VIEW.ACTIVITY.PainelPrincipal" />

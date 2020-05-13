@@ -1,6 +1,7 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,12 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Noticia;
 import com.example.meufortinite.MODEL.INTERFACE.CustomNoticia;
 import com.example.meufortinite.R;
+import com.example.meufortinite.VIEW.ACTIVITY.Chat;
+import com.example.meufortinite.VIEW.ACTIVITY.ConteudoNoticia;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorNoticias;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +42,12 @@ public class Noticias extends Fragment
     private AdaptadorNoticias adapter;
     private String TAG = "NOTICIAS_";
     private ValueEventListener noticiasValueListener;
+    private boolean resultado = false;
+    private TextView txt;
+    int cont = 0;
+    private DatabaseHelper db;
+    private ArrayList<Noticia> listNoticiasLocal;
+    private boolean shareclick = false;
 
     public Noticias()
     {
@@ -54,14 +65,19 @@ public class Noticias extends Fragment
 
     private void fazerCast(View view)
     {
+        txt = view.findViewById(R.id.txtAviso);
         recNoticias = view.findViewById(R.id.recNoticias);
         progress = view.findViewById(R.id.progress);
+        db = new DatabaseHelper(getContext());
+
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         Log.d(TAG,"onStart");
+        listNoticias.clear();
         recuperarDadosLocais();
     }
 
@@ -71,25 +87,63 @@ public class Noticias extends Fragment
         adapter = new AdaptadorNoticias(getContext(), listNoticias, new CustomNoticia()
         {
             @Override
-            public void onShareClick(ImageButton button, int position, Noticia noticia) {
+            public void onShareClick(ImageButton button, int position, Noticia noticia)
+            {
 
             }
 
             @Override
-            public void onLikeClick(ImageButton button, int position, Noticia noticia) {
-
+            public void onLikeClick(ImageButton button, TextView textView,int position, Noticia noticia,boolean share)
+            {
+                if (cont == 0)
+                {
+                    shareclick = share;
+                }
+                if (shareclick == false)
+                {
+                    button.setImageResource(R.drawable.ic_like_checked);
+                    ref.child("noticias").child(noticia.getId()).child("likes").setValue(noticia.getLikes() +1);
+                    textView.setText(Noticia.transformNum(noticia.getLikes() +1));
+                    Log.d("Noticias_","Inserindo noticia antes" + db.getQTDNoticias());
+                    db.inserirNoticia(noticia);
+                    Log.d("Noticias_","Inserindo noticia depois" + db.getQTDNoticias());
+                    shareclick = true;
+                }
+                else
+                {
+                    button.setImageResource(R.drawable.ic_like);
+                    ref.child("noticias").child(noticia.getId()).child("likes").setValue(noticia.getLikes());
+                    textView.setText(Noticia.transformNum(noticia.getLikes()));
+                    Log.d("Noticias_","Deletando noticia antes" + db.getQTDNoticias());
+                    db.deletarNoticia(noticia,"");
+                    Log.d("Noticias_","Deletando noticia depois" + db.getQTDNoticias());
+                    shareclick = false;
+                }
+                cont ++;
             }
 
             @Override
-            public void onClick(View button, int position, Noticia noticia) {
-
+            public void onClick(View button, int position, Noticia noticia)
+            {
+                Toast.makeText(getContext(),"Clicou em View",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getContext(), ConteudoNoticia.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("data",noticia.getData());
+                bundle.putString("ementa",noticia.getEmenta());
+                bundle.putString("image",noticia.getImage());
+                bundle.putString("titulo",noticia.getTitulo());
+                bundle.putDouble("likes",noticia.getLikes());
+                bundle.putString("id",noticia.getId());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         recNoticias.setAdapter(adapter);
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
         Log.d(TAG,"onStop");
     }
@@ -111,11 +165,21 @@ public class Noticias extends Fragment
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
+                listNoticias.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren())
                 {
                     progress.setVisibility(View.VISIBLE);
+                    txt.setVisibility(View.GONE);
                     Noticia noticia = snapshot.getValue(Noticia.class);
-                    listNoticias.add(noticia);
+                    if (!listNoticias.contains(noticia))
+                    {
+                        resultado = true;
+                        listNoticias.add(noticia);
+                    }
+                }
+                if (resultado == false)
+                {
+                    txt.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
                 progress.setVisibility(View.GONE);
@@ -128,8 +192,9 @@ public class Noticias extends Fragment
 
             }
         };
-        ref.child("noticias").addValueEventListener(noticiasValueListener);
+        ref.child("noticias").addListenerForSingleValueEvent(noticiasValueListener);
 
     }
+
 
 }

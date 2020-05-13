@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Mensagem;
+import com.example.meufortinite.MODEL.GERAL.Noticia;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.VIEW.FRAGMENT.Conversas;
 
@@ -39,6 +40,10 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public static final String COLUMN_AVATAR =  "icone";
     public static  final String TABLE_NAME_AVATAR = "avatar";
 
+    //DADOS TABELA NOTICIA
+    private static final String TABLE_NAME_NOTICIA = "noticia";
+
+
     //DADOS TABELA CONVERSA
     public static final String COLUMN_ULT_MSG =  "ultmsg";
     public static final String COLUMN_RECEBIDO =  "recebido";
@@ -60,6 +65,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
                     + COLUMN_ID + " TEXT PRIMARY KEY,"
                     + COLUMN_AMIGOS + " TEXT,"
                     + COLUMN_ICONE + " INTEGER"
+                    + ")";
+
+    //CRIANDO TABELA NOTICIA
+    public static final String CREATE_TABLENOTICIA =
+            "CREATE TABLE " + TABLE_NAME_NOTICIA + "("
+                    + COLUMN_ID + " TEXT PRIMARY KEY"
                     + ")";
 
     //CRIANDO TABELA AVATAR
@@ -89,6 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
                     + ")";
 
 
+
     public DatabaseHelper(Context context)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -103,6 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         db.execSQL(CREATE_TABLEAVATAR);
         db.execSQL(CREATE_TABLEAMIGOS);
         db.execSQL(CREATE_TABLECONVERSA);
+        db.execSQL(CREATE_TABLENOTICIA);
     }
 
     // Upgrading database
@@ -115,10 +128,29 @@ public class DatabaseHelper extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_AMIGOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CONVERSA);
 
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NOTICIA);
+
         // Create tables again
         onCreate(db);
     }
 
+    public long inserirNoticia(Noticia noticia)
+    {
+        // ABRIR MODO DE LEITURA DO BANCO
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ID, noticia.getId());
+
+        //INSERIR LINHA
+        long id = db.insert(TABLE_NAME_NOTICIA, null, values);
+
+        // FECHAR CONEXAO
+        db.close();
+
+        // RETORNA ID INSERIDO
+        return id;
+    }
 
     public long inserirAmigo(Amigo amigo)
     {
@@ -201,6 +233,26 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         // return newly inserted row id
         return id;
+    }
+
+    public Noticia getNoticia(long id)
+    {
+        // get readable database as we are not inserting anything
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_NOTICIA,
+                new String[]{COLUMN_ID},
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+        Noticia noticia = new Noticia
+                (null,null,null,0.0,null,cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
+
+        // close the db connection
+        cursor.close();
+
+        return noticia;
     }
 
     public Amigo getAmigo(long id)
@@ -323,6 +375,35 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return amigos;
     }
 
+    public List<Noticia> recuperaNoticias()
+    {
+        List<Noticia> noticias = new ArrayList<>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " +TABLE_NAME_NOTICIA;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                Noticia noticia = new Noticia();
+                noticia.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
+
+                noticias.add(noticia);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+
+        // return notes list
+        return noticias;
+    }
+
     public List<Mensagem> recuperaConversas()
     {
         List<Mensagem> conversas= new ArrayList<>();
@@ -429,6 +510,18 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return count;
     }
 
+    public int getQTDNoticias()
+    {
+        String countQuery = "SELECT  * FROM " + TABLE_NAME_NOTICIA;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        // return count
+        return count;
+    }
+
     public int getQTDConversas()
     {
         String countQuery = "SELECT  * FROM " + TABLE_NAME_CONVERSA;
@@ -472,6 +565,17 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         return db.update(TABLE_NAME_AMIGOS, values, COLUMN_ID+ " = ?",
                 new String[]{String.valueOf(amigo.getId())});
+    }
+
+    public int atualizarNoticia(Noticia noticia)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ID, noticia.getId());
+
+        return db.update(TABLE_NAME_NOTICIA, values, COLUMN_ID+ " = ?",
+                new String[]{String.valueOf(noticia.getId())});
     }
 
     public int atualizarConversa(Mensagem conversa)
@@ -527,6 +631,24 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             SQLiteDatabase db = this.getWritableDatabase();
             db.delete(TABLE_NAME_CONVERSA, COLUMN_ID+ " = ?",
+                    new String[]{ID});
+            db.close();
+        }
+    }
+
+    public void deletarNoticia(Noticia noticia, String ID)
+    {
+        if (ID == "")
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_NOTICIA, COLUMN_ID+ " = ?",
+                    new String[]{String.valueOf(noticia.getId())});
+            db.close();
+        }
+        else
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_NOTICIA, COLUMN_ID+ " = ?",
                     new String[]{ID});
             db.close();
         }
