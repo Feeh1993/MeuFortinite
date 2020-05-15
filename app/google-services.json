@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "339023810235-ceh4c91s54s1c42qpv29ruaph7vlaap4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meufortinite",
+            "certificate_hash": "ad9690b86f3dda17762e72c92f20a2a4833636d4"
+          }
+        },
+        {
           "client_id": "339023810235-3nblpimntd535ndq6cpipg57bru3rmh3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

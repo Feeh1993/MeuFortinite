@@ -20,6 +20,7 @@ import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
+import com.example.meufortinite.SERVICE.NotificacaoService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -79,6 +80,8 @@ public class Loading extends AppCompatActivity
     {
         super.onStart();
         dbLocal = new DatabaseHelper(getApplicationContext());
+        //iniciando service
+        getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
 
     }
 //recupera banco e verifica login

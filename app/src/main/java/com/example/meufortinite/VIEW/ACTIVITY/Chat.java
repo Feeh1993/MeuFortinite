@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +27,9 @@ import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.HELPER.SCUtils;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Mensagem;
+import com.example.meufortinite.MODEL.GERAL.Notificacao;
 import com.example.meufortinite.R;
+import com.example.meufortinite.SERVICE.NotificacaoService;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -61,6 +64,14 @@ public class Chat extends AppCompatActivity
     private String iconeA,mIcone;
     private DatabaseHelper db;
     private boolean resultado = false;
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+//STOPANDO SERVICE
+        getApplicationContext().stopService(new Intent(getApplicationContext(), NotificacaoService.class));
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
@@ -262,7 +273,6 @@ public class Chat extends AppCompatActivity
         protected void onPreExecute()
         {
             super.onPreExecute();
-
         }
 
         @Override
@@ -303,6 +313,7 @@ public class Chat extends AppCompatActivity
             }
             Log.d("CHAT_","AVATAR RECEBIDO: "+mensagem.getRecebido() );
             db.inserirConversa(mensagem);
+            db.atualizarNotificacao(new Notificacao(mensagem.getMessagem(),mensagem.getId()));
             ref.child("conversas").child(caminho).setValue(mensagem);
         }
     }
@@ -312,5 +323,7 @@ public class Chat extends AppCompatActivity
     {
         super.onStop();
        // ref.removeEventListener(msgmListener);
+        //iniciando service
+        getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
     }
 }

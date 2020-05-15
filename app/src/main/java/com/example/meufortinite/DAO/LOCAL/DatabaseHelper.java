@@ -13,6 +13,7 @@ import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.MODEL.GERAL.Noticia;
+import com.example.meufortinite.MODEL.GERAL.Notificacao;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.VIEW.FRAGMENT.Conversas;
 
@@ -53,6 +54,10 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public static final String TABLE_NAME_USER = "usuario";
     public static final String COLUMN_NICKNAME = "nickname";
 
+    //DADOS TABELA NOTIFICACAO
+    public static final String TABLE_NAME_NOTIFICACAO = "notificacao";
+
+
     //DADOS TABELA AMIGOS
     public static final String TABLE_NAME_AMIGOS = "amigos";
     public static final String COLUMN_AMIGOS =  "nickname";
@@ -71,6 +76,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public static final String CREATE_TABLENOTICIA =
             "CREATE TABLE " + TABLE_NAME_NOTICIA + "("
                     + COLUMN_ID + " TEXT PRIMARY KEY"
+                    + ")";
+
+    //CRIANDO TABELA NOTIFICACAO
+    public static final String CREATE_TABLENOTIFICACAO =
+            "CREATE TABLE " + TABLE_NAME_NOTIFICACAO + "("
+                    + COLUMN_ID + " TEXT PRIMARY KEY,"
+                    + COLUMN_RECEBIDO + " TEXT"
                     + ")";
 
     //CRIANDO TABELA AVATAR
@@ -116,6 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         db.execSQL(CREATE_TABLEAMIGOS);
         db.execSQL(CREATE_TABLECONVERSA);
         db.execSQL(CREATE_TABLENOTICIA);
+        db.execSQL(CREATE_TABLENOTIFICACAO);
     }
 
     // Upgrading database
@@ -127,11 +140,29 @@ public class DatabaseHelper extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_AVATAR);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_AMIGOS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CONVERSA);
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NOTIFICACAO);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NOTICIA);
 
         // Create tables again
         onCreate(db);
+    }
+    public long inserirNotificacao(Notificacao notificacao)
+    {
+        // ABRIR MODO DE LEITURA DO BANCO
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ID, notificacao.getId());
+        values.put(COLUMN_RECEBIDO, notificacao.getRecebido());
+
+        //INSERIR LINHA
+        long id = db.insert(TABLE_NAME_NOTIFICACAO, null, values);
+
+        // FECHAR CONEXAO
+        db.close();
+
+        // RETORNA ID INSERIDO
+        return id;
     }
 
     public long inserirNoticia(Noticia noticia)
@@ -233,6 +264,26 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         // return newly inserted row id
         return id;
+    }
+
+    public Notificacao getNotificacao(long id)
+    {
+        // get readable database as we are not inserting anything
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME_NOTIFICACAO,
+                new String[]{COLUMN_ID},
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+        Notificacao notificacao = new Notificacao(cursor.getString(cursor.getColumnIndex(COLUMN_RECEBIDO))
+                ,cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
+
+        // close the db connection
+        cursor.close();
+
+        return notificacao;
     }
 
     public Noticia getNoticia(long id)
@@ -342,6 +393,35 @@ public class DatabaseHelper extends SQLiteOpenHelper
         cursor.close();
 
         return usuario;
+    }
+
+    public List<Notificacao> recuperaNotificacao()
+    {
+        List<Notificacao> notificacoes = new ArrayList<>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " +TABLE_NAME_NOTIFICACAO;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                Notificacao notificacao = new Notificacao();
+                notificacao.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
+                notificacao.setRecebido(cursor.getString(cursor.getColumnIndex(COLUMN_RECEBIDO)));
+                notificacoes.add(notificacao);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+
+        // return notes list
+        return notificacoes;
     }
 
     public List<Amigo> recuperaAmigos()
@@ -498,6 +578,18 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return usuarios;
     }
 
+    public int getQTDNotificacao()
+    {
+            String countQuery = "SELECT  * FROM " + TABLE_NAME_NOTIFICACAO;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        // return count
+        return count;
+    }
+
     public int getQTDAmigos()
     {
         String countQuery = "SELECT  * FROM " + TABLE_NAME_AMIGOS;
@@ -552,6 +644,18 @@ public class DatabaseHelper extends SQLiteOpenHelper
         int count = cursor.getCount();
         cursor.close();
         return count;
+    }
+
+    public int atualizarNotificacao(Notificacao notificacao)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RECEBIDO, notificacao.getRecebido());
+        values.put(COLUMN_ID, notificacao.getId());
+
+        return db.update(TABLE_NAME_NOTIFICACAO, values, COLUMN_ID+ " = ?",
+                new String[]{String.valueOf(notificacao.getId())});
     }
 
     public int atualizarAmigo(Amigo amigo)
@@ -616,6 +720,24 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         return db.update(TABLE_NAME_USER, values, COLUMN_ID + " = ?",
                 new String[]{String.valueOf(usuario.getId())});
+    }
+
+    public void deletarNotificacao(Notificacao notificacao, String ID)
+    {
+        if (ID == "")
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_NOTIFICACAO, COLUMN_ID+ " = ?",
+                    new String[]{String.valueOf(notificacao.getId())});
+            db.close();
+        }
+        else
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_NAME_NOTIFICACAO, COLUMN_ID+ " = ?",
+                    new String[]{ID});
+            db.close();
+        }
     }
 
     public void deletarAmigo(Mensagem conversa, String ID)

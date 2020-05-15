@@ -27,6 +27,7 @@ import com.example.meufortinite.MODEL.GERAL.Mensagem;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.MODEL.INTERFACE.CustomConversa;
 import com.example.meufortinite.R;
+import com.example.meufortinite.SERVICE.NotificacaoService;
 import com.example.meufortinite.VIEW.ACTIVITY.Chat;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorConversa;
@@ -70,7 +71,8 @@ public class Conversas extends Fragment
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
         Log.d(TAG,"onStop");
     }
@@ -87,6 +89,8 @@ public class Conversas extends Fragment
     public void onResume()
     {
         super.onResume();
+
+
         novamsgValueListener = new ValueEventListener()
         {
             @Override
