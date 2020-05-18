@@ -28,6 +28,7 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
+import com.example.meufortinite.MODEL.GERAL.Notificacao;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.MODEL.INTERFACE.CustomClick;
 import com.example.meufortinite.MODEL.INTERFACE.CustomMsgeNtfc;
@@ -37,6 +38,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.orhanobut.dialogplus.DialogPlus;
 
 import java.util.ArrayList;
 
@@ -514,7 +516,8 @@ public class Amigos extends Fragment
             @Override
             public void onNotificacaoClick(ImageButton button, int position, Amigo usuario)
             {
-               //inserir dados
+                ref.child("notificacao").child(usuario.getId()).setValue(new Notificacao());
+
             }
 
             @SuppressLint("ResourceType")
