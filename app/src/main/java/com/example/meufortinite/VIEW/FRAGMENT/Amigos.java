@@ -1,7 +1,6 @@
 package com.example.meufortinite.VIEW.FRAGMENT;
 
 import android.annotation.SuppressLint;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -34,11 +33,13 @@ import com.example.meufortinite.MODEL.INTERFACE.CustomClick;
 import com.example.meufortinite.MODEL.INTERFACE.CustomMsgeNtfc;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorAmigos;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.orhanobut.dialogplus.DialogPlus;
 
 import java.util.ArrayList;
 
@@ -411,7 +412,7 @@ public class Amigos extends Fragment
             @Override
             public void onNotificacaoClick(ImageButton button, int position, Amigo usuario)
             {
-
+                chamarNotifificacao(usuario);
             }
 
             @SuppressLint("ResourceType")
@@ -516,8 +517,8 @@ public class Amigos extends Fragment
             @Override
             public void onNotificacaoClick(ImageButton button, int position, Amigo usuario)
             {
-                ref.child("notificacao").child(usuario.getId()).setValue(new Notificacao());
-
+                //ref.child("notificacao").child(usuario.getId()).setValue(new Notificacao(":",usuario.getId()));
+                chamarNotifificacao(usuario);
             }
 
             @SuppressLint("ResourceType")
@@ -528,6 +529,22 @@ public class Amigos extends Fragment
             }
         });
         recBusca.setAdapter(adapterBusca);
+    }
+    private void chamarNotifificacao(Amigo usuario)
+    {
+        ref.child("alerta").child(usuario.getId()).setValue(new Notificacao(usuario.getId()+
+                ":"+meuUsuario.get(0).getId()+
+                ":"+usuario.getIcone()+":"+usuario.getNick(),meuUsuario.get(0).getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Snackbar.make(getView(),"Notificação encaminhada com sucesso!\n Aguarde resposta...", Snackbar.LENGTH_LONG).setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                }).show();
+            }
+        });
     }
 
 

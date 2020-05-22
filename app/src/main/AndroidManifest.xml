@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.meufortinite" >
+    package="com.example.meufortinite">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <application
         android:allowBackup="true"
@@ -16,18 +17,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+        <receiver
+            android:name=".SERVICE.NotificacaoReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
+        <activity android:name=".VIEW.DIALOG.Alertar" />
+
         <service
             android:name=".SERVICE.NotificacaoService"
-            android:exported="true" >
-        </service>
+            android:exported="true" />
 
         <activity android:name=".VIEW.ACTIVITY.ConteudoNoticia" />
         <activity android:name=".VIEW.ADAPTER.AdaptadorConversa" />
         <activity android:name=".VIEW.ACTIVITY.Chat" />
         <activity android:name=".VIEW.ACTIVITY.SelecionarAvatar" />
         <activity android:name=".VIEW.ACTIVITY.PainelPrincipal" />
-        <activity android:name=".VIEW.ACTIVITY.Loading" >
+        <activity android:name=".VIEW.ACTIVITY.Loading">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

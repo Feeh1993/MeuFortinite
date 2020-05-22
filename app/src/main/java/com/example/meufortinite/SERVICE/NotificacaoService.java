@@ -1,21 +1,19 @@
 package com.example.meufortinite.SERVICE;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -33,7 +31,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -42,7 +40,8 @@ public class NotificacaoService extends Service
 
 {
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
-    private ChildEventListener mensagemStartListener,mensagemEndListener,noticiaListener,notificacaoListener;
+    private ChildEventListener mensagemStartListener,mensagemEndListener,noticiaListener;
+    private ValueEventListener notificacaoListener;
     private String TAG = "SERVICO_";
     private DatabaseHelper db;
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
@@ -75,6 +74,8 @@ public class NotificacaoService extends Service
         escutarNovasMensagens();
         //escutar e notificar novas noticias
         escutarNovasNoticias();
+        //escutar e notificar novos alertas
+        escutarNovosAlertas();
         super.onCreate();
     }
 
@@ -92,38 +93,20 @@ public class NotificacaoService extends Service
         ref.child("noticias").removeEventListener(noticiaListener);
         ref.child("conversas").orderByKey().endAt(meuUsuario.get(0).getId()).removeEventListener(mensagemEndListener);
         ref.child("conversas").orderByKey().startAt(meuUsuario.get(0).getId()).removeEventListener(mensagemStartListener);
-        ref.child("conversas").orderByKey().startAt(meuUsuario.get(0).getId()).removeEventListener(notificacaoListener);
+        ref.child("alerta").child(meuUsuario.get(0).getId()).removeEventListener(notificacaoListener);
 
         stopForeground(true);
         stopSelf();
     }
-    private void escutarNovasNotificacoes()
+    private void escutarNovosAlertas()
     {
-        notificacaoListener = new ChildEventListener()
+        notificacaoListener = new ValueEventListener()
         {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                String notificacao = dataSnapshot.getValue().toString();
-
-                Log.d("service_","nova notificacao : "+ notificacao);
+                Notificacao notificacao = dataSnapshot.getValue(Notificacao.class);
                 enviarNotificacao(notificacao,null,null,3);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
-            {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
             }
 
             @Override
@@ -131,7 +114,7 @@ public class NotificacaoService extends Service
 
             }
         };
-        ref.child("notificacao").child(meuUsuario.get(0).getId()).addChildEventListener(notificacaoListener);
+        ref.child("alerta").child(meuUsuario.get(0).getId()).addValueEventListener(notificacaoListener);
     }
 
     private void escutarNovasNoticias()
@@ -280,6 +263,7 @@ public class NotificacaoService extends Service
                             {
                                 Log.d(TAG, "Entrou no catch,atualizando noticia... ");
                             }
+                            break;
                         case 2:
                             try
                             {
@@ -291,6 +275,7 @@ public class NotificacaoService extends Service
                             {
                                 Log.d(TAG, "Entrou no catch,atualizando mensagem... ");
                             }
+                            break;
                     }
                 }
                 Log.d(TAG, "esse id já foi notificado --> "+ id);
@@ -306,103 +291,161 @@ public class NotificacaoService extends Service
                     enviarNotificacao(null,mensagem,null,0);
                     db.inserirNotificacao(new Notificacao(mensagem.getMessagem(),mensagem.getId()));
                     Log.d(TAG, "Banco Notificacao Depois: "+db.getQTDNotificacao());
+                    break;
                 case 2:
                     Log.d(TAG, "Banco Notificacao Antes: "+db.getQTDNotificacao());
                     cont ++;
                     enviarNotificacao(null,null,noticia,1);
                     db.inserirNotificacao(new Notificacao(noticia.getTitulo(),noticia.getId()));
                     Log.d(TAG, "Banco Notificacao Depois: "+db.getQTDNotificacao());
-
+                    break;
             }
         }
     }
 
     // Enviar uma notificação
-    private void enviarNotificacao(String notificacao,Mensagem mensagem,Noticia noticia,int tipo)
+    private void enviarNotificacao(Notificacao notificacao,Mensagem mensagem,Noticia noticia,int tipo)
     {
         switch (tipo)
         {
             case 0:
-                Log.i(TAG, "enviarNotificação Mensagem: " + mensagem.getId());
+                try
+                {
+                    int NOTIFICACAO_ID = cont +1;
+                    Log.i(TAG, "enviarNotificação Mensagem: " + mensagem.getId());
 // Intenção de iniciar a atividade principal
-                Intent chat = new Intent(getApplicationContext(), Chat.class);
-                Bundle dados = new Bundle();
-                dados.putString("meu_id", meuUsuario.get(0).getId());
-                dados.putString("id_user", mensagem.getId());
-                dados.putString("meu_nick",meuUsuario.get(0).getNickname());
-                dados.putString("nick_amigo", mensagem.getUsername());
-                dados.putString("iconeA", mensagem.getRecebido());
-                dados.putString("mIcone", meuAvatar.get(0).getAvatar());
-                chat.putExtras(dados);
-                //chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Intent chat = new Intent(getApplicationContext(), Chat.class);
+                    Bundle dados = new Bundle();
+                    dados.putString("meu_id", meuUsuario.get(0).getId());
+                    dados.putString("id_user", mensagem.getId());
+                    dados.putString("meu_nick",meuUsuario.get(0).getNickname());
+                    dados.putString("nick_amigo", mensagem.getUsername());
+                    dados.putString("iconeA", mensagem.getRecebido());
+                    dados.putString("mIcone", meuAvatar.get(0).getAvatar());
+                    chat.putExtras(dados);
+                    //chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //CRIANDO INTENÇÃO
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,chat,0);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,chat,0);
 // CRIANDO NOTIFICAÇÃO
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANEL_CHAT)
-                        .setSmallIcon(R.mipmap.ic_logo)
-                        .setAutoCancel(true)
-                        .setContentTitle(mensagem.getUsername())
-                        .setContentText(mensagem.getMessagem())
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setContentIntent(pendingIntent);
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANEL_CHAT)
+                            .setSmallIcon(R.mipmap.ic_logo)
+                            .setAutoCancel(true)
+                            .setContentTitle(mensagem.getUsername())
+                            .setContentText(mensagem.getMessagem())
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setContentIntent(pendingIntent);
 // Criando e enviando notificação
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                int random = (int) System.currentTimeMillis();
+                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                    int random = (int) System.currentTimeMillis();
 
 //CRIANDO CANAL DE NOTIFICAÇÃO
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    {
+                        NotificationChannel canalChat = new NotificationChannel(CHANEL_CHAT,"Chat",NotificationManager.IMPORTANCE_HIGH);
+                        canalChat.setDescription("Noticias do seu game");
+                        canalChat.setLightColor(R.color.logo1);
+                        notificationManager.createNotificationChannel(canalChat);
+                        builder.setChannelId(CHANEL_CHAT);
+                    }
+                    notificationManager.notify(NOTIFICACAO_ID, builder.build());
+                }catch (NullPointerException e)
                 {
-                    NotificationChannel canalChat = new NotificationChannel(CHANEL_CHAT,"Chat",NotificationManager.IMPORTANCE_HIGH);
-                    canalChat.setDescription("Noticias do seu game");
-                    canalChat.setLightColor(R.color.logo1);
-                    notificationManager.createNotificationChannel(canalChat);
-                    builder.setChannelId(CHANEL_CHAT);
+
                 }
-                notificationManager.notify(cont, builder.build());
                 break;
             case 1:
-                Log.i(TAG, "enviarNotificação Noticia: " + noticia.getId());
+                try
+                {
+                    int NOTIFICACAO_ID = cont +1;
+                    Log.i(TAG, "enviarNotificação Noticia: " + noticia.getId());
 // Intenção de iniciar a atividade principal
-                Intent conteudoNoticia = new Intent(getApplicationContext(), ConteudoNoticia.class);
-                Bundle dadosNoticia = new Bundle();
-                dadosNoticia.putString("data", noticia.getData());
-                dadosNoticia.putString("ementa",noticia.getEmenta() );
-                dadosNoticia.putString("image",noticia.getImage());
-                dadosNoticia.putString("titulo",noticia.getTitulo());
-                dadosNoticia.putDouble("likes", noticia.getLikes());
-                dadosNoticia.putString("id", noticia.getId());
-                conteudoNoticia.putExtras(dadosNoticia);
-                //chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Intent conteudoNoticia = new Intent(getApplicationContext(), ConteudoNoticia.class);
+                    Bundle dadosNoticia = new Bundle();
+                    dadosNoticia.putString("data", noticia.getData());
+                    dadosNoticia.putString("ementa",noticia.getEmenta() );
+                    dadosNoticia.putString("image",noticia.getImage());
+                    dadosNoticia.putString("titulo",noticia.getTitulo());
+                    dadosNoticia.putDouble("likes", noticia.getLikes());
+                    dadosNoticia.putString("id", noticia.getId());
+                    conteudoNoticia.putExtras(dadosNoticia);
+                    //chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //CRIANDO INTENÇÃO
-                PendingIntent intencaoPendente = PendingIntent.getActivity(getApplicationContext(),0,conteudoNoticia,0);
+                    PendingIntent intencaoPendente = PendingIntent.getActivity(getApplicationContext(),0,conteudoNoticia,0);
 // CRIANDO NOTIFICAÇÃO
-                NotificationCompat.Builder builderNoticia = new NotificationCompat.Builder(this,CHANEL_CHAT)
-                        .setContentTitle(noticia.getTitulo())
-                        .setSmallIcon(R.mipmap.ic_logo)
-                        .setAutoCancel(true)
-                        .setContentText(noticia.getEmenta())
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setContentIntent(intencaoPendente);
+                    NotificationCompat.Builder builderNoticia = new NotificationCompat.Builder(this,CHANEL_CHAT)
+                            .setContentTitle(noticia.getTitulo())
+                            .setSmallIcon(R.mipmap.ic_logo)
+                            .setAutoCancel(true)
+                            .setContentText(noticia.getEmenta())
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setContentIntent(intencaoPendente);
 // Criando e enviando notificação
-                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
+                    NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
 
 //CRIANDO CANAL DE NOTIFICAÇÃO
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    {
+                        NotificationChannel canalNoticias = new NotificationChannel(CHANEL_NOTICIAS,"Noticias",NotificationManager.IMPORTANCE_DEFAULT);
+                        canalNoticias.setDescription("Receba notificações das novas conversas");
+                        canalNoticias.setLightColor(R.color.logo2);
+                        managerCompat.createNotificationChannel(canalNoticias);
+                        builderNoticia.setChannelId(CHANEL_NOTICIAS);
+                    }
+                    managerCompat.notify(NOTIFICACAO_ID, builderNoticia.build());
+                }catch (NullPointerException e)
                 {
-                    NotificationChannel canalNoticias = new NotificationChannel(CHANEL_NOTICIAS,"Noticias",NotificationManager.IMPORTANCE_DEFAULT);
-                    canalNoticias.setDescription("Receba notificações das novas conversas");
-                    canalNoticias.setLightColor(R.color.logo2);
-                    managerCompat.createNotificationChannel(canalNoticias);
-                    builderNoticia.setChannelId(CHANEL_NOTICIAS);
+
                 }
-                managerCompat.notify(cont, builderNoticia.build());
                 break;
 
-            case 2:
-                //personalizar os botões de ok
-                Log.i(TAG, "enviarNotificação Notificacao: " + notificacao);
+            case 3:
+                try
+                {
+                    String NOTIFICACAO_ID = String.valueOf(cont +1);
+                    Log.d(TAG, "CASE3: cont "+NOTIFICACAO_ID);
+                    Log.d(TAG, "CASE3: notificacao "+notificacao.getRecebido());
+                    //personalizar os botões de ok
+                    String textos[] = notificacao.getRecebido().split(":");
+                    //idA+":"+mId+":"+icone+":"+nick
 
-                ref.child("notificacao").child(meuUsuario.get(0).getId()).removeValue();
+                    //criando intenção do botão Bora
+                    Intent brodcastB = new Intent(this,NotificacaoReceiver.class);
+                    brodcastB.setAction("BORA");
+                    brodcastB.putExtra("texto",notificacao.getRecebido()+":"+NOTIFICACAO_ID);
+                    PendingIntent pendingB = PendingIntent.getBroadcast(this,0,brodcastB,0);
+                    //criando intenção do botão AgoraN
+                    Intent brodcastN = new Intent(this,NotificacaoReceiver.class);
+                    brodcastN.setAction("NAO");
+                    brodcastN.putExtra("texto",notificacao.getRecebido()+":"+NOTIFICACAO_ID);
+                    PendingIntent pendingN = PendingIntent.getBroadcast(this,0,brodcastN,0);
+
+                    NotificationCompat.Builder compat = new NotificationCompat.Builder(this,CHANEL_NOTIFICACAO)
+                            .setSmallIcon(R.mipmap.ic_logo)
+                            .setContentTitle("NOVO ALERTA RECEBIDO")
+                            .setContentText("Seu amigo "+textos[3]+" está te chamando...")
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                            .addAction(0,"Bora",pendingB)
+                            .addAction(0,"agora não",pendingN);
+
+
+                    // Criando e enviando notificação
+                    NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+
+//CRIANDO CANAL DE NOTIFICAÇÃO
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    {
+                        NotificationChannel canalNotificacao = new NotificationChannel(CHANEL_NOTIFICACAO,"Notificacao",NotificationManager.IMPORTANCE_HIGH);
+                        canalNotificacao.setDescription("Receba notificações dos alertas dos amigos");
+                        canalNotificacao.setLightColor(R.color.logo2);
+                        manager.createNotificationChannel(canalNotificacao);
+                        compat.setChannelId(CHANEL_NOTICIAS);
+                    }
+                    manager.notify(Integer.parseInt(NOTIFICACAO_ID), compat.build());
+
+                }catch (NullPointerException e)
+                {
+
+                }
                 break;
         }
 
@@ -414,13 +457,5 @@ public class NotificacaoService extends Service
         return null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void criarCanais()
-    {
-        NotificationChannel canalNotificacao = new NotificationChannel(CHANEL_NOTIFICACAO,"Notificacao",NotificationManager.IMPORTANCE_HIGH);
-        canalNotificacao.setDescription("Receba notificações dos seus amigos");
-        canalNotificacao.setLightColor(R.color.logo3);
 
-
-    }
 }
