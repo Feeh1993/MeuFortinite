@@ -46,7 +46,6 @@ public class Conversas extends Fragment
 {
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
     private RecyclerView recChat;
-    private FloatingActionButton fabNmsg;
     private ViewPager viewPager;
     private DatabaseHelper db;
     private ArrayList<Usuario> meuUsuario = new ArrayList<>();
@@ -183,10 +182,10 @@ public class Conversas extends Fragment
 // IMPLEMENTAR BANCO REMOTO :<
     private void recuperarBanco()
     {
-        listConversa.clear();
+        //listConversa.clear();
         try
         {
-            ref.child("conversas").orderByKey().startAt(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
+            ref.child("usuarios").child(meuUsuario.get(0).getId()).child("conversas").addValueEventListener(new ValueEventListener()
             {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
@@ -197,6 +196,7 @@ public class Conversas extends Fragment
                         Log.d(TAG, "startAt ICONE DATA"+new_mensagem.getRecebido());
                         if (!listConversa.contains(new_mensagem))
                         {
+                            Log.d(TAG, "startAt USERNAME: "+new_mensagem.getUsername());
                             //listConversa.add(new_mensagem);
                             db.inserirConversa(new_mensagem);
                             db.atualizarConversa(new_mensagem);
@@ -213,44 +213,12 @@ public class Conversas extends Fragment
 
                 }
             });
-            ref.child("conversas").orderByKey().endAt(meuUsuario.get(0).getId()).addValueEventListener(new ValueEventListener()
-            {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                    {
-                        Mensagem new_mensagem = snapshot.getValue(Mensagem.class);
-                        Log.d(TAG, "endAt ICONE DATA"+new_mensagem.getRecebido());
-                        if (!listConversa.contains(new_mensagem))
-                        {
-                            //listConversa.add(new_mensagem);
-                            db.inserirConversa(new_mensagem);
-                            db.atualizarConversa(new_mensagem);
-                            Log.d(TAG, "endAt TAM LIST CONVRS: "+listConversa.size());
-                            Log.d(TAG, "endAt TAM LIST CONVRS BANCO IF: "+db.getQTDConversas());
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                    recuperarDadosLocais();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
 
         }catch (IndexOutOfBoundsException e)
         {
             Toast.makeText(getContext(),"Não entrou na query",Toast.LENGTH_LONG).show();
         }
     }
-
-
-
-
     private void recuperarDadosLocais()
     {
         db = new DatabaseHelper(getContext());
@@ -277,7 +245,7 @@ public class Conversas extends Fragment
             @Override
             public void onItemClick(View itemView, int position, Mensagem conversa)
             {
-                //FALTA IMPLEMENTAR CLIQUE
+                String[] icone_tipo = conversa.getRecebido().split(":");
                 Intent intent = new Intent(getContext(), Chat.class);
                 Bundle bundle = new Bundle();
                 Log.d("NM_","IDUSER: "+conversa.getId());
@@ -287,7 +255,7 @@ public class Conversas extends Fragment
                 bundle.putString("meu_nick",meuUsuario.get(0).getNickname());
                 bundle.putString("nick_amigo",conversa.getUsername());
                 bundle.putString("mIcone",meuAvatar.get(0).getAvatar());
-                bundle.putString("iconeA",conversa.getRecebido());
+                bundle.putString("iconeA",icone_tipo[0]);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -296,27 +264,9 @@ public class Conversas extends Fragment
 
     }
 
-    private void fazerCast(View view)
-    {
+    private void fazerCast(View view) {
         recChat = view.findViewById(R.id.recChat);
-        fabNmsg = view.findViewById(R.id.fabNovaMsg);
         viewPager = (ViewPager) getActivity().findViewById(R.id.vp_painel);
-        fabNmsg.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                abrirListaAmigos();
-            }
-        });
     }
-    //criar algo para abrir lista amigos
-    private void abrirListaAmigos()
-    {
-        FragmentManager fm = getChildFragmentManager();
-        //NovaMensagem novaMensagem = NovaMensagem.novaMensagem();
-        //novaMensagem.show(fm,"fragment_alert");
-
-    }
-
 
 }

@@ -95,6 +95,7 @@ public class NovaMensagem extends DialogFragment
                 bundle.putString("iconeA",iconeA);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                dismiss();
             }
         });
         btnCancelar.setOnClickListener(new View.OnClickListener()

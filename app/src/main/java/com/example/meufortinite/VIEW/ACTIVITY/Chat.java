@@ -24,10 +24,8 @@ import android.widget.TextView;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
-import com.example.meufortinite.HELPER.SCUtils;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
 import com.example.meufortinite.MODEL.GERAL.Mensagem;
-import com.example.meufortinite.MODEL.GERAL.Notificacao;
 import com.example.meufortinite.R;
 import com.example.meufortinite.SERVICE.NotificacaoService;
 import com.example.meufortinite.VIEW.ADAPTER.AdaptadorChat;
@@ -195,10 +193,13 @@ public class Chat extends AppCompatActivity
             {
                 progressBar.setVisibility(View.GONE);
                 Mensagem new_mensagem = dataSnapshot.getValue(Mensagem.class);
-                mensagemArrayList.add(new_mensagem);
-                adapter.notifyDataSetChanged();
-                recChat.scrollToPosition(adapter.getItemCount() - 1);
-                resultado = true;
+                if (new_mensagem.getUsername() != null)
+                {
+                    mensagemArrayList.add(new_mensagem);
+                    adapter.notifyDataSetChanged();
+                    recChat.scrollToPosition(adapter.getItemCount() - 1);
+                    resultado = true;
+                }
             }
 
             @Override public void onChildChanged(DataSnapshot dataSnapshot, String s)
@@ -258,11 +259,6 @@ public class Chat extends AppCompatActivity
         {
             return;
         }
-        //simple anti-flood protection
-        if ((System.currentTimeMillis() / 1000L - last_message_timestamp) < ANTI_FLOOD_SECONDS) {
-            SCUtils.showErrorSnackBar(mContext, findViewById(android.R.id.content), "Texto muito grande,limite se a menos de 1000 caracteres").show();
-            return;
-        }
         TarefaMensagem tarefaMensagem = new TarefaMensagem();
         tarefaMensagem.execute(new_message);
     }
@@ -280,13 +276,14 @@ public class Chat extends AppCompatActivity
         {
             mensagem = strings[0];
             Mensagem msgRemota = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(), "0",meuNick+":"+mIcone);
-            Mensagem msgLocal = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(),iconeA,nickAmigo);
+            Mensagem msgPraMim = new Mensagem(idUser,mensagem, DatabaseHelper.getDateTime(),iconeA+":1",nickAmigo);
+            Mensagem msgPraELE = new Mensagem(meuId,mensagem, DatabaseHelper.getDateTime(),mIcone+":0",meuNick);
             String key = ref.child("chat").child(meuId).child(idUser).push().getKey();
             if (caminho != "")
             {
                 ref.child("chat").child(caminho).child(key).setValue(msgRemota);
                 //IMPLEMENTAR OS BANCOS LOCAIS
-                verificarEsalvar(msgLocal);
+                verificarEsalvar(msgPraMim,msgPraELE);
             }
             else
             {
@@ -294,27 +291,27 @@ public class Chat extends AppCompatActivity
                 caminho = meuId+"||"+idUser;
                 ref.child("chat").child(caminho).child(key).setValue(msgRemota);
                 localizarExistencia(caminho,"");
-                verificarEsalvar(msgLocal);
+                verificarEsalvar(msgPraMim,msgPraELE);
             }
 
             last_message_timestamp = System.currentTimeMillis() / 1000L;
             return null;
         }
-        private  void verificarEsalvar(Mensagem mensagem)
+        private  void verificarEsalvar(Mensagem msgPraMim, Mensagem msgPraEle)
         {
             listaBancoLocal.addAll(db.recuperaConversas());
             for (int i = 0; i < listaBancoLocal.size(); i++)
             {
-                if (listaBancoLocal.get(i).getId().equals(mensagem.getId()))
+                if (listaBancoLocal.get(i).getId().equals(msgPraMim.getId()))
                 {
                     Log.d("CHAT_","Verificar = true");
-                    db.deletarConversa(mensagem,"");
+                    db.deletarConversa(msgPraMim,"");
                 }
             }
-            Log.d("CHAT_","AVATAR RECEBIDO: "+mensagem.getRecebido() );
-            db.inserirConversa(mensagem);
-            db.atualizarNotificacao(new Notificacao(mensagem.getMessagem(),mensagem.getId()));
-            ref.child("conversas").child(caminho).setValue(mensagem);
+            Log.d("CHAT_","AVATAR RECEBIDO: "+msgPraMim.getRecebido() );
+            db.inserirConversa(msgPraMim);
+            ref.child("usuarios").child(idUser).child("conversas").child(meuId).setValue(msgPraEle);
+            ref.child("usuarios").child(meuId).child("conversas").child(idUser).setValue(msgPraMim);
         }
     }
 

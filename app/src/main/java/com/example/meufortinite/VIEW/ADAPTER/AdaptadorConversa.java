@@ -72,11 +72,12 @@ public class AdaptadorConversa extends RecyclerView.Adapter<AdaptadorConversa.Vi
         String horas[] = conversa.getData().split(" ");
         Log.d("ADPTC","DADOS CONVERSA:HORA  "+ horas[1]);
         String hora[] = horas[1].split(":");
+        String[] icone_tipo = conversa.getRecebido().split(":");
 
         viewHolder.nick.setText(conversa.getUsername());
         viewHolder.ultmsg.setText(conversa.getMessagem());
         viewHolder.hora.setText(hora[0]+":"+hora[1]);
-        viewHolder.imageView.setImageResource(Avatar.identificarAvatar(Integer.parseInt(conversa.getRecebido())));
+        viewHolder.imageView.setImageResource(Avatar.identificarAvatar(Integer.parseInt(icone_tipo[0])));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener()
         {
             @Override

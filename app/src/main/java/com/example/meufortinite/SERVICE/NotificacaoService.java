@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -40,7 +41,7 @@ public class NotificacaoService extends Service
 
 {
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
-    private ChildEventListener mensagemStartListener,mensagemEndListener,noticiaListener;
+    private ChildEventListener mensagemListener,noticiaListener;
     private ValueEventListener notificacaoListener;
     private String TAG = "SERVICO_";
     private DatabaseHelper db;
@@ -49,6 +50,7 @@ public class NotificacaoService extends Service
     private int NOTIFICATION_ID;
     private String CHANEL_NOTICIAS = "1",CHANEL_CHAT = "2",CHANEL_NOTIFICACAO = "3";
     private ArrayList<Notificacao> minhasNotificacoes = new ArrayList<>();
+    private static boolean isServiceRunning = false;
 
     private int cont = 1;
 
@@ -56,26 +58,29 @@ public class NotificacaoService extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Log.d(TAG, "Iniciando Service");
-        return START_NOT_STICKY;
+        if (intent != null)
+        {
+            escutarBancos();
+        }
+        else stopMyService();
+        return START_STICKY;
+    }
+
+    private void stopMyService()
+    {
+        ref.child("noticias").removeEventListener(noticiaListener);
+        ref.child("usuarios").child(meuUsuario.get(0).getId()).child("conversas").removeEventListener(mensagemListener);
+        ref.child("alerta").child(meuUsuario.get(0).getId()).removeEventListener(notificacaoListener);
+        stopForeground(true);
+        stopSelf();
+        isServiceRunning = false;
     }
 
     @Override
     public void onCreate()
     {
         Log.d(TAG, "onCreate");
-        db = new DatabaseHelper(getApplicationContext());
-        minhasNotificacoes.clear();
-        meuUsuario.clear();
-        meuAvatar.clear();
-        minhasNotificacoes.addAll(db.recuperaNotificacao());
-        meuUsuario.addAll(db.recuperarUsuarios());
-        meuAvatar.addAll(db.recuperarAvatar());
-        //escutar alterações em mensagens
-        escutarNovasMensagens();
-        //escutar e notificar novas noticias
-        escutarNovasNoticias();
-        //escutar e notificar novos alertas
-        escutarNovosAlertas();
+        escutarBancos();
         super.onCreate();
     }
 
@@ -89,15 +94,30 @@ public class NotificacaoService extends Service
     public void onDestroy()
     {
         super.onDestroy();
+        stopMyService();
         Log.d(TAG, "Destruindo service");
-        ref.child("noticias").removeEventListener(noticiaListener);
-        ref.child("conversas").orderByKey().endAt(meuUsuario.get(0).getId()).removeEventListener(mensagemEndListener);
-        ref.child("conversas").orderByKey().startAt(meuUsuario.get(0).getId()).removeEventListener(mensagemStartListener);
-        ref.child("alerta").child(meuUsuario.get(0).getId()).removeEventListener(notificacaoListener);
-
-        stopForeground(true);
-        stopSelf();
     }
+    private void escutarBancos()
+    {
+        if (isServiceRunning) return;
+        isServiceRunning = true;
+
+        db = new DatabaseHelper(getApplicationContext());
+        minhasNotificacoes.clear();
+        meuUsuario.clear();
+        meuAvatar.clear();
+        minhasNotificacoes.addAll(db.recuperaNotificacao());
+        meuUsuario.addAll(db.recuperarUsuarios());
+        meuAvatar.addAll(db.recuperarAvatar());
+        //escutar alterações em mensagens
+        escutarNovasMensagens();
+        //escutar e notificar novas noticias
+        escutarNovasNoticias();
+        //escutar e notificar novos alertas
+        escutarNovosAlertas();
+    }
+
+
     private void escutarNovosAlertas()
     {
         notificacaoListener = new ValueEventListener()
@@ -106,7 +126,7 @@ public class NotificacaoService extends Service
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 Notificacao notificacao = dataSnapshot.getValue(Notificacao.class);
-                enviarNotificacao(notificacao,null,null,3);
+                enviarNotificacao(notificacao,null,3);
             }
 
             @Override
@@ -126,7 +146,7 @@ public class NotificacaoService extends Service
             {
                 Noticia noticia = dataSnapshot.getValue(Noticia.class);
                 Log.d("service_","nova noticia : "+ noticia.getTitulo());
-                verificarNotificacao(noticia.getId(),noticia.getTitulo(),2,null,noticia);
+                verificarNotificacao(noticia.getId(),noticia.getData(),noticia.getTitulo(),2,noticia);
             }
 
             @Override
@@ -155,48 +175,18 @@ public class NotificacaoService extends Service
 
     private void escutarNovasMensagens()
     {
-       mensagemStartListener = new ChildEventListener()
-        {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
-            {
-                Mensagem new_mensagem = dataSnapshot.getValue(Mensagem.class);
-                Log.d("service_","nova mensagem startAt : "+ new_mensagem.getMessagem());
-                verificarNotificacao(new_mensagem.getId(),new_mensagem.getMessagem(),0,new_mensagem,null);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
-            {
-                Mensagem new_mensagem = dataSnapshot.getValue(Mensagem.class);
-                Log.d("service_","nova mensagem alterada startAt : "+ new_mensagem.getMessagem());
-                verificarNotificacao(new_mensagem.getId(),new_mensagem.getMessagem(),1,new_mensagem,null);
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-
-        mensagemEndListener= new ChildEventListener()
+        mensagemListener= new ChildEventListener()
         {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
             {
                 Mensagem new_mensagem = dataSnapshot.getValue(Mensagem.class);
                 Log.d("service_","nova mensagem endAt : "+ new_mensagem.getMessagem());
-                verificarNotificacao(new_mensagem.getId(),new_mensagem.getMessagem(),0,new_mensagem,null);
+                String[] icone_tipo = new_mensagem.getRecebido().split(":");
+                if (icone_tipo[1].equals("0"))
+                {
+                    enviarNotificacaoMsg(new_mensagem,icone_tipo[0]);
+                }
             }
 
             @Override
@@ -204,7 +194,11 @@ public class NotificacaoService extends Service
             {
                 Mensagem new_mensagem = dataSnapshot.getValue(Mensagem.class);
                 Log.d("service_","nova mensagem alterada endAt : "+ new_mensagem.getMessagem());
-                verificarNotificacao(new_mensagem.getId(),new_mensagem.getMessagem(),1,new_mensagem,null);
+                String[] icone_tipo = new_mensagem.getRecebido().split(":");
+                if (icone_tipo[1].equals("0"))
+                {
+                    enviarNotificacaoMsg(new_mensagem,icone_tipo[0]);
+                }
             }
 
             @Override
@@ -224,15 +218,12 @@ public class NotificacaoService extends Service
 
             }
         };
-        ref.child("conversas").orderByKey().endAt(meuUsuario.get(0).getId()).addChildEventListener(mensagemEndListener);
-        ref.child("conversas").orderByKey().startAt(meuUsuario.get(0).getId()).addChildEventListener(mensagemStartListener);
+        ref.child("usuarios").child(meuUsuario.get(0).getId()).child("conversas").addChildEventListener(mensagemListener);
     }
 
-    private void verificarNotificacao(String id,String recebido,int tipo,Mensagem mensagem,Noticia noticia)
+    private void verificarNotificacao(String id,String data,String recebido,int tipo,Noticia noticia)
     {
         /******************************** tipos:**************
-         * tipo == 0 é mensagem adicionada
-         * tipo == 1 é mensagem alterada
          * tipo == 2 é noticia adicionada
          * tipo == 3 é notificacao adicionada
           */
@@ -242,35 +233,23 @@ public class NotificacaoService extends Service
             Log.d(TAG, "IDLISTA: "+minhasNotificacoes.get(i).getId()+" e IDMENSAGEM: "+id);
             if (minhasNotificacoes.get(i).getId().equals(id))
             {
-                if (minhasNotificacoes.get(i).getRecebido().equals(recebido))
+                if (minhasNotificacoes.get(i).getData().equals(data))
                 {
                     res = true;
-                    Log.d(TAG, "Esse id já foi notificado: "+ id);
+                    Log.d(TAG, "Esse id já foi notificado: "+ data);
                     break;
                 }
                 else
                 {
                     switch (tipo)
                     {
-                        case 1:
-                            try
-                            {
-                                db.atualizarNotificacao(new Notificacao(mensagem.getMessagem(),mensagem.getId()));
-                                Log.d(TAG, "Banco Atualizado Notificacao : "+db.getQTDNotificacao());
-                                cont ++;
-                                enviarNotificacao(null,mensagem,null,0);
-                            }catch (NullPointerException e)
-                            {
-                                Log.d(TAG, "Entrou no catch,atualizando noticia... ");
-                            }
-                            break;
                         case 2:
                             try
                             {
-                                db.atualizarNotificacao(new Notificacao(noticia.getTitulo(),noticia.getId()));
+                                db.atualizarNotificacao(new Notificacao(noticia.getTitulo(),noticia.getId(),noticia.getData()));
                                 Log.d(TAG, "Banco Atualizado Notificacao : "+db.getQTDNotificacao());
                                 cont ++;
-                                enviarNotificacao(null,null,noticia,1);
+                                enviarNotificacao(null,noticia,1);
                             }catch (NullPointerException e)
                             {
                                 Log.d(TAG, "Entrou no catch,atualizando mensagem... ");
@@ -278,81 +257,78 @@ public class NotificacaoService extends Service
                             break;
                     }
                 }
-                Log.d(TAG, "esse id já foi notificado --> "+ id);
+                Log.d(TAG, "esse id já foi notificado --> "+ data);
             }
         }
         if (res == false)
         {
             switch (tipo)
             {
-                case 0:
-                    Log.d(TAG, "Banco Notificacao Antes: "+db.getQTDNotificacao());
-                    cont ++;
-                    enviarNotificacao(null,mensagem,null,0);
-                    db.inserirNotificacao(new Notificacao(mensagem.getMessagem(),mensagem.getId()));
-                    Log.d(TAG, "Banco Notificacao Depois: "+db.getQTDNotificacao());
-                    break;
                 case 2:
                     Log.d(TAG, "Banco Notificacao Antes: "+db.getQTDNotificacao());
                     cont ++;
-                    enviarNotificacao(null,null,noticia,1);
-                    db.inserirNotificacao(new Notificacao(noticia.getTitulo(),noticia.getId()));
+                    enviarNotificacao(null,noticia,1);
+                    db.inserirNotificacao(new Notificacao(noticia.getTitulo(),noticia.getId(),noticia.getData()));
                     Log.d(TAG, "Banco Notificacao Depois: "+db.getQTDNotificacao());
                     break;
             }
         }
     }
 
+    // enviar uma notificacao de mensagem
+    private void enviarNotificacaoMsg(Mensagem mensagem, String icone)
+    {
+        try
+        {
+            int NOTIFICACAO_ID = cont +1;
+            Log.i(TAG, "enviarNotificação Mensagem: " + mensagem.getId());
+// Intenção de iniciar a atividade principal
+            Intent chat = new Intent(getApplicationContext(), Chat.class);
+            Bundle dados = new Bundle();
+            dados.putString("meu_id", meuUsuario.get(0).getId());
+            dados.putString("id_user", mensagem.getId());
+            dados.putString("meu_nick",meuUsuario.get(0).getNickname());
+            dados.putString("nick_amigo", mensagem.getUsername());
+            dados.putString("iconeA",icone);
+            dados.putString("mIcone", meuAvatar.get(0).getAvatar());
+            chat.putExtras(dados);
+            //chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//CRIANDO INTENÇÃO
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,chat,0);
+// CRIANDO NOTIFICAÇÃO
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANEL_CHAT)
+                    .setSmallIcon(R.mipmap.ic_logo)
+                    .setAutoCancel(true)
+                    .setContentTitle(mensagem.getUsername())
+                    .setContentText(mensagem.getMessagem())
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent);
+// Criando e enviando notificação
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+            int random = (int) System.currentTimeMillis();
+
+//CRIANDO CANAL DE NOTIFICAÇÃO
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                NotificationChannel canalChat = new NotificationChannel(CHANEL_CHAT,"Chat",NotificationManager.IMPORTANCE_HIGH);
+                canalChat.setDescription("Noticias do seu game");
+                canalChat.setLightColor(R.color.logo1);
+                notificationManager.createNotificationChannel(canalChat);
+                builder.setChannelId(CHANEL_CHAT);
+            }
+            notificationManager.notify(NOTIFICACAO_ID, builder.build());
+            ref.child("usuarios").child(meuUsuario.get(0).getId()).child("conversas").child(mensagem.getId()).child("recebido").setValue(icone+":1");
+        }catch (NullPointerException e)
+        {
+
+        }
+    }
+
     // Enviar uma notificação
-    private void enviarNotificacao(Notificacao notificacao,Mensagem mensagem,Noticia noticia,int tipo)
+    private void enviarNotificacao(Notificacao notificacao,Noticia noticia,int tipo)
     {
         switch (tipo)
         {
-            case 0:
-                try
-                {
-                    int NOTIFICACAO_ID = cont +1;
-                    Log.i(TAG, "enviarNotificação Mensagem: " + mensagem.getId());
-// Intenção de iniciar a atividade principal
-                    Intent chat = new Intent(getApplicationContext(), Chat.class);
-                    Bundle dados = new Bundle();
-                    dados.putString("meu_id", meuUsuario.get(0).getId());
-                    dados.putString("id_user", mensagem.getId());
-                    dados.putString("meu_nick",meuUsuario.get(0).getNickname());
-                    dados.putString("nick_amigo", mensagem.getUsername());
-                    dados.putString("iconeA", mensagem.getRecebido());
-                    dados.putString("mIcone", meuAvatar.get(0).getAvatar());
-                    chat.putExtras(dados);
-                    //chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//CRIANDO INTENÇÃO
-                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,chat,0);
-// CRIANDO NOTIFICAÇÃO
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANEL_CHAT)
-                            .setSmallIcon(R.mipmap.ic_logo)
-                            .setAutoCancel(true)
-                            .setContentTitle(mensagem.getUsername())
-                            .setContentText(mensagem.getMessagem())
-                            .setPriority(NotificationCompat.PRIORITY_HIGH)
-                            .setContentIntent(pendingIntent);
-// Criando e enviando notificação
-                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                    int random = (int) System.currentTimeMillis();
-
-//CRIANDO CANAL DE NOTIFICAÇÃO
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    {
-                        NotificationChannel canalChat = new NotificationChannel(CHANEL_CHAT,"Chat",NotificationManager.IMPORTANCE_HIGH);
-                        canalChat.setDescription("Noticias do seu game");
-                        canalChat.setLightColor(R.color.logo1);
-                        notificationManager.createNotificationChannel(canalChat);
-                        builder.setChannelId(CHANEL_CHAT);
-                    }
-                    notificationManager.notify(NOTIFICACAO_ID, builder.build());
-                }catch (NullPointerException e)
-                {
-
-                }
-                break;
             case 1:
                 try
                 {
@@ -405,43 +381,92 @@ public class NotificacaoService extends Service
                     Log.d(TAG, "CASE3: cont "+NOTIFICACAO_ID);
                     Log.d(TAG, "CASE3: notificacao "+notificacao.getRecebido());
                     //personalizar os botões de ok
-                    String textos[] = notificacao.getRecebido().split(":");
-                    //idA+":"+mId+":"+icone+":"+nick
+                    String textos[] = notificacao.getRecebido().split("###");
+                    Log.d(TAG, "enviarNotificacao: size texto "+textos.length
+                            +"\n TEXTO[0] "+textos[0]
+                            +"\n TEXTO[1] "+textos[1]
+                            +"\n TEXTO[2] "+textos[2]
+                            +"\n TEXTO[3] "+textos[3]
+                            +"\n TEXTO[4] "+textos[4]);
+                    //tipo+":"+idA+":"+mId+":"+icone+":"+nick+":"id
 
-                    //criando intenção do botão Bora
-                    Intent brodcastB = new Intent(this,NotificacaoReceiver.class);
-                    brodcastB.setAction("BORA");
-                    brodcastB.putExtra("texto",notificacao.getRecebido()+":"+NOTIFICACAO_ID);
-                    PendingIntent pendingB = PendingIntent.getBroadcast(this,0,brodcastB,0);
-                    //criando intenção do botão AgoraN
-                    Intent brodcastN = new Intent(this,NotificacaoReceiver.class);
-                    brodcastN.setAction("NAO");
-                    brodcastN.putExtra("texto",notificacao.getRecebido()+":"+NOTIFICACAO_ID);
-                    PendingIntent pendingN = PendingIntent.getBroadcast(this,0,brodcastN,0);
+                    // tipo 0 é o usúario enviando alerta
+                    //tipo 1 é o usuario respondendo a alerta
+                    if (textos[0].equals("0"))
+                    {
+                        //criando intencao do botão Não
+                        Intent brodcastN = new Intent(getApplicationContext(),NotificacaoReceiver.class);
+                        Bundle bundleN = new Bundle();
+                        bundleN.putString("idA",textos[1]);
+                        bundleN.putString("mId",textos[2]);
+                        bundleN.putString("icone",textos[3]);
+                        bundleN.putString("nick",textos[4]);
+                        bundleN.putString("notificacao_id",NOTIFICACAO_ID);
+                        brodcastN.putExtras(bundleN);
+                        brodcastN.setAction("NAO");
+                        //criando intenção do botão Bora
+                        Intent brodcastB = new Intent(getApplicationContext(),NotificacaoReceiver.class);
+                        Bundle bundle = new Bundle();
+                        //brodcastB.putExtra("texto",notificacao.getRecebido());
+                        bundle.putString("idA",textos[1]);
+                        bundle.putString("mId",textos[2]);
+                        bundle.putString("icone",textos[3]);
+                        bundle.putString("nick",textos[4]);
+                        bundle.putString("notificacao_id",NOTIFICACAO_ID);
+                        brodcastB.putExtras(bundle);
+                        brodcastB.setAction("BORA");
+                        //sendBroadcast(brodcastB);
+                        PendingIntent pendingN = PendingIntent.getBroadcast(this,0,brodcastN,PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent pendingB = PendingIntent.getBroadcast(this,0,brodcastB,PendingIntent.FLAG_UPDATE_CURRENT);
+                        NotificationCompat.Builder compat = new NotificationCompat.Builder(this,CHANEL_NOTIFICACAO)
+                                .setSmallIcon(R.mipmap.ic_logo)
+                                .setContentTitle("NOVO ALERTA RECEBIDO")
+                                .setContentText("SEU AMIGO "+textos[4]+" ESTA TE CHAMANDO...")
+                                .setPriority(NotificationCompat.PRIORITY_MAX)
+                                .setAutoCancel(true)
+                                .addAction(0,"Bora",pendingB)
+                                .addAction(0,"agora não",pendingN);
 
-                    NotificationCompat.Builder compat = new NotificationCompat.Builder(this,CHANEL_NOTIFICACAO)
-                            .setSmallIcon(R.mipmap.ic_logo)
-                            .setContentTitle("NOVO ALERTA RECEBIDO")
-                            .setContentText("Seu amigo "+textos[3]+" está te chamando...")
-                            .setPriority(NotificationCompat.PRIORITY_MAX)
-                            .addAction(0,"Bora",pendingB)
-                            .addAction(0,"agora não",pendingN);
-
-
-                    // Criando e enviando notificação
-                    NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+                        // Criando e enviando notificação
+                        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
 
 //CRIANDO CANAL DE NOTIFICAÇÃO
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    {
-                        NotificationChannel canalNotificacao = new NotificationChannel(CHANEL_NOTIFICACAO,"Notificacao",NotificationManager.IMPORTANCE_HIGH);
-                        canalNotificacao.setDescription("Receba notificações dos alertas dos amigos");
-                        canalNotificacao.setLightColor(R.color.logo2);
-                        manager.createNotificationChannel(canalNotificacao);
-                        compat.setChannelId(CHANEL_NOTICIAS);
-                    }
-                    manager.notify(Integer.parseInt(NOTIFICACAO_ID), compat.build());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        {
+                            NotificationChannel canalNotificacao = new NotificationChannel(CHANEL_NOTIFICACAO,"Notificacao",NotificationManager.IMPORTANCE_HIGH);
+                            canalNotificacao.setDescription("Receba notificações dos alertas dos amigos");
+                            canalNotificacao.setLightColor(R.color.logo2);
+                            manager.createNotificationChannel(canalNotificacao);
+                            compat.setChannelId(CHANEL_NOTICIAS);
+                        }
+                        manager.notify(Integer.parseInt(NOTIFICACAO_ID), compat.build());
+                        //startForeground(NOTIFICATION_ID,compat.build());
 
+                    }
+                    else
+                    {
+                        NotificationCompat.Builder compat = new NotificationCompat.Builder(this,CHANEL_NOTIFICACAO)
+                                .setSmallIcon(R.mipmap.ic_logo)
+                                .setContentTitle("RESPOSTA DE ALERTA RECEBIDA")
+                                .setContentText(textos[4]+" NÃO PODE JOGAR NO MOMENTO!")
+                                .setPriority(NotificationCompat.PRIORITY_MAX)
+                                .setAutoCancel(true);
+
+                        // Criando e enviando notificação
+                        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+
+//CRIANDO CANAL DE NOTIFICAÇÃO
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        {
+                            NotificationChannel canalNotificacao = new NotificationChannel(CHANEL_NOTIFICACAO,"Notificacao",NotificationManager.IMPORTANCE_HIGH);
+                            canalNotificacao.setDescription("Receba notificações dos alertas dos amigos");
+                            canalNotificacao.setLightColor(R.color.logo2);
+                            manager.createNotificationChannel(canalNotificacao);
+                            compat.setChannelId(CHANEL_NOTICIAS);
+                        }
+                        manager.notify(Integer.parseInt(NOTIFICACAO_ID), compat.build());
+                        ref.child("alerta").child(textos[2]).removeValue();
+                    }
                 }catch (NullPointerException e)
                 {
 
@@ -451,11 +476,10 @@ public class NotificacaoService extends Service
 
     }
 
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-
 }

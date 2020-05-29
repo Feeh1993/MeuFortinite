@@ -80,8 +80,6 @@ public class Loading extends AppCompatActivity
     {
         super.onStart();
         dbLocal = new DatabaseHelper(getApplicationContext());
-        //iniciando service
-        getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
 
     }
 //recupera banco e verifica login
@@ -120,11 +118,15 @@ public class Loading extends AppCompatActivity
                 {
                     Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
                     dbLocal.inserirAvatar(avatar);
+                    //iniciando service
+                    getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
                 }
                 else
                 {
                     Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
                     dbLocal.atualizarAvatar(avatar);
+                    //iniciando service
+                    getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
                 }
                 startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
             }

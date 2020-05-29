@@ -50,15 +50,22 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.MyViewHold
   public int getItemViewType(int position)
   {
     Mensagem mensagem = data.get(position);
-    String userAndIcon[] = mensagem.getUsername().split(":");
-    if(meuUser.equals(userAndIcon[0]))
+    try
     {
-      return LEFT_MSG;
-    }
-    else
+      String userAndIcon[] = mensagem.getUsername().split(":");
+      if(meuUser.equals(userAndIcon[0]))
+      {
+        return LEFT_MSG;
+      }
+      else
+      {
+        return RIGHT_MSG;
+      }
+    }catch (NullPointerException e)
     {
-      return RIGHT_MSG;
+
     }
+    return 2;
   }
 
   @Override
@@ -110,32 +117,34 @@ public class AdaptadorChat extends RecyclerView.Adapter<AdaptadorChat.MyViewHold
   @Override public void onBindViewHolder(MyViewHolder myViewHolder, int i)
   {
     Mensagem mensagem = data.get(i);
-
-
-    String userAndIcon[] = mensagem.getUsername().split(":");
-    Log.d("ADPT_CHAT","meuUSer: "+meuUser+"\n userMSG: "+userAndIcon[0] );
-    if(meuUser.equals(userAndIcon[0]))
+    try
     {
-      if (mensagem.getRecebido() == "0")
+      String userAndIcon[] = mensagem.getUsername().split(":");
+      Log.d("ADPT_CHAT","meuUSer: "+meuUser+"\n userMSG: "+userAndIcon[0] );
+      if(meuUser.equals(userAndIcon[0]))
       {
-        myViewHolder.txt.setText(mensagem.getMessagem());
-      }else
-      {
-        myViewHolder.txt.setText(mensagem.getMessagem());
+        if (mensagem.getRecebido() == "0")
+        {
+          myViewHolder.txt.setText(mensagem.getMessagem());
+        }else
+        {
+          myViewHolder.txt.setText(mensagem.getMessagem());
+        }
       }
-    }
-    else
+      else
+      {
+        if (mensagem.getRecebido() == "1")
+        {
+          myViewHolder.txt.setText(mensagem.getMessagem());
+        }else
+        {
+          myViewHolder.txt.setText(mensagem.getMessagem());
+        }
+      }
+
+    }catch (NullPointerException e)
     {
-      if (mensagem.getRecebido() == "1")
-      {
-        myViewHolder.txt.setText(mensagem.getMessagem());
-      }else
-      {
-        myViewHolder.txt.setText(mensagem.getMessagem());
-      }
     }
-
-
   }
 
 

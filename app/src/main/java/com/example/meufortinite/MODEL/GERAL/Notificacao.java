@@ -4,10 +4,13 @@ public class Notificacao
 {
     private String recebido;
     private String id;
+    private String data;
 
-    public Notificacao(String recebido, String id) {
+    public Notificacao(String recebido, String id,String data)
+    {
         this.recebido = recebido;
         this.id = id;
+        this.data = data;
     }
 
     public Notificacao() {
@@ -28,5 +31,13 @@ public class Notificacao
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 }

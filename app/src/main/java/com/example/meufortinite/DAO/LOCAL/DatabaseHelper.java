@@ -82,7 +82,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public static final String CREATE_TABLENOTIFICACAO =
             "CREATE TABLE " + TABLE_NAME_NOTIFICACAO + "("
                     + COLUMN_ID + " TEXT PRIMARY KEY,"
-                    + COLUMN_RECEBIDO + " TEXT"
+                    + COLUMN_RECEBIDO + " TEXT,"
+                    + COLUMN_CRIADO + " TEXT"
                     + ")";
 
     //CRIANDO TABELA AVATAR
@@ -154,6 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(COLUMN_ID, notificacao.getId());
         values.put(COLUMN_RECEBIDO, notificacao.getRecebido());
+        values.put(COLUMN_CRIADO,notificacao.getData());
 
         //INSERIR LINHA
         long id = db.insert(TABLE_NAME_NOTIFICACAO, null, values);
@@ -278,7 +280,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         if (cursor != null)
             cursor.moveToFirst();
         Notificacao notificacao = new Notificacao(cursor.getString(cursor.getColumnIndex(COLUMN_RECEBIDO))
-                ,cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
+                ,cursor.getString(cursor.getColumnIndex(COLUMN_ID)),cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)));
 
         // close the db connection
         cursor.close();
@@ -413,6 +415,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 Notificacao notificacao = new Notificacao();
                 notificacao.setId(cursor.getString(cursor.getColumnIndex(COLUMN_ID)));
                 notificacao.setRecebido(cursor.getString(cursor.getColumnIndex(COLUMN_RECEBIDO)));
+                notificacao.setData(cursor.getString(cursor.getColumnIndex(COLUMN_CRIADO)));
                 notificacoes.add(notificacao);
             } while (cursor.moveToNext());
         }
@@ -653,6 +656,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(COLUMN_RECEBIDO, notificacao.getRecebido());
         values.put(COLUMN_ID, notificacao.getId());
+        values.put(COLUMN_CRIADO,notificacao.getData());
 
         return db.update(TABLE_NAME_NOTIFICACAO, values, COLUMN_ID+ " = ?",
                 new String[]{String.valueOf(notificacao.getId())});

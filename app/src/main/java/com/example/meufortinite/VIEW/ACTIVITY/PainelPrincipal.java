@@ -2,6 +2,8 @@ package com.example.meufortinite.VIEW.ACTIVITY;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -9,6 +11,7 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
+import com.example.meufortinite.SERVICE.NotificacaoService;
 import com.example.meufortinite.VIEW.ADAPTER.PPPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +27,7 @@ public class PainelPrincipal extends AppCompatActivity
     private ArrayList<Usuario> usuarios = new ArrayList<>();
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
     private TabLayout tabLayout;
+    private String TAG = "PainelPrincipal_";
     private int[] imageResId = 
             {
             R.drawable.ic_amigos,
@@ -46,6 +50,8 @@ public class PainelPrincipal extends AppCompatActivity
     private Usuario meuUser ;
     private FirebaseAuth user = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private DatabaseHelper db;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -151,6 +157,6 @@ public class PainelPrincipal extends AppCompatActivity
     protected void onStop() 
     {
         super.onStop();
-        ref.child("usuarios").child(usuarios.get(0).getId()).child("tipo").setValue("offline");    
+        ref.child("usuarios").child(usuarios.get(0).getId()).child("tipo").setValue("offline");
     }
 }

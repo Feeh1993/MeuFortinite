@@ -152,6 +152,7 @@ public class Amigos extends Fragment
                             db.atualizarAmigo(meuAmigo);
                             listAmigos.get(i).setIcone(meuAmigo.getIcone());
                             listAmigos.get(i).setAmigos(meuAmigo.getAmigos());
+                            txtUsuario.setVisibility(View.GONE);
                             adaptadorAmigos.notifyDataSetChanged();
                         }
                     }
@@ -160,6 +161,7 @@ public class Amigos extends Fragment
                 {
                     db.inserirAmigo(meuAmigo);
                     listAmigos.add(meuAmigo);
+                    txtUsuario.setVisibility(View.GONE);
                     adaptadorAmigos.notifyDataSetChanged();
                 }
             }
@@ -532,9 +534,10 @@ public class Amigos extends Fragment
     }
     private void chamarNotifificacao(Amigo usuario)
     {
-        ref.child("alerta").child(usuario.getId()).setValue(new Notificacao(usuario.getId()+
-                ":"+meuUsuario.get(0).getId()+
-                ":"+usuario.getIcone()+":"+usuario.getNick(),meuUsuario.get(0).getId())).addOnCompleteListener(new OnCompleteListener<Void>() {
+        //tipo+":"+idA+":"+mId+":"+icone+":"+nick+":"id
+        ref.child("alerta").child(usuario.getId()).setValue(new Notificacao(
+                "0"+"###"+meuUsuario.get(0).getId()+"###"+usuario.getId()+ "###"+meuAvatar.get(0).getAvatar()+"###"+meuUsuario.get(0).getNickname(),
+                meuUsuario.get(0).getId(),DatabaseHelper.getDateTime())).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Snackbar.make(getView(),"Notificação encaminhada com sucesso!\n Aguarde resposta...", Snackbar.LENGTH_LONG).setAction("OK", new View.OnClickListener() {
