@@ -13,6 +13,7 @@ import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
 import com.example.meufortinite.DAO.REMOTO.ConfiguracaoFirebase;
 import com.example.meufortinite.MODEL.GERAL.Amigo;
 import com.example.meufortinite.MODEL.GERAL.Avatar;
+import com.example.meufortinite.MODEL.INTERFACE.BaseRecyclerAdapter;
 import com.example.meufortinite.R;
 import com.google.firebase.database.DatabaseReference;
 
@@ -30,9 +31,11 @@ public class SelecionarAvatar extends AppCompatActivity
     private int cont = 0;
     private DatabaseHelper db;
     private int id = 1;
+    
 
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
     private String idUser = "";
+    private ArrayList<Amigo> meuUser = new ArrayList<>();
 
 
     @Override
@@ -41,6 +44,7 @@ public class SelecionarAvatar extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selecao_avatar);
         db = new DatabaseHelper(getApplicationContext());
+        meuUser.addAll(db.recuperaAmigos());
         Bundle bundle = getIntent().getExtras();
         idUser = bundle.getString("id_user");
         if (db.getQTDAvatares() > 0)
@@ -247,6 +251,7 @@ public class SelecionarAvatar extends AppCompatActivity
                                     {
                                         Log.d("SELECION_", "Banco atualizado Entrou no if: REPeTICAO: "+x+" \ne \n avatar: "+tag);
                                         db.atualizarAvatar(new Avatar(id,String.valueOf(tag),DatabaseHelper.getDateTime()));
+                                        db.atualizarAmigo(new Amigo(tag,meuUser.get(0).getNick(),meuUser.get(0).getTipo(),meuUser.get(0).getId(),meuUser.get(0).getAmigos()));
                                         ref.child("usuarios").child(idUser).child("icone").setValue(tag);
                                     }
                                     else

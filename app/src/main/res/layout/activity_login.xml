@@ -31,10 +31,9 @@
             <LinearLayout
                 android:id="@+id/lnlLogin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_margin="3dp"
-                android:background="@drawable/bordas_fundo"
                 android:orientation="vertical"
                 android:visibility="visible">
 
@@ -44,196 +43,148 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="Faça login ou cadastre-se"
+                    android:text="Faça login ou cadastre-se "
                     android:textAllCaps="false"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
 
-                <EditText
-                    android:id="@+id/edtUserLogin"
-                    android:layout_width="300dp"
-                    android:layout_height="41dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/bordas_fundo"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="Digite seu username"
-                    android:inputType="textPersonName"
-                    android:textAlignment="center"
-                    android:visibility="gone"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
-
-                <EditText
-                    android:id="@+id/edtEmailLogin"
-                    android:layout_width="300dp"
-                    android:layout_height="41dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bordas_fundo"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:hint="Digite seu email"
-                    android:inputType="textPersonName"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary" />
-
                 <FrameLayout
-                    android:id="@+id/frmlPassLog"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="15dp"
-                    android:gravity="center"
-                    android:visibility="visible">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/edtSenhaLog"
-                        android:layout_width="300dp"
-                        android:layout_height="41dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bordas_fundo"
-                        android:ems="10"
-                        android:gravity="center"
-                        android:hint="Digite uma senha de 8 digitos"
-                        android:inputType="textPassword"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorPrimary"
-                        android:textColorHint="@color/colorPrimary" />
-
-                    <ImageButton
-                        android:id="@+id/imgPassLog"
+                    <com.google.android.gms.common.SignInButton
+                        android:id="@+id/sign_in_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center|right"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btnGoogle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="4dp"
                         android:background="@null"
-                        android:elevation="10dp"
-                        app:srcCompat="@drawable/ic_close_password" />
+                        android:drawableLeft="@drawable/ic_google"
+                        android:padding="2px"
+                        android:text=" Login com Google"
+                        android:textColor="@color/colorPrimary" />
                 </FrameLayout>
-
-                <LinearLayout
-                    android:id="@+id/lnlBotoes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center|center_horizontal"
-                    android:layout_marginBottom="15dp">
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|center_horizontal">
-
-                        <Button
-                            android:id="@+id/btnCadLogin"
-                            android:layout_width="150dp"
-                            android:layout_height="40dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/bordas_fundo"
-                            android:text="Cadastrar"
-                            android:textColor="@color/colorPrimary" />
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|center_horizontal">
-
-                        <Button
-                            android:id="@+id/btnLogin"
-                            android:layout_width="150dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/bordas_fundo"
-                            android:text="Conectar"
-                            android:textColor="@color/colorPrimary" />
-
-                        <ProgressBar
-                            android:id="@+id/prgbBuscaLogin"
-                            style="?android:attr/progressBarStyle"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center|right"
-                            android:layout_marginRight="3dp"
-                            android:visibility="gone" />
-                    </FrameLayout>
-                </LinearLayout>
 
             </LinearLayout>
 
         </FrameLayout>
 
-        <Button
-            android:id="@+id/btnPro"
+        <FrameLayout
+            android:id="@+id/frml_adm"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@null"
-            android:drawableRight="@drawable/ic_premium"
-            android:text="Assine o pró por apenas R$ 0,99 ao mês e obtenha acesso ilimitado ao no aplicativo além de todos os avatares desbloqueados!"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/main_green_color" />
+            android:layout_height="100dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:elevation="25dp"
+            android:visibility="gone">
+
+            <com.tomer.fadingtextview.FadingTextView
+                android:id="@+id/fdngtxtTopo_buscar"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="2dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:visibility="visible"
+                app:texts="@array/textInfoNick"
+                app:timeout="3000" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtNickLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:layout_weight="0.7"
+                    android:background="@drawable/bordas_brancas"
+                    android:hint="Digite o nick do jogo e clique em salvar"
+                    android:inputType="text"
+                    android:padding="14dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textColorLink="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3">
+
+                    <Button
+                        android:id="@+id/btnLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|center_horizontal"
+                        android:layout_margin="2dp"
+                        android:background="@drawable/bordas_fundo"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="Salvar"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14sp" />
+
+                    <ProgressBar
+                        android:id="@+id/prgbLogin"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|center_horizontal"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/frml_adm"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:background="@drawable/bordas_fundo"
-        android:elevation="25dp"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edtSenhaAdmLogin"
+            <Button
+                android:id="@+id/btnPro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:hint="Digite sua senha de Administrador"
-                android:inputType="textMultiLine|text|textPassword"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:textColorLink="@color/colorPrimary" />
+                android:layout_marginTop="5dp"
+                android:background="@null"
+                android:drawableRight="@drawable/ic_premium"
+                android:text="Assine o pró por apenas R$ 0,99 ao mês e obtenha acesso ilimitado ao no aplicativo além de todos os avatares desbloqueados!"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/main_green_color" />
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3">
-
-                <Button
-                    android:id="@+id/btnAdmLogin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|center_horizontal"
-                    android:background="@drawable/bordas_fundo"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="4dp"
-                    android:text="logar"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorPrimary" />
-
-                <ProgressBar
-                    android:id="@+id/prgbLoginAdm"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|center_horizontal"
-                    android:visibility="gone" />
-            </FrameLayout>
-
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="8dp"
+                android:background="@color/verde_agua"
+                android:text="Espaço de propaganda"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textColor="@color/epica"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </FrameLayout>

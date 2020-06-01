@@ -157,6 +157,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
                     {
                         viewHolder.imageView.setImageResource(Avatar.identificarAvatar(usuario.getIcone()));
                     }
+                    else viewHolder.imageView.setImageResource(R.drawable.ic_add_avatar);
                     viewHolder.imageView.setVisibility(View.VISIBLE);
                     if (meuUsuario.getAmigos() != null)
                     {

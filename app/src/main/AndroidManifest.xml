@@ -18,13 +18,14 @@
         android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <receiver
             android:name=".SERVICE.NotificacaoReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
 
         <service
-            android:name="com.example.meufortinite.SERVICE.NotificacaoService"
+            android:name=".SERVICE.NotificacaoService"
             android:exported="false" />
 
         <activity android:name=".VIEW.ACTIVITY.ConteudoNoticia" />

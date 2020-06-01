@@ -91,7 +91,6 @@ public class Loading extends AppCompatActivity
             Log.d("LOADING_", "SIZE USUARIOS"+String.valueOf(usuarios.size()));
             if (mAuth.getCurrentUser() != null)
             {
-                txt.setText("bem vindo de volta ");
                 atualizarBancoLocal();
             }
             else
@@ -101,6 +100,7 @@ public class Loading extends AppCompatActivity
             }
         } catch (IndexOutOfBoundsException e)
         {
+            txt.setText("bem vindo a nossa plataforma");
             startActivity(new Intent(getApplicationContext(), Login.class));
         }
     }
@@ -113,22 +113,34 @@ public class Loading extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 Amigo meuUser = dataSnapshot.getValue(Amigo.class);
-                dbLocal.atualizarAmigo(meuUser);
-                if (dbLocal.getQTDAvatares() == 0)
+                if (meuUser.getNick() != null)
                 {
-                    Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
-                    dbLocal.inserirAvatar(avatar);
-                    //iniciando service
-                    getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
+                    txt.setText("bem vindo de volta ");
+                    dbLocal.atualizarAmigo(meuUser);
+                    if (dbLocal.getQTDAvatares() == 0)
+                    {
+                        Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
+                        dbLocal.inserirAvatar(avatar);
+                        //iniciando service
+                        getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
+                    }
+                    else
+                    {
+                        Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
+                        dbLocal.atualizarAvatar(avatar);
+                        dbLocal.atualizarAmigo(meuUser);
+                        dbLocal.atualizarUsuario(new Usuario(meuUser.getId(),DatabaseHelper.getDateTime(),meuUser.getNick()));
+                        //iniciando service
+                        getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
+                    }
+                    startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
                 }
                 else
                 {
-                    Avatar avatar = new Avatar(1,String.valueOf(meuUser.getIcone()),DatabaseHelper.getDateTime());
-                    dbLocal.atualizarAvatar(avatar);
-                    //iniciando service
-                    getApplicationContext().startService(new Intent(getApplicationContext(), NotificacaoService.class));
+                    txt.setText("bem vindo a nossa plataforma");
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(getApplicationContext(), Login.class));
                 }
-                startActivity(new Intent(getApplicationContext(), PainelPrincipal.class));
             }
 
             @Override

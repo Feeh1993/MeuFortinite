@@ -125,7 +125,7 @@ public class Noticias extends Fragment
             @Override
             public void onClick(View button, int position, Noticia noticia)
             {
-                Toast.makeText(getContext(),"Clicou em View",Toast.LENGTH_LONG).show();
+                //t.makeText(getContext(),"Clicou em View",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getContext(), ConteudoNoticia.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("data",noticia.getData());

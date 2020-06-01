@@ -77,5 +77,23 @@
         android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:layout_margin="8dp"
+            android:background="@color/verde_agua"
+            android:text="Espaço de propaganda"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/epica"
+            android:textSize="18sp" />
+    </FrameLayout>
+
 
 </LinearLayout>

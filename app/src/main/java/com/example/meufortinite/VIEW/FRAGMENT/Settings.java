@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
@@ -23,6 +24,8 @@ import com.example.meufortinite.MODEL.GERAL.Usuario;
 import com.example.meufortinite.R;
 import com.example.meufortinite.VIEW.ACTIVITY.Login;
 import com.example.meufortinite.VIEW.ACTIVITY.SelecionarAvatar;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
@@ -32,11 +35,11 @@ public class Settings extends Fragment
 {
     private Button btnPro,btnLogout;
     private ImageButton imgTrocarImg;
-    private Switch swtchNtficacao;
     private DatabaseHelper db;
     private ArrayList<Avatar> avatars = new ArrayList<>();
     private ArrayList<Usuario> usuarios = new ArrayList<>();
     private DatabaseReference ref = ConfiguracaoFirebase.getFirebase();
+    private TextView txtNick,txtTermos;
 
 
 
@@ -60,10 +63,15 @@ public class Settings extends Fragment
         {
             avatars.clear();
             avatars.addAll(db.recuperarAvatar());
-            imgTrocarImg.setImageResource(Avatar.identificarAvatar(Integer.parseInt(avatars.get(0).getAvatar())));
+            if (avatars.get(0).getAvatar().equals("0"))
+            {
+                imgTrocarImg.setImageResource(R.drawable.ic_add_avatar);
+            }
+            else imgTrocarImg.setImageResource(Avatar.identificarAvatar(Integer.parseInt(avatars.get(0).getAvatar())));
             Log.d("SETTINGS_","AVATAR: "+avatars.get(0).getAvatar());
             Log.d("SETTINGS_","HORA DA ATUALIZAÇÃO: "+avatars.get(0).getCriado());
         }
+        txtNick.setText("Seu nick: "+usuarios.get(0).getNickname());
         return view;
     }
 
@@ -79,7 +87,11 @@ public class Settings extends Fragment
         {
             avatars.clear();
             avatars.addAll(db.recuperarAvatar());
-            imgTrocarImg.setImageResource(Avatar.identificarAvatar(Integer.parseInt(avatars.get(0).getAvatar())));
+            if (avatars.get(0).getAvatar().equals("0"))
+            {
+                imgTrocarImg.setImageResource(R.drawable.ic_add_avatar);
+            }
+            else imgTrocarImg.setImageResource(Avatar.identificarAvatar(Integer.parseInt(avatars.get(0).getAvatar())));
             Log.d("SETTINGS_","AVATAR: "+avatars.get(0).getAvatar());
             Log.d("SETTINGS_","HORA DA ATUALIZAÇÃO: "+avatars.get(0).getCriado());
         }
@@ -90,7 +102,17 @@ public class Settings extends Fragment
         btnPro = view.findViewById(R.id.btnPro);
         btnLogout = view.findViewById(R.id.btnLogout);
         imgTrocarImg = view.findViewById(R.id.imgAvatar_setting);
-        swtchNtficacao = view.findViewById(R.id.swtchNotificacoes_settings);
+        txtNick = view.findViewById(R.id.txtNick);
+        txtTermos = view.findViewById(R.id.txtTermos);
+
+        txtTermos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Snackbar.make(v,"Clicou em termos", BaseTransientBottomBar.LENGTH_LONG).show();
+            }
+        });
+
 
         btnPro.setOnClickListener(new View.OnClickListener() {
             @Override

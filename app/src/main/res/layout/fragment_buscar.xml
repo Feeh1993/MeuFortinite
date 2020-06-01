@@ -7,6 +7,19 @@
     android:background="@color/black"
     tools:context=".VIEW.FRAGMENT.Buscar">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="8dp"
+        android:background="@color/verde_agua"
+        android:text="Espaço de propaganda"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/epica"
+        android:textSize="18sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
