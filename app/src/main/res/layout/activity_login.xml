@@ -166,13 +166,15 @@
                 android:id="@+id/btnPro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@null"
+                android:layout_margin="2dp"
+                android:background="@drawable/bordas_pro"
                 android:drawableRight="@drawable/ic_premium"
-                android:text="Assine o pró por apenas R$ 0,99 ao mês e obtenha acesso ilimitado ao no aplicativo além de todos os avatares desbloqueados!"
+                android:padding="5dp"
+                android:text="Assine o pró por apenas R$ 0,99 ao mês e obtenha acesso ilimitado no aplicativo além de todos os avatares desbloqueados!"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@color/main_green_color" />
+                android:textColor="@color/branco"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/textView8"

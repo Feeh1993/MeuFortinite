@@ -415,6 +415,7 @@ public class NotificacaoService extends Service
                         bundle.putString("notificacao_id",NOTIFICACAO_ID);
                         brodcastB.putExtras(bundle);
                         brodcastB.setAction("BORA");
+                        brodcastB.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         //sendBroadcast(brodcastB);
                         PendingIntent pendingN = PendingIntent.getBroadcast(this,0,brodcastN,PendingIntent.FLAG_UPDATE_CURRENT);
                         PendingIntent pendingB = PendingIntent.getBroadcast(this,0,brodcastB,PendingIntent.FLAG_UPDATE_CURRENT);

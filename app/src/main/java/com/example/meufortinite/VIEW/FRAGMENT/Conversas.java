@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.meufortinite.DAO.LOCAL.DatabaseHelper;
@@ -56,6 +57,7 @@ public class Conversas extends Fragment
 
 
     private ValueEventListener novamsgValueListener;
+    private TextView txtConversa;
 
 
     public Conversas()
@@ -88,8 +90,6 @@ public class Conversas extends Fragment
     public void onResume()
     {
         super.onResume();
-
-
         novamsgValueListener = new ValueEventListener()
         {
             @Override
@@ -179,7 +179,7 @@ public class Conversas extends Fragment
 
         return view;
     }
-// IMPLEMENTAR BANCO REMOTO :<
+    //recupera banco remoto
     private void recuperarBanco()
     {
         //listConversa.clear();
@@ -198,6 +198,7 @@ public class Conversas extends Fragment
                         {
                             Log.d(TAG, "startAt USERNAME: "+new_mensagem.getUsername());
                             //listConversa.add(new_mensagem);
+                            txtConversa.setVisibility(View.GONE);
                             db.inserirConversa(new_mensagem);
                             db.atualizarConversa(new_mensagem);
                             Log.d(TAG, "startAt TAM LIST CONVRS: "+listConversa.size());
@@ -206,6 +207,10 @@ public class Conversas extends Fragment
                         }
                     }
                     recuperarDadosLocais();
+                    if (listConversa.size() == 0)
+                    {
+                        txtConversa.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
@@ -267,6 +272,7 @@ public class Conversas extends Fragment
     private void fazerCast(View view) {
         recChat = view.findViewById(R.id.recChat);
         viewPager = (ViewPager) getActivity().findViewById(R.id.vp_painel);
+        txtConversa = (TextView) view.findViewById(R.id.txtConversas);
     }
 
 }

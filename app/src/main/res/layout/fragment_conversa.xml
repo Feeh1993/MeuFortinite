@@ -9,6 +9,16 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <TextView
+        android:id="@+id/txtConversas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Você não possui conversas \n inicie uma nova conversa na aba amigos"
+        android:textAlignment="center"
+        android:textColor="@color/branco"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

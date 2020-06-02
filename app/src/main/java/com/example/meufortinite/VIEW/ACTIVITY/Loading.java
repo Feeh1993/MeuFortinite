@@ -113,6 +113,13 @@ public class Loading extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 Amigo meuUser = dataSnapshot.getValue(Amigo.class);
+                try
+                {
+
+                }catch (NullPointerException e)
+                {
+
+                }
                 if (meuUser.getNick() != null)
                 {
                     txt.setText("bem vindo de volta ");
